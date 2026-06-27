@@ -60,7 +60,7 @@ export function Reveal({
       className={className}
       initial={hidden}
       animate={show ? shown : hidden}
-      transition={{ duration: blur ? 1.05 : 0.85, ease: EASE, delay }}
+      transition={{ duration: blur ? 1.5 : 1.25, ease: EASE, delay }}
     >
       {children}
     </motion.div>
@@ -127,7 +127,7 @@ export function RevealLines({
               className={cn("block", lineClassName)}
               initial={{ y: "115%" }}
               animate={show ? { y: 0 } : { y: "115%" }}
-              transition={{ duration: 0.95, ease: EASE, delay: delay + i * 0.09 }}
+              transition={{ duration: 1.4, ease: EASE, delay: delay + i * 0.12 }}
             >
               {line}
             </motion.span>
@@ -142,7 +142,7 @@ export function RevealLines({
 
 const staggerParent: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
+  show: { transition: { staggerChildren: 0.16, delayChildren: 0.08 } },
 };
 const staggerChild: Variants = {
   hidden: { opacity: 0, y: 24, scale: 0.97 },
@@ -150,7 +150,7 @@ const staggerChild: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.8, ease: EASE },
+    transition: { duration: 1.2, ease: EASE },
   },
 };
 
