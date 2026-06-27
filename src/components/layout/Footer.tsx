@@ -23,8 +23,8 @@ export default function Footer() {
       data-nav-theme="dark"
       className="relative overflow-hidden bg-ink text-paper-dim"
     >
-      {/* 幾何マークを薄く配置（全体が収まるように、端で見切れさせない） */}
-      <div className="pointer-events-none absolute right-6 top-1/2 hidden h-[clamp(150px,20vw,240px)] w-[clamp(150px,20vw,240px)] -translate-y-1/2 opacity-[0.05] sm:block">
+      {/* 大きめの幾何マークを薄く配置。右側は意図的に画面外へ見切れさせる。 */}
+      <div className="pointer-events-none absolute right-[-2.5rem] top-1/2 hidden h-[clamp(280px,34vw,440px)] w-[clamp(280px,34vw,440px)] -translate-y-1/2 opacity-[0.05] sm:block">
         <LogoMark tone="paper" className="h-full w-full" />
       </div>
 
