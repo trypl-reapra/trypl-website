@@ -76,7 +76,16 @@ export default function Nav() {
         <nav className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-page">
           <Link
             href="/"
-            aria-label="TrypL ホーム"
+            aria-label="TrypL ホーム（先頭へ）"
+            onClick={(e) => {
+              setOpen(false);
+              // すでにホームにいる場合は遷移せず先頭までスクロール。
+              if (pathname === "/") {
+                e.preventDefault();
+                if (lenis) lenis.scrollTo(0, { duration: 1.1 });
+                else window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
             className={cn(
               "relative z-50 transition-colors duration-500",
               dark ? "text-paper" : "text-ink",
