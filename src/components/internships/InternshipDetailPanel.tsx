@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button, Badge } from "@/components/ui";
 import { Magnetic } from "@/components/motion";
@@ -45,26 +46,22 @@ export default function InternshipDetailPanel({
 
   return (
     <div className="flex max-h-[88vh] flex-col">
-      {/* sticky header */}
-      <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-line bg-paper/85 px-6 py-5 backdrop-blur-xl sm:px-9">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center rounded-full border border-line px-3 py-1 text-xs text-mute">
-              {CATEGORIES[i.category]}
-            </span>
-            {i.featured && (
-              <span className="eyebrow text-[0.625rem] text-ink">Featured</span>
-            )}
-          </div>
-          <p className="mt-3 truncate text-sm text-mute">
-            {i.company} · {i.companyTag}
-          </p>
-        </div>
+      {/* 横長のヘッダー画像（iPhone 壁紙風）。閉じる・企業名をオーバーレイ。 */}
+      <div className="relative h-36 shrink-0 sm:h-48">
+        <Image
+          src="/internships-header.jpg"
+          alt=""
+          fill
+          sizes="(max-width: 768px) 100vw, 768px"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/35 to-ink/10" />
+
         <button
           type="button"
           onClick={onClose}
           aria-label="閉じる"
-          className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-line text-ink transition-colors hover:bg-ink hover:text-paper"
+          className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-ink/40 text-paper backdrop-blur-md transition-colors hover:bg-ink/70"
         >
           <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
             <path
@@ -75,6 +72,19 @@ export default function InternshipDetailPanel({
             />
           </svg>
         </button>
+
+        <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center gap-3 px-6 pb-5 sm:px-9">
+          <span className="inline-flex items-center rounded-full border border-paper/30 bg-ink/20 px-3 py-1 text-xs text-paper backdrop-blur-md">
+            {CATEGORIES[i.category]}
+          </span>
+          {i.featured && (
+            <span className="eyebrow text-[0.625rem] text-paper">Featured</span>
+          )}
+          <span className="text-sm text-paper/85">
+            {i.company}
+            {i.companyTag ? ` · ${i.companyTag}` : ""}
+          </span>
+        </div>
       </div>
 
       {/* scrollable body */}

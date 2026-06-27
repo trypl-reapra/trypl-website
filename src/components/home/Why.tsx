@@ -1,8 +1,79 @@
 "use client";
 
-import { Reveal, Stagger, StaggerItem } from "@/components/motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { Reveal } from "@/components/motion";
 import { Container, Eyebrow } from "@/components/ui";
 import { useT } from "@/i18n/LocaleProvider";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+function ShiftRow({
+  from,
+  to,
+  index,
+}: {
+  from: string;
+  to: string;
+  index: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -12% 0px" });
+  const d = index * 0.1;
+
+  return (
+    <div
+      ref={ref}
+      className="group grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-ink/15 py-6 sm:gap-8 sm:py-7"
+    >
+      {/* before — fades back with a drawn strike-through */}
+      <motion.span
+        initial={{ opacity: 0, x: -24 }}
+        animate={inView ? { opacity: 0.5, x: 0 } : {}}
+        transition={{ duration: 0.6, ease: EASE, delay: d }}
+        className="relative inline-block text-sm text-mute sm:text-base"
+      >
+        {from}
+        <motion.span
+          aria-hidden
+          initial={{ scaleX: 0 }}
+          animate={inView ? { scaleX: 1 } : {}}
+          transition={{ duration: 0.5, ease: EASE, delay: d + 0.35 }}
+          className="absolute left-0 top-1/2 h-px w-full origin-left bg-mute/50"
+        />
+      </motion.span>
+
+      {/* arrow — appears, nudges on hover */}
+      <motion.svg
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        initial={{ opacity: 0, scale: 0.6 }}
+        animate={inView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ duration: 0.45, ease: EASE, delay: d + 0.4 }}
+        className="h-5 w-5 text-ink transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5"
+      >
+        <path
+          d="M5 12h14M13 6l6 6-6 6"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </motion.svg>
+
+      {/* after — slides in and pops */}
+      <motion.span
+        initial={{ opacity: 0, x: 28 }}
+        animate={inView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.6, ease: EASE, delay: d + 0.5 }}
+        className="text-right font-jp text-lg font-bold tracking-tight sm:text-2xl"
+      >
+        {to}
+      </motion.span>
+    </div>
+  );
+}
 
 export default function Why() {
   const t = useT();
@@ -27,36 +98,11 @@ export default function Why() {
             </Reveal>
           </div>
 
-          <Stagger className="lg:pt-16">
-            <div className="border-t border-ink/15">
-              {shifts.map((s) => (
-                <StaggerItem key={s.to}>
-                  <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-ink/15 py-6 sm:gap-8 sm:py-7">
-                    <span className="text-sm text-mute line-through decoration-mute/40 sm:text-base">
-                      {s.from}
-                    </span>
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      aria-hidden="true"
-                      className="h-5 w-5 text-mute"
-                    >
-                      <path
-                        d="M5 12h14M13 6l6 6-6 6"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    <span className="text-right font-jp text-lg font-bold tracking-tight sm:text-2xl">
-                      {s.to}
-                    </span>
-                  </div>
-                </StaggerItem>
-              ))}
-            </div>
-          </Stagger>
+          <div className="border-t border-ink/15 lg:pt-16">
+            {shifts.map((s, idx) => (
+              <ShiftRow key={s.to} from={s.from} to={s.to} index={idx} />
+            ))}
+          </div>
         </div>
       </Container>
     </section>

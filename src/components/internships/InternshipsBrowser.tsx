@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useLenis } from "lenis/react";
 import InternshipCard from "./InternshipCard";
-import InternshipDetailPanel from "./InternshipDetailPanel";
+import InternshipModal from "./InternshipModal";
 import { cn } from "@/lib/cn";
 import type { CategoryKey, Internship } from "@/data/internships";
 
@@ -44,25 +43,9 @@ export default function InternshipsBrowser({
 }) {
   const [active, setActive] = useState<Filter>("all");
   const [selected, setSelected] = useState<Internship | null>(null);
-  const lenis = useLenis();
 
   const filtered =
     active === "all" ? items : items.filter((i) => i.category === active);
-
-  // ポップアップ表示中はスクロールを止める＋Escで閉じる。
-  useEffect(() => {
-    if (!lenis) return;
-    if (selected) lenis.stop();
-    else lenis.start();
-  }, [selected, lenis]);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSelected(null);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
 
   return (
     <div>
@@ -111,36 +94,7 @@ export default function InternshipsBrowser({
         </AnimatePresence>
       </motion.div>
 
-      {/* Apple ライクな展開ポップアップ */}
-      <AnimatePresence>
-        {selected && (
-          <div className="fixed inset-0 z-[80]">
-            {/* backdrop */}
-            <motion.div
-              key="backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              onClick={() => setSelected(null)}
-              className="absolute inset-0 bg-ink/45 backdrop-blur-md"
-            />
-            {/* centered, expands from the card via shared layoutId */}
-            <div className="absolute inset-0 flex items-start justify-center overflow-y-auto p-4 sm:items-center sm:p-6">
-              <motion.div
-                layoutId={`card-${selected.slug}`}
-                style={{ borderRadius: 24 }}
-                className="relative my-auto w-full max-w-3xl overflow-hidden bg-paper text-ink shadow-[0_60px_140px_-40px_rgba(0,0,0,0.6)]"
-              >
-                <InternshipDetailPanel
-                  internship={selected}
-                  onClose={() => setSelected(null)}
-                />
-              </motion.div>
-            </div>
-          </div>
-        )}
-      </AnimatePresence>
+      <InternshipModal selected={selected} onClose={() => setSelected(null)} />
     </div>
   );
 }

@@ -1,14 +1,18 @@
 "use client";
 
+import { useState } from "react";
+import { motion } from "framer-motion";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { Container, Eyebrow, ArrowLink } from "@/components/ui";
 import InternshipCard from "@/components/internships/InternshipCard";
-import { getAllInternships } from "@/data/internships";
+import InternshipModal from "@/components/internships/InternshipModal";
+import { getAllInternships, type Internship } from "@/data/internships";
 import { useT } from "@/i18n/LocaleProvider";
 
 export default function InternshipPreview() {
   const items = getAllInternships().slice(0, 3);
   const t = useT();
+  const [selected, setSelected] = useState<Internship | null>(null);
 
   return (
     <section data-nav-theme="light" className="bg-paper text-ink">
@@ -37,11 +41,23 @@ export default function InternshipPreview() {
         <Stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((i) => (
             <StaggerItem key={i.slug} className="h-full">
-              <InternshipCard internship={i} className="h-full" />
+              <motion.div
+                layoutId={`card-${i.slug}`}
+                style={{ borderRadius: 16 }}
+                className="h-full"
+              >
+                <InternshipCard
+                  internship={i}
+                  onSelect={() => setSelected(i)}
+                  className="h-full"
+                />
+              </motion.div>
             </StaggerItem>
           ))}
         </Stagger>
       </Container>
+
+      <InternshipModal selected={selected} onClose={() => setSelected(null)} />
     </section>
   );
 }

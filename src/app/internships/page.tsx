@@ -55,7 +55,6 @@ export default async function InternshipsPage() {
         eyebrow="Internships · 募集一覧"
         title={["実践の、機会を。"]}
         lead="REAPRA および投資先企業での、選び抜かれたインターン。一つの現場に深く入り込むことも、半年単位で複数の現場を横断することもできます。"
-        image="/internships-header.jpg"
       />
 
       <Section tone="light" topPad={false}>
