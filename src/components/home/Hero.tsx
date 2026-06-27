@@ -1,4 +1,4 @@
-import { RevealLines, Parallax, Magnetic } from "@/components/motion";
+import { RevealLines, Reveal, Parallax, Magnetic } from "@/components/motion";
 import { RingsSvg, DashRing } from "@/components/decor";
 import { Button, Eyebrow } from "@/components/ui";
 
@@ -46,10 +46,16 @@ export default function Hero() {
             className="mt-8 max-w-xl text-base leading-relaxed text-mute sm:text-lg"
             delay={0.45}
             lines={[
-              "TrypL（トリプル）は、REAPRA発の若年層向け実践型インターンコミュニティ。",
-              "内発的動機を起点に、実践から「社会と共創する熟達」への一歩を。",
+              "「何者かになりたい」と願う。未知の世界に足を踏み入れる。",
+              "社会の肌触りを感じながら、仲間と共に問い続ける。",
             ]}
           />
+
+          <Reveal immediate delay={0.6}>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-mute sm:text-lg">
+              TrypL（トリプル）は、学生の「やりたい」を「実践」に変え、社会と接続するためのコミュニティです。私たちは、一人ひとりの内発的な動機を大切にしながら、共に未来を切り拓く場を提供します。
+            </p>
+          </Reveal>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Magnetic>

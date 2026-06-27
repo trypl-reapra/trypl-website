@@ -9,15 +9,18 @@ export type Member = {
   role: string;
   org: string;
   bio: string;
+  /** public/ 配下のポートレート画像パス（任意） */
+  photo?: string;
 };
 
 export const team: Member[] = [
   {
     name: "山田 晃義",
     reading: "Akiyoshi Yamada",
-    role: "プロジェクトオーナー",
+    role: "TrypL 責任者",
     org: "TrypL",
-    bio: "TrypL の全体をリードし、ビジョンの設定・方針決定・チームづくりを担う。REAPRA の理念を現場の実践へとつなぐ役割。",
+    bio: "TrypL の全体をリードし、ビジョンの設定・方針決定・チームづくりを担う責任者。REAPRA の理念を現場の実践へとつなぐ役割を果たす。",
+    photo: "/team/yamada-akiyoshi.webp",
   },
   {
     name: "諸藤 周平",

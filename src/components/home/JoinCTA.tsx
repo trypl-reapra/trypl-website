@@ -16,15 +16,15 @@ export default function JoinCTA() {
       </Parallax>
 
       <Container className="relative py-28 sm:py-36 lg:py-44">
-        <Eyebrow className="text-mute-dark">Join TrypL</Eyebrow>
+        <Eyebrow className="text-mute-dark">Join our community</Eyebrow>
 
         <h2 className="mt-8 font-jp text-[clamp(2.6rem,9vw,7rem)] font-bold leading-[0.98] tracking-[-0.03em] text-paper">
-          <RevealLines lines={["はじめよう。"]} />
+          <RevealLines lines={["共に歩む仲間へ。"]} />
         </h2>
 
         <Reveal delay={0.15}>
           <p className="mt-8 max-w-xl leading-relaxed text-mute-dark">
-            興味の登録から、説明会、そして実践へ。まずは気軽に、最初の一歩を。あなたの「やってみたい」を、社会とつなげます。
+            わたしたちは、個々の内発的動機を尊重しつつ、互いに刺激し合う「越境者」の集まりです。現状に満足せず、社会の現場で試行錯誤しながら共に成長できる仲間を探しています。将来の履歴書のためではなく、今のあなたの「挑戦」を、わたしたちと一緒に形にしませんか？
           </p>
         </Reveal>
 

@@ -1,22 +1,23 @@
+import Image from "next/image";
 import { cn } from "@/lib/cn";
 
 /**
- * TrypL のシンボル：3つの円が重なるトライアド。
- * 「3つのL（Learning / Long-term / LifeMission）」と
- * 「重なり＝社会との共創」を表す幾何学マーク。currentColor で描画。
+ * TrypL のシンボルマーク（公式アイコン）。
+ * 黒地に白の幾何学的な T を象ったブランドマークを角丸の正方形で表示する。
  */
 export function LogoMark({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 40 40"
-      fill="none"
-      aria-hidden="true"
-      className={cn("h-[1.1em] w-[1.1em]", className)}
-    >
-      <circle cx="20" cy="13.2" r="9.4" stroke="currentColor" strokeWidth="1.7" />
-      <circle cx="13" cy="25.4" r="9.4" stroke="currentColor" strokeWidth="1.7" />
-      <circle cx="27" cy="25.4" r="9.4" stroke="currentColor" strokeWidth="1.7" />
-    </svg>
+    <Image
+      src="/trypl-mark.png"
+      alt="TrypL"
+      width={330}
+      height={329}
+      priority
+      className={cn(
+        "h-[1.1em] w-[1.1em] rounded-[0.22em] object-cover",
+        className,
+      )}
+    />
   );
 }
 

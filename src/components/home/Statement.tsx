@@ -1,4 +1,4 @@
-import { Marquee, RevealLines, Stagger, StaggerItem } from "@/components/motion";
+import { Marquee, Reveal, RevealLines, Stagger, StaggerItem } from "@/components/motion";
 import { Container, Eyebrow } from "@/components/ui";
 import { brandWords } from "@/data/site";
 
@@ -33,22 +33,22 @@ export default function Statement() {
       </div>
 
       <Container className="py-24 sm:py-32 lg:py-40">
-        <Eyebrow className="text-mute-dark">What is TrypL</Eyebrow>
+        <Eyebrow className="text-mute-dark">What we do</Eyebrow>
 
         <h2 className="mt-8 max-w-4xl font-jp text-[clamp(1.9rem,5vw,3.75rem)] font-bold leading-[1.18] tracking-[-0.02em] text-paper">
           <RevealLines
             lines={[
-              "不透明な時代に、若年層が",
-              "長い時間軸で社会と向き合い、",
-              "実践を通じて熟達していく。",
+              "社会と学生の距離を縮め",
+              "実践的な学びを最大化する。",
             ]}
           />
-          <RevealLines
-            className="mt-4 block text-mute-dark"
-            delay={0.3}
-            lines={["——その、きっかけとなる場所。"]}
-          />
         </h2>
+
+        <Reveal delay={0.2}>
+          <p className="mt-8 max-w-2xl leading-relaxed text-mute-dark">
+            TrypLは、REAPRAの投資先企業群と連携し、単なるスキル習得に留まらない、社会のリアルな課題に向き合う機会を提供します。社会に価値を生み出すためには、まず動いてみること。私たちは「案ずるより産むが易し」を合言葉に、学生が社会のプレイヤーとして成長するためのコミュニティを構築しています。
+          </p>
+        </Reveal>
 
         <Stagger className="mt-20 grid gap-px overflow-hidden rounded-2xl border border-line-dark bg-line-dark sm:grid-cols-3">
           {pillars.map((p) => (

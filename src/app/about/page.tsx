@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import PageHeader from "@/components/PageHeader";
 import JoinCTA from "@/components/home/JoinCTA";
 import { Container, Section, Eyebrow } from "@/components/ui";
@@ -145,21 +146,32 @@ export default function AboutPage() {
           <Stagger className="mt-12 grid gap-6 sm:grid-cols-2">
             {team.map((m) => (
               <StaggerItem key={m.name}>
-                <div className="h-full rounded-2xl border border-line bg-paper p-8">
-                  <div className="flex items-baseline justify-between gap-4">
-                    <h3 className="font-jp text-xl font-bold">{m.name}</h3>
-                    {m.reading && (
-                      <span className="font-display text-xs tracking-wide text-mute">
-                        {m.reading}
-                      </span>
-                    )}
+                <div className="flex h-full gap-6 rounded-2xl border border-line bg-paper p-8">
+                  {m.photo && (
+                    <Image
+                      src={m.photo}
+                      alt={m.name}
+                      width={160}
+                      height={160}
+                      className="h-20 w-20 shrink-0 rounded-full object-cover sm:h-24 sm:w-24"
+                    />
+                  )}
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                      <h3 className="font-jp text-xl font-bold">{m.name}</h3>
+                      {m.reading && (
+                        <span className="font-display text-xs tracking-wide text-mute">
+                          {m.reading}
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-1 text-sm text-mute">
+                      {m.role} · {m.org}
+                    </p>
+                    <p className="mt-5 text-sm leading-relaxed text-mute">
+                      {m.bio}
+                    </p>
                   </div>
-                  <p className="mt-1 text-sm text-mute">
-                    {m.role} · {m.org}
-                  </p>
-                  <p className="mt-5 text-sm leading-relaxed text-mute">
-                    {m.bio}
-                  </p>
                 </div>
               </StaggerItem>
             ))}
