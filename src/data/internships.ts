@@ -406,3 +406,37 @@ export function getUsedCategories(): { key: CategoryKey; label: string }[] {
     .filter((k) => used.has(k))
     .map((k) => ({ key: k, label: CATEGORIES[k] }));
 }
+
+/* ------------------------------------------------- header images */
+/** 募集ポップアップのヘッダーに使う横長画像。募集ごとに別の自然写真を割り当て。 */
+const HEADER_POOL = [
+  "/intern/1.jpg",
+  "/intern/2.jpg",
+  "/intern/3.jpg",
+  "/intern/4.jpg",
+  "/intern/5.jpg",
+  "/intern/6.jpg",
+  "/intern/7.jpg",
+  "/intern/8.jpg",
+  "/intern/9.jpg",
+];
+
+const HEADER_BY_SLUG: Record<string, string> = {
+  "jicou-ai-business": "/intern/1.jpg",
+  "trypl-community-growth": "/intern/2.jpg",
+  "reapra-industry-research": "/intern/3.jpg",
+  "yolot-business-dev": "/intern/4.jpg",
+  "coten-history-research": "/intern/5.jpg",
+  "agrimedia-field-marketing": "/intern/6.jpg",
+  "foodison-ops-data": "/intern/7.jpg",
+  "medup-healthcare-business": "/intern/8.jpg",
+  "rechroma-climate-research": "/intern/9.jpg",
+};
+
+/** スラッグから安定的にヘッダー画像を決める（未登録は文字列ハッシュでプールから）。 */
+export function headerImageFor(slug: string): string {
+  if (HEADER_BY_SLUG[slug]) return HEADER_BY_SLUG[slug];
+  let h = 0;
+  for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
+  return HEADER_POOL[h % HEADER_POOL.length];
+}

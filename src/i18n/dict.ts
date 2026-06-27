@@ -127,8 +127,8 @@ export const dict: Record<Locale, Dict> = {
     },
     preview: {
       eyebrow: "Internships",
-      title: "実践の、機会。",
-      lead: "REAPRA および投資先企業での、選び抜かれたインターン。半年単位で複数の現場を横断する経験設計も可能です。",
+      title: "実践の機会。",
+      lead: "REAPRA およびREAPRA投資先企業での、選び抜かれたインターン。複数のインターンを横断する経験設計も可能です。",
       all: "すべての募集を見る",
     },
     join: {
@@ -217,7 +217,7 @@ export const dict: Record<Locale, Dict> = {
     preview: {
       eyebrow: "Internships",
       title: "Opportunities for practice.",
-      lead: "Curated internships at REAPRA and its portfolio companies. You can even design an experience that spans several fields over half-year stretches.",
+      lead: "Curated internships at REAPRA and its portfolio companies. You can even design an experience that spans several internships.",
       all: "See all internships",
     },
     join: {
@@ -306,7 +306,7 @@ export const dict: Record<Locale, Dict> = {
     preview: {
       eyebrow: "Internships",
       title: "실천의 기회.",
-      lead: "REAPRA와 투자처 기업에서 엄선한 인턴십. 반년 단위로 여러 현장을 넘나드는 경험 설계도 가능합니다.",
+      lead: "REAPRA와 REAPRA 투자처 기업에서 엄선한 인턴십. 여러 인턴십을 넘나드는 경험 설계도 가능합니다.",
       all: "모든 모집 보기",
     },
     join: {

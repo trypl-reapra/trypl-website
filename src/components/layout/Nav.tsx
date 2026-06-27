@@ -26,6 +26,7 @@ export default function Nav() {
     { label: t.nav.about, href: "/about" },
     { label: t.nav.internships, href: "/internships" },
     { label: t.nav.events, href: "/events" },
+    { label: t.footer.contact, href: "/contact" },
     { label: t.nav.links, href: "/links" },
   ];
 
@@ -98,7 +99,7 @@ export default function Nav() {
           </a>
 
           {/* desktop */}
-          <div className="hidden items-center gap-7 md:flex">
+          <div className="hidden items-center gap-6 lg:flex">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -134,7 +135,7 @@ export default function Nav() {
             aria-label={open ? "メニューを閉じる" : "メニューを開く"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="relative z-50 flex h-10 w-10 items-center justify-center md:hidden"
+            className="relative z-50 flex h-10 w-10 items-center justify-center lg:hidden"
           >
             <span className="relative block h-3 w-6">
               <span
@@ -164,7 +165,7 @@ export default function Nav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-40 bg-ink text-paper-dim md:hidden"
+            className="fixed inset-0 z-40 bg-ink text-paper-dim lg:hidden"
             data-lenis-prevent
           >
             <div className="flex h-full flex-col justify-between px-page pb-12 pt-24">

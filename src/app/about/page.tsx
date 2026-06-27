@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import Image from "next/image";
 import PageHeader from "@/components/PageHeader";
 import JoinCTA from "@/components/home/JoinCTA";
@@ -72,15 +73,40 @@ export default function AboutPage() {
           </Stagger>
 
           <Reveal delay={0.2}>
-            <p className="mt-12 font-display text-lg tracking-tight text-ink sm:text-2xl">
-              Try
-              <span className="text-mute"> 挑戦 </span>×<span> Practice</span>
-              <span className="text-mute"> 実践 </span>×<span> pLay</span>
-              <span className="text-mute"> 楽しむ</span>
-            </p>
-            <p className="mt-3 max-w-xl text-sm leading-relaxed text-mute">
-              「楽しく遊ぶように、実践に挑戦する」。読み方は “トリプル”。その姿勢を、名前そのものに込めています。
-            </p>
+            <div className="mt-14 overflow-hidden rounded-3xl border border-line bg-paper p-8 sm:p-12">
+              <div className="flex flex-wrap items-end gap-x-5 gap-y-7 font-display sm:gap-x-8">
+                {[
+                  { en: "Try", jp: "挑戦" },
+                  { en: "Practice", jp: "実践" },
+                  { en: "pLay", jp: "楽しむ" },
+                ].map((w, i) => (
+                  <Fragment key={w.en}>
+                    {i > 0 && (
+                      <span className="pb-7 text-2xl font-light text-mute sm:pb-9 sm:text-4xl">
+                        ×
+                      </span>
+                    )}
+                    <span className="leading-none">
+                      <span className="block text-4xl font-bold tracking-tight text-ink sm:text-6xl">
+                        {w.en === "pLay" ? (
+                          <>
+                            p<span className="text-ink underline decoration-2 underline-offset-4">L</span>ay
+                          </>
+                        ) : (
+                          w.en
+                        )}
+                      </span>
+                      <span className="mt-3 block font-jp text-sm font-medium text-mute sm:text-base">
+                        {w.jp}
+                      </span>
+                    </span>
+                  </Fragment>
+                ))}
+              </div>
+              <p className="mt-9 max-w-xl border-t border-line pt-8 leading-relaxed text-mute">
+                「楽しく遊ぶように、実践に挑戦する」。読み方は “トリプル”。その姿勢を、名前そのものに込めています。
+              </p>
+            </div>
           </Reveal>
         </Container>
       </Section>

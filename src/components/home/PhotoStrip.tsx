@@ -14,7 +14,7 @@ export default function PhotoStrip() {
         <Eyebrow>Community · 活動の様子</Eyebrow>
         <Reveal>
           <h2 className="mt-7 font-jp text-[clamp(1.8rem,4.5vw,3rem)] font-bold tracking-[-0.02em]">
-            現場には、いつも人がいる。
+            現場には、いつも仲間がいる。
           </h2>
         </Reveal>
       </Container>
