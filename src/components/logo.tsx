@@ -3,20 +3,26 @@ import { cn } from "@/lib/cn";
 
 /**
  * TrypL のシンボルマーク（公式アイコン）。
- * 黒地に白の幾何学的な T を象ったブランドマークを角丸の正方形で表示する。
+ * 幾何学的な T を象ったブランドマーク。背景は透過済みで、
+ * tone に応じて明背景用（ink＝黒）と暗背景用（paper＝白）を出し分ける。
+ * object-contain で全体を収めるため、マークの上端が欠けない。
  */
-export function LogoMark({ className }: { className?: string }) {
+export function LogoMark({
+  className,
+  tone = "ink",
+}: {
+  className?: string;
+  /** ink: 明るい背景に黒マーク / paper: 暗い背景に白マーク */
+  tone?: "ink" | "paper";
+}) {
   return (
     <Image
-      src="/trypl-mark.png"
+      src={tone === "paper" ? "/trypl-mark-light.png" : "/trypl-mark-dark.png"}
       alt="TrypL"
       width={330}
       height={329}
       priority
-      className={cn(
-        "h-[1.1em] w-[1.1em] rounded-[0.22em] object-cover",
-        className,
-      )}
+      className={cn("h-[1.1em] w-[1.1em] object-contain", className)}
     />
   );
 }
@@ -25,13 +31,15 @@ export function LogoMark({ className }: { className?: string }) {
 export function Logo({
   className,
   withMark = true,
+  tone = "ink",
 }: {
   className?: string;
   withMark?: boolean;
+  tone?: "ink" | "paper";
 }) {
   return (
     <span className={cn("inline-flex items-center gap-2", className)}>
-      {withMark && <LogoMark className="h-[1.05em] w-[1.05em]" />}
+      {withMark && <LogoMark tone={tone} className="h-[1.05em] w-[1.05em]" />}
       <span className="font-display text-[1.15em] font-semibold tracking-tight">
         TrypL
       </span>

@@ -10,14 +10,14 @@ export default function Footer() {
   return (
     <footer className="relative overflow-hidden bg-ink text-paper-dim">
       {/* 巨大な幾何マーク（薄く） */}
-      <div className="pointer-events-none absolute -right-24 -top-24 h-[360px] w-[360px] text-paper/[0.04]">
-        <LogoMark className="h-full w-full" />
+      <div className="pointer-events-none absolute -right-24 -top-24 h-[360px] w-[360px] opacity-[0.05]">
+        <LogoMark tone="paper" className="h-full w-full" />
       </div>
 
       <Container className="relative py-20 sm:py-28">
         <div className="grid gap-14 lg:grid-cols-[1.4fr_1fr_1fr]">
           <div className="max-w-sm">
-            <Logo className="text-paper" />
+            <Logo className="text-paper" tone="paper" />
             <p className="mt-6 text-sm leading-relaxed text-mute-dark">
               {site.tagline}
               <br />
