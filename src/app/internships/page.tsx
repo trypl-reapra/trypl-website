@@ -26,9 +26,10 @@ export default function InternshipsPage() {
 
       <Section tone="light" topPad={false}>
         <Container>
-          {/* placeholder notice */}
-          <div className="mb-12 rounded-xl border border-line bg-fog px-5 py-4 text-sm text-mute">
-            現在掲載しているのはデモ用のサンプル募集です。実際の募集要項に差し替えてご利用ください。
+          {/* notice */}
+          <div className="mb-12 rounded-xl border border-line bg-fog px-5 py-4 text-sm leading-relaxed text-mute">
+            「株式会社ジコウ」は実際に募集中のインターンです。それ以外は、REAPRA
+            投資先企業を題材にした募集要項の例（サンプル）です。
           </div>
 
           <InternshipsBrowser items={items} categories={categories} />

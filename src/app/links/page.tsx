@@ -3,7 +3,7 @@ import Link from "next/link";
 import { LogoMark } from "@/components/logo";
 import { Reveal } from "@/components/motion";
 import { cn } from "@/lib/cn";
-import { site } from "@/data/site";
+import { site, events } from "@/data/site";
 import { socials, entryForm } from "@/data/socials";
 
 export const metadata: Metadata = {
@@ -110,6 +110,12 @@ export default function LinksPage() {
               label="募集一覧を見る"
               sub="REAPRA・投資先でのインターン"
               href="/internships"
+              available
+            />
+            <LinkRow
+              label="イベントに参加する"
+              sub="説明会・座談会・ワークショップ（Luma）"
+              href={events.lumaUrl}
               available
             />
             <LinkRow

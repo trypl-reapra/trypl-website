@@ -13,8 +13,8 @@ export const site = {
   taglineEn: "Try × Practice × pLay",
   description:
     "TrypL（トリプル）は、REAPRA発の若年層向け実践型インターンコミュニティ。社会とつながり、やりながら学ぶ。REAPRAおよび投資先企業でのインターンを通じて、内発的動機から「社会と共創する熟達」への一歩を踏み出す場です。",
-  // 連絡先（プレースホルダー）。正式アドレスに差し替えてください。
-  email: "hello@trypl.jp",
+  // 連絡先。
+  email: "trypl@reapra.sg",
   parent: {
     name: "REAPRA",
     description: "産業創造の研究実践",
@@ -25,10 +25,16 @@ export const site = {
 export const nav: { label: string; href: string }[] = [
   { label: "TrypLとは", href: "/about" },
   { label: "募集一覧", href: "/internships" },
+  { label: "イベント", href: "/events" },
   { label: "リンク", href: "/links" },
 ];
 
 export const cta = { label: "参加する", href: "/join" } as const;
+
+/** イベント情報。Luma で参加受付・カレンダーを公開している。 */
+export const events = {
+  lumaUrl: "https://luma.com/55yk6nif",
+} as const;
 
 /** 名前に込めた3つの意味（3つのL） */
 export const triple = [

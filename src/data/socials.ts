@@ -7,6 +7,7 @@
 export type SocialKey =
   | "instagram"
   | "x"
+  | "linkedin"
   | "tiktok"
   | "threads"
   | "youtube"
@@ -28,18 +29,26 @@ export const socials: Social[] = [
   {
     key: "instagram",
     label: "Instagram",
-    handle: "@trypl.jp",
-    href: "#",
-    available: false,
+    handle: "@trypl_official",
+    href: "https://www.instagram.com/trypl_official",
+    available: true,
     role: "発信",
   },
   {
     key: "x",
     label: "X (Twitter)",
-    handle: "@trypl_jp",
-    href: "#",
-    available: false,
+    handle: "@trypl_official",
+    href: "https://x.com/trypl_official",
+    available: true,
     role: "拡散",
+  },
+  {
+    key: "linkedin",
+    label: "LinkedIn",
+    handle: "TrypL",
+    href: "https://www.linkedin.com/showcase/trypl/",
+    available: true,
+    role: "発信",
   },
   {
     key: "tiktok",
