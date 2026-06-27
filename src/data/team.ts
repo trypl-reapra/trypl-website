@@ -13,23 +13,25 @@ export type Member = {
   photo?: string;
 };
 
-export const team: Member[] = [
-  {
-    name: "山田 晃義",
-    reading: "Akiyoshi Yamada",
-    role: "TrypL 責任者",
-    org: "TrypL",
-    bio: "TrypL の全体をリードし、ビジョンの設定・方針決定・チームづくりを担う責任者。REAPRA の理念を現場の実践へとつなぐ役割を果たす。",
-    photo: "/team/yamada-akiyoshi.webp",
-  },
-  {
-    name: "諸藤 周平",
-    reading: "Shuhei Morofuji",
-    role: "促媒者・伴走者",
-    org: "REAPRA 代表",
-    bio: "「産業創造の研究実践」を掲げる REAPRA 代表。長期の時間軸と内発的動機を起点とする学習のアプローチで、TrypL に伴走する。",
-  },
-];
+/** TrypL 代表者。 */
+export const representative: Member = {
+  name: "山田 晃義",
+  reading: "Akiyoshi Yamada",
+  role: "TrypL 代表",
+  org: "TrypL",
+  bio: "TrypL の全体をリードし、ビジョンの設定・方針決定・チームづくりを担う代表者。REAPRA の理念を現場の実践へとつなぐ役割を果たす。",
+  photo: "/team/yamada-akiyoshi.webp",
+};
+
+/** 代表メッセージ（見出し＋本文）。 */
+export const representativeMessage = {
+  title: "「やりたい」という衝動を、社会の現場で形にする。",
+  body: [
+    "TrypLが目指すのは、単なる学生団体やインターン紹介所ではありません。それは、どんな人とも安心感を持って本音を出し合い、共に人生という冒険を楽しみ、互いに応援し支え合える「家族」のような愛情に満ちたコミュニティです。",
+    "今の社会では、多くの学生が「将来のために実績を作らなければならない」という強迫観念に囚われています。しかし、本当に大切なのは、履歴書を飾ることではなく、あなた自身の内側にある純粋な動機に従って、社会の複雑さに直接触れてみることです。",
+    "自分の弱さや「わがまま」さえも分かち合いながら、仲間と共に未踏の現場へ踏み出す。その試行錯誤のプロセスこそが、あなたを本当の意味での「熟達」へと導きます。私たちは、この挑戦を楽しみ、共に成長していける「越境者」たちを待っています。",
+  ],
+} as const;
 
 /** About ページで使う、活動の歩み（プレースホルダー） */
 export const milestones: { phase: string; title: string; body: string }[] = [

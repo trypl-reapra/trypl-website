@@ -5,7 +5,7 @@ import JoinCTA from "@/components/home/JoinCTA";
 import { Container, Section, Eyebrow } from "@/components/ui";
 import { Reveal, RevealLines, Stagger, StaggerItem } from "@/components/motion";
 import { triple } from "@/data/site";
-import { team, milestones } from "@/data/team";
+import { representative, representativeMessage, milestones } from "@/data/team";
 
 export const metadata: Metadata = {
   title: "TrypLとは",
@@ -134,48 +134,60 @@ export default function AboutPage() {
         </Container>
       </Section>
 
-      {/* Team */}
+      {/* Message — 代表メッセージ */}
       <Section tone="fog">
         <Container>
-          <Eyebrow>Team</Eyebrow>
+          <Eyebrow>Message · 代表メッセージ</Eyebrow>
           <Reveal>
-            <h2 className="mt-7 font-jp text-[clamp(1.9rem,5vw,3.5rem)] font-bold tracking-[-0.02em]">
-              運営チーム
+            <h2 className="mt-7 max-w-3xl font-jp text-[clamp(1.7rem,4vw,3rem)] font-bold leading-[1.4] tracking-[-0.02em]">
+              {representativeMessage.title}
             </h2>
           </Reveal>
-          <Stagger className="mt-12 grid gap-6 sm:grid-cols-2">
-            {team.map((m) => (
-              <StaggerItem key={m.name}>
-                <div className="flex h-full gap-6 rounded-2xl border border-line bg-paper p-8">
-                  {m.photo && (
-                    <Image
-                      src={m.photo}
-                      alt={m.name}
-                      width={160}
-                      height={160}
-                      className="h-20 w-20 shrink-0 rounded-full object-cover sm:h-24 sm:w-24"
-                    />
-                  )}
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                      <h3 className="font-jp text-xl font-bold">{m.name}</h3>
-                      {m.reading && (
-                        <span className="font-display text-xs tracking-wide text-mute">
-                          {m.reading}
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-1 text-sm text-mute">
-                      {m.role} · {m.org}
-                    </p>
-                    <p className="mt-5 text-sm leading-relaxed text-mute">
-                      {m.bio}
-                    </p>
+
+          <div className="mt-14 grid items-start gap-10 lg:grid-cols-[1.35fr_0.65fr] lg:gap-16">
+            {/* greeting text */}
+            <div className="order-2 max-w-2xl lg:order-1">
+              {representativeMessage.body.map((p, i) => (
+                <Reveal key={i} delay={0.05 + i * 0.05}>
+                  <p
+                    className={
+                      "leading-[1.95] text-mute" + (i > 0 ? " mt-6" : "")
+                    }
+                  >
+                    {p}
+                  </p>
+                </Reveal>
+              ))}
+            </div>
+
+            {/* large portrait */}
+            <Reveal className="order-1 lg:order-2" delay={0.1}>
+              <figure>
+                <Image
+                  src={representative.photo!}
+                  alt={representative.name}
+                  width={800}
+                  height={800}
+                  className="aspect-[4/5] w-full rounded-3xl object-cover"
+                />
+                <figcaption className="mt-5">
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className="font-jp text-xl font-bold text-ink">
+                      {representative.name}
+                    </span>
+                    {representative.reading && (
+                      <span className="font-display text-xs tracking-wide text-mute">
+                        {representative.reading}
+                      </span>
+                    )}
                   </div>
-                </div>
-              </StaggerItem>
-            ))}
-          </Stagger>
+                  <p className="mt-1 text-sm text-mute">
+                    {representative.role} · {representative.org}
+                  </p>
+                </figcaption>
+              </figure>
+            </Reveal>
+          </div>
         </Container>
       </Section>
 
