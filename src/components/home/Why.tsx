@@ -26,21 +26,23 @@ function ShiftRow({
       ref={ref}
       className="group grid grid-cols-[1fr_auto_1fr] items-center gap-4 border-b border-ink/15 py-6 sm:gap-8 sm:py-7"
     >
-      {/* before — fades back with a drawn strike-through */}
+      {/* before — fades back with a drawn strike-through（線はテキスト幅だけ） */}
       <motion.span
         initial={{ opacity: 0, x: -24 }}
         animate={inView ? { opacity: 0.5, x: 0 } : {}}
         transition={{ duration: 1.3, ease: EASE, delay: d }}
-        className="relative inline-block text-sm text-mute sm:text-base"
+        className="justify-self-start text-sm text-mute sm:text-base"
       >
-        {from}
-        <motion.span
-          aria-hidden
-          initial={{ scaleX: 0 }}
-          animate={inView ? { scaleX: 1 } : {}}
-          transition={{ duration: 1.05, ease: EASE, delay: d + 0.7 }}
-          className="absolute left-0 top-1/2 h-px w-full origin-left bg-mute/50"
-        />
+        <span className="relative inline-block">
+          {from}
+          <motion.span
+            aria-hidden
+            initial={{ scaleX: 0 }}
+            animate={inView ? { scaleX: 1 } : {}}
+            transition={{ duration: 1.05, ease: EASE, delay: d + 0.7 }}
+            className="absolute left-0 top-1/2 h-px w-full origin-left bg-mute/50"
+          />
+        </span>
       </motion.span>
 
       {/* arrow — appears, nudges on hover */}
