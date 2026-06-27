@@ -19,7 +19,7 @@ function ShiftRow({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "0px 0px -12% 0px" });
-  const d = index * 0.14;
+  const d = index * 0.18;
 
   return (
     <div
@@ -30,7 +30,7 @@ function ShiftRow({
       <motion.span
         initial={{ opacity: 0, x: -24 }}
         animate={inView ? { opacity: 0.5, x: 0 } : {}}
-        transition={{ duration: 0.9, ease: EASE, delay: d }}
+        transition={{ duration: 1.3, ease: EASE, delay: d }}
         className="relative inline-block text-sm text-mute sm:text-base"
       >
         {from}
@@ -38,7 +38,7 @@ function ShiftRow({
           aria-hidden
           initial={{ scaleX: 0 }}
           animate={inView ? { scaleX: 1 } : {}}
-          transition={{ duration: 0.75, ease: EASE, delay: d + 0.5 }}
+          transition={{ duration: 1.05, ease: EASE, delay: d + 0.7 }}
           className="absolute left-0 top-1/2 h-px w-full origin-left bg-mute/50"
         />
       </motion.span>
@@ -50,7 +50,7 @@ function ShiftRow({
         aria-hidden="true"
         initial={{ opacity: 0, scale: 0.6 }}
         animate={inView ? { opacity: 1, scale: 1 } : {}}
-        transition={{ duration: 0.7, ease: EASE, delay: d + 0.6 }}
+        transition={{ duration: 1, ease: EASE, delay: d + 0.85 }}
         className="h-5 w-5 text-ink transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5"
       >
         <path
@@ -66,7 +66,7 @@ function ShiftRow({
       <motion.span
         initial={{ opacity: 0, x: 28 }}
         animate={inView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.9, ease: EASE, delay: d + 0.75 }}
+        transition={{ duration: 1.3, ease: EASE, delay: d + 1.05 }}
         className="text-right font-jp text-lg font-bold tracking-tight sm:text-2xl"
       >
         {to}
