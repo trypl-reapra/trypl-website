@@ -35,12 +35,14 @@ export default function Hero() {
 
           <h1 className="mt-7 font-jp text-[clamp(2.7rem,9vw,7.5rem)] font-bold leading-[0.98] tracking-[-0.03em]">
             <RevealLines
+              immediate
               lines={["社会とつながり、", "やりながら学ぶ。"]}
               delay={0.05}
             />
           </h1>
 
           <RevealLines
+            immediate
             className="mt-8 max-w-xl text-base leading-relaxed text-mute sm:text-lg"
             delay={0.45}
             lines={[

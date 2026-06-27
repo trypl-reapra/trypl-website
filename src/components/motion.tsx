@@ -2,6 +2,7 @@
 
 import {
   motion,
+  useInView,
   useMotionValue,
   useReducedMotion,
   useScroll,
@@ -22,21 +23,30 @@ export function Reveal({
   delay = 0,
   y = 28,
   once = true,
+  immediate = false,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
   y?: number;
   once?: boolean;
+  /** ファーストビュー固定の要素（ヒーロー等）はマウント時に必ず再生する。
+   *  スクロールで入ってくる要素はビューポート検知で再生する。 */
+  immediate?: boolean;
 }) {
   const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  // useInView は要素のマウント後にオブザーバを張るため、whileInView と違って
+  // ハイドレーション前後の初回コールバック取りこぼしが起きにくい。
+  const inView = useInView(ref, { once, margin: "0px 0px -12% 0px" });
+  const show = immediate || inView;
   if (reduce) return <div className={className}>{children}</div>;
   return (
     <motion.div
+      ref={ref}
       className={className}
       initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once, margin: "0px 0px -12% 0px" }}
+      animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y }}
       transition={{ duration: 0.85, ease: EASE, delay }}
     >
       {children}
@@ -52,15 +62,21 @@ export function RevealLines({
   className,
   lineClassName,
   delay = 0,
+  immediate = false,
 }: {
   lines: ReactNode[];
   className?: string;
   lineClassName?: string;
   delay?: number;
+  /** ファーストビュー固定の見出し（ヒーロー / ページヘッダー）はマウント時に再生。 */
+  immediate?: boolean;
 }) {
   const reduce = useReducedMotion();
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -8% 0px" });
+  const show = immediate || inView;
   return (
-    <span className={cn("block", className)}>
+    <span ref={ref} className={cn("block", className)}>
       {lines.map((line, i) => (
         <span key={i} className="block overflow-hidden pb-[0.08em]">
           {reduce ? (
@@ -69,8 +85,7 @@ export function RevealLines({
             <motion.span
               className={cn("block", lineClassName)}
               initial={{ y: "115%" }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+              animate={show ? { y: 0 } : { y: "115%" }}
               transition={{ duration: 0.95, ease: EASE, delay: delay + i * 0.09 }}
             >
               {line}
@@ -101,14 +116,16 @@ export function Stagger({
   className?: string;
 }) {
   const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
   if (reduce) return <div className={className}>{children}</div>;
   return (
     <motion.div
+      ref={ref}
       className={className}
       variants={staggerParent}
       initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+      animate={inView ? "show" : "hidden"}
     >
       {children}
     </motion.div>

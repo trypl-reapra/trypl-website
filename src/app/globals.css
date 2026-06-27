@@ -34,55 +34,62 @@
 
 /* ============================================================
    Base
+   これらはベースリセットなので必ず @layer base に入れる。
+   レイヤー外（アンレイヤード）に置くと、Tailwind のユーティリティ
+   （@layer utilities の .text-paper 等）より優先順位が高くなり、
+   例えば a{color:inherit} が text-paper を打ち消して
+   黒地ボタンの白文字が消える、といった不具合を起こす。
    ============================================================ */
 
-* {
-  -webkit-tap-highlight-color: transparent;
-}
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
 
-html {
-  scroll-behavior: smooth;
-  text-size-adjust: 100%;
-}
+  html {
+    scroll-behavior: smooth;
+    text-size-adjust: 100%;
+  }
 
-body {
-  background: var(--color-paper);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
-  font-feature-settings: "palt" 1; /* tighter JP kerning */
-  letter-spacing: 0.01em;
-  line-height: 1.7;
-  overflow-x: hidden;
-}
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "palt" 1; /* tighter JP kerning */
+    letter-spacing: 0.01em;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
 
-::selection {
-  background: var(--color-ink);
-  color: var(--color-paper);
-}
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
 
-:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 3px;
-  border-radius: 2px;
-}
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-h1,
-h2,
-h3,
-h4 {
-  text-wrap: balance;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  font-weight: 600;
-}
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    font-weight: 600;
+  }
 
-p {
-  text-wrap: pretty;
+  p {
+    text-wrap: pretty;
+  }
 }
 
 /* ============================================================

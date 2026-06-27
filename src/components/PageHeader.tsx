@@ -18,10 +18,10 @@ export default function PageHeader({
       <Container className="relative">
         <Eyebrow>{eyebrow}</Eyebrow>
         <h1 className="mt-7 font-jp text-[clamp(2.4rem,7vw,5.5rem)] font-bold leading-[1.04] tracking-[-0.03em]">
-          <RevealLines lines={lines} />
+          <RevealLines immediate lines={lines} />
         </h1>
         {lead && (
-          <Reveal delay={0.2}>
+          <Reveal immediate delay={0.2}>
             <p className="mt-8 max-w-2xl text-lg leading-relaxed text-mute">
               {lead}
             </p>
