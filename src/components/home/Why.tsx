@@ -1,33 +1,28 @@
+"use client";
+
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { Container, Eyebrow } from "@/components/ui";
-
-const shifts = [
-  { from: "就活のために", to: "内発的動機から" },
-  { from: "短期の実績づくり", to: "長期の時間軸で" },
-  { from: "情報を受け取るだけ", to: "実践して学ぶ" },
-  { from: "ひとりで悩む", to: "仲間と共創する" },
-];
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function Why() {
+  const t = useT();
+  const shifts = t.why.shifts;
   return (
     <section data-nav-theme="light" className="bg-fog text-ink">
       <Container className="py-24 sm:py-32 lg:py-40">
         <div className="grid gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
           <div>
-            <Eyebrow>Why TrypL</Eyebrow>
+            <Eyebrow>{t.why.eyebrow}</Eyebrow>
             <Reveal>
               <h2 className="mt-7 font-jp text-[clamp(1.9rem,5vw,3.5rem)] font-bold leading-[1.15] tracking-[-0.02em]">
-                なぜ、
+                {t.why.titleLines[0]}
                 <br />
-                TrypL なのか。
+                {t.why.titleLines[1]}
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="mt-8 max-w-md leading-relaxed text-mute">
-                「良い大学に入る」ことに全力を注いだ先で、燃え尽きてしまう。気づけば3年生、「就活どうしよう」と焦り出す。
-                <br />
-                <br />
-                本来、学生の時間は、もっと豊かな探索の場であるはず。TrypLは、その問いに別の入口を用意します。
+              <p className="mt-8 max-w-md whitespace-pre-line leading-relaxed text-mute">
+                {t.why.lead}
               </p>
             </Reveal>
           </div>

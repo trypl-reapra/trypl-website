@@ -1,3 +1,5 @@
+"use client";
+
 import {
   RevealLines,
   Reveal,
@@ -7,8 +9,10 @@ import {
 } from "@/components/motion";
 import { RingsSvg, DashRing } from "@/components/decor";
 import { Button, Eyebrow } from "@/components/ui";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function Hero() {
+  const t = useT();
   return (
     <section
       data-nav-theme="light"
@@ -40,32 +44,28 @@ export default function Hero() {
 
       <ScrollFadeOut className="relative z-10 mx-auto w-full min-w-0 max-w-[1280px]">
         <div className="min-w-0 max-w-3xl">
-          <Eyebrow>REAPRA発・実践型コミュニティ</Eyebrow>
+          <Eyebrow>{t.hero.eyebrow}</Eyebrow>
 
           <h1 className="mt-6 font-jp text-[clamp(2.35rem,6.4vw,5.25rem)] font-bold leading-[1.04] tracking-[-0.03em]">
-            <RevealLines
-              immediate
-              lines={["社会とつながり、", "やりながら学ぶ。"]}
-              delay={0.05}
-            />
+            <RevealLines immediate lines={t.hero.title} delay={0.05} />
           </h1>
 
           <Reveal immediate delay={0.4}>
             <p className="mt-7 max-w-xl text-base leading-[1.9] text-mute sm:text-lg">
-              「何者かになりたい」と願う。未知の世界に足を踏み入れる。社会の肌触りを感じながら、仲間と共に問い続ける。
+              {t.hero.lead1}
             </p>
           </Reveal>
 
           <Reveal immediate delay={0.5}>
             <p className="mt-5 max-w-xl text-base leading-[1.9] text-mute sm:text-lg">
-              TrypL（トリプル）は、学生の「やりたい」を「実践」に変え、社会と接続するためのコミュニティです。私たちは、一人ひとりの内発的な動機を大切にしながら、共に未来を切り拓く場を提供します。
+              {t.hero.lead2}
             </p>
           </Reveal>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Magnetic>
               <Button href="/internships" size="lg">
-                募集を見る
+                {t.hero.seeInternships}
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -83,7 +83,7 @@ export default function Hero() {
               </Button>
             </Magnetic>
             <Button href="/about" variant="outline" size="lg">
-              TrypLとは
+              {t.hero.aboutLink}
             </Button>
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function Hero() {
 
       {/* scroll cue */}
       <div className="pointer-events-none absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-3 text-mute sm:flex">
-        <span className="eyebrow text-[0.625rem]">Scroll</span>
+        <span className="eyebrow text-[0.625rem]">{t.scroll}</span>
         <span className="relative block h-10 w-px overflow-hidden bg-line">
           <span className="animate-cue absolute inset-x-0 top-0 h-4 bg-ink" />
         </span>

@@ -1,19 +1,30 @@
+"use client";
+
 import Link from "next/link";
 import { Logo, LogoMark } from "@/components/logo";
 import { Container } from "@/components/ui";
-import { site, nav, cta } from "@/data/site";
+import { site, cta } from "@/data/site";
 import { socials } from "@/data/socials";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function Footer() {
-  const year = new Date().getFullYear();
+  const year = 2026;
+  const t = useT();
+  const navItems = [
+    { label: t.nav.about, href: "/about" },
+    { label: t.nav.internships, href: "/internships" },
+    { label: t.nav.events, href: "/events" },
+    { label: t.nav.links, href: "/links" },
+    { label: t.cta, href: cta.href },
+  ];
 
   return (
     <footer
       data-nav-theme="dark"
       className="relative overflow-hidden bg-ink text-paper-dim"
     >
-      {/* 巨大な幾何マーク（薄く） */}
-      <div className="pointer-events-none absolute -right-24 -top-24 h-[360px] w-[360px] opacity-[0.05]">
+      {/* 幾何マークを薄く配置（全体が収まるように、端で見切れさせない） */}
+      <div className="pointer-events-none absolute right-6 top-1/2 hidden h-[clamp(150px,20vw,240px)] w-[clamp(150px,20vw,240px)] -translate-y-1/2 opacity-[0.05] sm:block">
         <LogoMark tone="paper" className="h-full w-full" />
       </div>
 
@@ -24,7 +35,7 @@ export default function Footer() {
             <p className="mt-6 text-sm leading-relaxed text-mute-dark">
               {site.tagline}
               <br />
-              REAPRA発・若年層向け実践型インターンコミュニティ。
+              {t.footer.desc}
             </p>
             <a
               href={`mailto:${site.email}`}
@@ -35,9 +46,9 @@ export default function Footer() {
           </div>
 
           <nav aria-label="サイト内リンク">
-            <h3 className="eyebrow text-mute-dark">Explore</h3>
+            <h3 className="eyebrow text-mute-dark">{t.footer.explore}</h3>
             <ul className="mt-5 space-y-3 text-sm">
-              {[...nav, cta].map((item) => (
+              {navItems.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
@@ -51,7 +62,7 @@ export default function Footer() {
           </nav>
 
           <nav aria-label="SNS リンク">
-            <h3 className="eyebrow text-mute-dark">Follow</h3>
+            <h3 className="eyebrow text-mute-dark">{t.footer.follow}</h3>
             <ul className="mt-5 grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
               {socials.map((s) => (
                 <li key={s.key}>
@@ -75,7 +86,7 @@ export default function Footer() {
 
         <div className="mt-16 flex flex-col gap-4 border-t border-line-dark pt-8 text-xs text-mute-dark sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {year} {site.name}. Powered by{" "}
+            © {year} {site.name}. {t.footer.poweredBy}{" "}
             <a
               href={site.parent.url}
               target="_blank"

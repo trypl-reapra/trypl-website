@@ -1,31 +1,35 @@
+"use client";
+
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { Container, Eyebrow, ArrowLink } from "@/components/ui";
 import InternshipCard from "@/components/internships/InternshipCard";
 import { getAllInternships } from "@/data/internships";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function InternshipPreview() {
   const items = getAllInternships().slice(0, 3);
+  const t = useT();
 
   return (
     <section data-nav-theme="light" className="bg-paper text-ink">
       <Container className="py-24 sm:py-32 lg:py-40">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-xl">
-            <Eyebrow>Internships</Eyebrow>
+            <Eyebrow>{t.preview.eyebrow}</Eyebrow>
             <Reveal>
               <h2 className="mt-7 font-jp text-[clamp(1.9rem,5vw,3.5rem)] font-bold tracking-[-0.02em]">
-                実践の、機会。
+                {t.preview.title}
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
               <p className="mt-6 leading-relaxed text-mute">
-                REAPRA および投資先企業での、選び抜かれたインターン。半年単位で複数の現場を横断する経験設計も可能です。
+                {t.preview.lead}
               </p>
             </Reveal>
           </div>
           <Reveal delay={0.15}>
             <ArrowLink href="/internships" className="shrink-0">
-              すべての募集を見る
+              {t.preview.all}
             </ArrowLink>
           </Reveal>
         </div>

@@ -6,8 +6,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useLenis } from "lenis/react";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/logo";
+import LangSwitcher from "@/components/layout/LangSwitcher";
 import { cn } from "@/lib/cn";
-import { site, nav, cta } from "@/data/site";
+import { site, cta } from "@/data/site";
+import { useT } from "@/i18n/LocaleProvider";
 
 type Theme = "light" | "dark";
 
@@ -18,6 +20,14 @@ export default function Nav() {
   const [theme, setTheme] = useState<Theme>("light");
   const pathname = usePathname();
   const lenis = useLenis();
+  const t = useT();
+
+  const navItems = [
+    { label: t.nav.about, href: "/about" },
+    { label: t.nav.internships, href: "/internships" },
+    { label: t.nav.events, href: "/events" },
+    { label: t.nav.links, href: "/links" },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -88,8 +98,8 @@ export default function Nav() {
           </a>
 
           {/* desktop */}
-          <div className="hidden items-center gap-9 md:flex">
-            {nav.map((item) => (
+          <div className="hidden items-center gap-7 md:flex">
+            {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -104,6 +114,7 @@ export default function Nav() {
                 {item.label}
               </Link>
             ))}
+            <LangSwitcher dark={dark} />
             <Link
               href={cta.href}
               className={cn(
@@ -113,7 +124,7 @@ export default function Nav() {
                   : "bg-ink text-paper hover:bg-ink-soft",
               )}
             >
-              {cta.label}
+              {t.cta}
             </Link>
           </div>
 
@@ -158,7 +169,7 @@ export default function Nav() {
           >
             <div className="flex h-full flex-col justify-between px-page pb-12 pt-24">
               <ul className="flex flex-col gap-2">
-                {nav.map((item, i) => (
+                {navItems.map((item, i) => (
                   <motion.li
                     key={item.href}
                     initial={{ opacity: 0, y: 24 }}
@@ -182,12 +193,14 @@ export default function Nav() {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="space-y-6"
               >
+                <LangSwitcher dark />
                 <Link
                   href={cta.href}
                   className="inline-flex h-14 w-full items-center justify-center rounded-full bg-paper text-base font-medium text-ink"
                 >
-                  {cta.label}
+                  {t.cta}
                 </Link>
               </motion.div>
             </div>
