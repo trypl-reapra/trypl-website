@@ -38,21 +38,23 @@ export default function Hero() {
       <ScrollFadeOut className="relative z-10 mx-auto w-full min-w-0 max-w-[1280px]">
         <div className="min-w-0 max-w-3xl">
           <Eyebrow className="text-paper/70">
-            {eyebrowParts.map((part, idx) => (
-              <Fragment key={idx}>
-                {part}
-                {idx < eyebrowParts.length - 1 && (
-                  <a
-                    href={site.parent.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-paper underline decoration-paper/40 underline-offset-2 transition-colors hover:decoration-paper"
-                  >
-                    REAPRA
-                  </a>
-                )}
-              </Fragment>
-            ))}
+            <span>
+              {eyebrowParts.map((part, idx) => (
+                <Fragment key={idx}>
+                  {part}
+                  {idx < eyebrowParts.length - 1 && (
+                    <a
+                      href={site.parent.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-paper underline decoration-paper/40 underline-offset-2 transition-colors hover:decoration-paper"
+                    >
+                      REAPRA
+                    </a>
+                  )}
+                </Fragment>
+              ))}
+            </span>
           </Eyebrow>
 
           <h1 className="mt-6 font-jp text-[clamp(2.35rem,6.4vw,5.25rem)] font-bold leading-[1.04] tracking-[-0.03em] text-paper [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]">

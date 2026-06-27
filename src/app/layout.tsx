@@ -5,6 +5,7 @@ import SmoothScroll from "@/components/layout/SmoothScroll";
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import ScrollProgress from "@/components/layout/ScrollProgress";
+import ScrollReset from "@/components/layout/ScrollReset";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
 import { site } from "@/data/site";
 
@@ -82,6 +83,7 @@ export default function RootLayout({
         </a>
         <LocaleProvider>
           <SmoothScroll>
+            <ScrollReset />
             <ScrollProgress />
             <Nav />
             <main id="main">{children}</main>
