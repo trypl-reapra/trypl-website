@@ -9,18 +9,19 @@ import { cn } from "@/lib/cn";
 export default function InternshipCard({
   internship: i,
   className,
+  onSelect,
 }: {
   internship: Internship;
   className?: string;
+  /** 指定時は遷移せずボタンとして振る舞う（ポップアップ展開用）。 */
+  onSelect?: () => void;
 }) {
-  return (
-    <Link
-      href={`/internships/${i.slug}`}
-      className={cn(
-        "group relative flex flex-col justify-between rounded-2xl border border-line bg-paper p-7 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-ink hover:shadow-[0_30px_70px_-40px_rgba(0,0,0,0.45)] sm:p-8",
-        className,
-      )}
-    >
+  const classes = cn(
+    "group relative flex h-full w-full flex-col justify-between rounded-2xl border border-line bg-paper p-7 text-left transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-ink hover:shadow-[0_30px_70px_-40px_rgba(0,0,0,0.45)] sm:p-8",
+    className,
+  );
+  const inner = (
+    <>
       <div>
         <div className="flex items-center justify-between gap-3">
           <span className="inline-flex items-center rounded-full border border-line px-3 py-1 text-xs text-mute">
@@ -68,6 +69,19 @@ export default function InternshipCard({
           </svg>
         </div>
       </div>
+    </>
+  );
+
+  if (onSelect) {
+    return (
+      <button type="button" onClick={onSelect} className={classes}>
+        {inner}
+      </button>
+    );
+  }
+  return (
+    <Link href={`/internships/${i.slug}`} className={classes}>
+      {inner}
     </Link>
   );
 }

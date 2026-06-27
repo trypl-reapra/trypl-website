@@ -6,6 +6,7 @@ import { Container } from "@/components/ui";
 import { site, cta } from "@/data/site";
 import { socials } from "@/data/socials";
 import { useT } from "@/i18n/LocaleProvider";
+import FooterQuote from "@/components/layout/FooterQuote";
 
 export default function Footer() {
   const year = 2026;
@@ -97,7 +98,7 @@ export default function Footer() {
             </a>
             .
           </p>
-          <p className="tracking-wide">Learning · Long-term · LifeMission</p>
+          <FooterQuote />
         </div>
       </Container>
     </footer>
