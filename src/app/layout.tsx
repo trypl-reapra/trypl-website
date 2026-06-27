@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   },
   // プレースホルダー段階では検索インデックスを抑止。
   // 正式公開時に { index: true, follow: true } へ変更してください。
-  robots: { index: false, follow: false },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({

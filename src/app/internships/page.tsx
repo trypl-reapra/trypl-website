@@ -29,7 +29,7 @@ export default async function InternshipsPage() {
   const mapped: Internship[] = adminItems.map((a) => ({
     slug: `admin-${a.id}`,
     company: a.company,
-    companyTag: "管理画面で追加",
+    companyTag: "インターン募集",
     title: a.title,
     category: "business",
     location: a.location || "—",
@@ -82,12 +82,6 @@ export default async function InternshipsPage() {
 
       <Section tone="light" topPad={false}>
         <Container>
-          {/* notice */}
-          <div className="mb-12 rounded-xl border border-line bg-fog px-5 py-4 text-sm leading-relaxed text-mute">
-            「株式会社ジコウ」は実際に募集中のインターンです。それ以外は、REAPRA
-            投資先企業を題材にした募集要項の例（サンプル）です。
-          </div>
-
           <InternshipsBrowser items={items} categories={categories} />
         </Container>
       </Section>

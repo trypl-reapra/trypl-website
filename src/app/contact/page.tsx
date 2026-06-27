@@ -35,9 +35,6 @@ export default function ContactPage() {
               >
                 {site.email}
               </a>
-              <p className="mt-10 text-sm leading-relaxed text-mute">
-                ※ いただいた内容は運営の管理画面で確認し、対応に利用します。
-              </p>
             </div>
 
             <div className="rounded-3xl border border-line bg-fog p-6 sm:p-9">

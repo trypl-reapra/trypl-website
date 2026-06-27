@@ -42,15 +42,14 @@ export default function EventsPage() {
           <div className="rounded-3xl border border-line-dark p-8 sm:p-12">
             <Eyebrow className="text-mute-dark">Upcoming · 開催予定</Eyebrow>
             <h2 className="mt-6 font-jp text-3xl font-bold tracking-tight text-paper sm:text-4xl">
-              イベントカレンダー
+              開催予定をチェック。
             </h2>
             <p className="mt-5 max-w-xl leading-relaxed text-mute-dark">
-              開催予定の一覧・詳細・参加申し込みは、TrypL の Luma
-              ページにまとめています。気になる回があれば、お気軽にご参加ください。
+              次回の開催日や詳細、参加のお申し込みはこちらから。気になる回があれば、お気軽にご参加ください。
             </p>
             <div className="mt-9 flex flex-wrap gap-4">
               <Button href={events.lumaUrl} variant="inverse" size="lg">
-                Luma で予定を見る
+                開催予定を見る
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
