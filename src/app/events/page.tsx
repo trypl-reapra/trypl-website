@@ -94,7 +94,7 @@ export default function EventsPage() {
         </Container>
       </Section>
 
-      {/* Gallery — イベントの様子 */}
+      {/* Gallery — イベントの様子（横に流れるマーキー） */}
       <Section tone="fog">
         <Container>
           <Eyebrow>Gallery · イベントの様子</Eyebrow>
@@ -108,24 +108,32 @@ export default function EventsPage() {
               発表、対話、交流。実際の現場に触れながら、仲間とともに学び合う場をつくっています。
             </p>
           </Reveal>
+        </Container>
 
-          <Stagger className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
-            {events.photos.map((p) => (
-              <StaggerItem key={p.src}>
-                <figure className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-mist">
+        {/* 端から端まで横に流れる写真ストリップ（ホバーで一時停止） */}
+        <div className="marquee relative mt-12 overflow-hidden">
+          {/* 左右のフェード */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-fog to-transparent sm:w-24" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-fog to-transparent sm:w-24" />
+          <div className="marquee-track">
+            {[...events.photos, ...events.photos, ...events.photos].map(
+              (p, i) => (
+                <figure
+                  key={i}
+                  className="group relative mx-2 aspect-[4/3] h-36 shrink-0 overflow-hidden rounded-xl bg-mist sm:h-44"
+                >
                   <Image
                     src={p.src}
                     alt={p.alt}
                     fill
-                    sizes="(max-width: 640px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+                    sizes="240px"
+                    className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110"
                   />
-                  <span className="pointer-events-none absolute inset-0 bg-ink/0 transition-colors duration-500 group-hover:bg-ink/10" />
                 </figure>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </Container>
+              ),
+            )}
+          </div>
+        </div>
       </Section>
 
       <JoinCTA />
