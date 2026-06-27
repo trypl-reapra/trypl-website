@@ -7,7 +7,7 @@ import { useLenis } from "lenis/react";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/cn";
-import { nav, cta } from "@/data/site";
+import { site, nav, cta } from "@/data/site";
 
 type Theme = "light" | "dark";
 
@@ -74,25 +74,18 @@ export default function Nav() {
         )}
       >
         <nav className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-page">
-          <Link
-            href="/"
-            aria-label="TrypL ホーム（先頭へ）"
-            onClick={(e) => {
-              setOpen(false);
-              // すでにホームにいる場合は遷移せず先頭までスクロール。
-              if (pathname === "/") {
-                e.preventDefault();
-                if (lenis) lenis.scrollTo(0, { duration: 1.1 });
-                else window.scrollTo({ top: 0, behavior: "smooth" });
-              }
-            }}
+          {/* 通常リンク（<a>）にしてフルリロードでサイトのトップを開く。 */}
+          <a
+            href={site.url}
+            aria-label="TrypL ホーム"
+            onClick={() => setOpen(false)}
             className={cn(
               "relative z-50 transition-colors duration-500",
               dark ? "text-paper" : "text-ink",
             )}
           >
             <Logo tone={dark ? "paper" : "ink"} />
-          </Link>
+          </a>
 
           {/* desktop */}
           <div className="hidden items-center gap-9 md:flex">
