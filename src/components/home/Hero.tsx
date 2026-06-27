@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  RevealLines,
-  Reveal,
-  Parallax,
-  Magnetic,
-  ScrollFadeOut,
-} from "@/components/motion";
-import { RingsSvg, DashRing } from "@/components/decor";
+import { RevealLines, Reveal, Magnetic, ScrollFadeOut } from "@/components/motion";
 import { Button, Eyebrow } from "@/components/ui";
 import { useT } from "@/i18n/LocaleProvider";
 
@@ -15,56 +8,52 @@ export default function Hero() {
   const t = useT();
   return (
     <section
-      data-nav-theme="light"
-      className="relative flex min-h-[100svh] items-center overflow-hidden bg-paper px-page pb-20 pt-28 text-ink sm:pt-24"
+      data-nav-theme="dark"
+      className="relative flex min-h-[100svh] items-center overflow-hidden bg-ink px-page pb-20 pt-28 text-paper sm:pt-24"
     >
-      {/* faint geometric grid */}
-      <div className="pointer-events-none absolute inset-0 bg-grid bg-grid-fade opacity-[0.9]" />
-
-      {/* concentric rings, slow rotation + parallax drift */}
-      <Parallax
-        speed={0.12}
-        className="pointer-events-none absolute left-1/2 top-1/2 aspect-square w-[min(112vw,1000px)] -translate-x-1/2 -translate-y-1/2"
+      {/* ループ背景動画（イベントの様子から生成・無音） */}
+      <video
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        poster="/hero-poster.jpg"
+        aria-hidden="true"
       >
-        <div className="relative h-full w-full opacity-[0.85]">
-          <div className="absolute inset-0 animate-spin-slower text-ink">
-            <RingsSvg />
-          </div>
-          <div
-            className="absolute inset-0 animate-spin-slow text-ink [animation-direction:reverse]"
-          >
-            <DashRing />
-          </div>
-        </div>
-      </Parallax>
+        <source src="/hero.mp4" type="video/mp4" />
+      </video>
 
-      {/* top + bottom fade so rings melt into the page */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-paper to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-paper to-transparent" />
+      {/* 可読性のためのスクリム（左を濃く＋全体を少し暗く＋下端を締める） */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/55 to-ink/25" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-ink/30" />
+      {/* 微かな幾何グリッド */}
+      <div className="pointer-events-none absolute inset-0 bg-grid bg-grid-fade text-paper opacity-[0.12]" />
 
       <ScrollFadeOut className="relative z-10 mx-auto w-full min-w-0 max-w-[1280px]">
         <div className="min-w-0 max-w-3xl">
-          <Eyebrow>{t.hero.eyebrow}</Eyebrow>
+          <Eyebrow className="text-paper/70">{t.hero.eyebrow}</Eyebrow>
 
-          <h1 className="mt-6 font-jp text-[clamp(2.35rem,6.4vw,5.25rem)] font-bold leading-[1.04] tracking-[-0.03em]">
+          <h1 className="mt-6 font-jp text-[clamp(2.35rem,6.4vw,5.25rem)] font-bold leading-[1.04] tracking-[-0.03em] text-paper [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]">
             <RevealLines immediate lines={t.hero.title} delay={0.05} />
           </h1>
 
           <Reveal immediate delay={0.4}>
-            <p className="mt-7 max-w-xl text-base leading-[1.9] text-mute sm:text-lg">
+            <p className="mt-7 max-w-xl text-base leading-[1.9] text-paper/85 sm:text-lg">
               {t.hero.lead1}
             </p>
           </Reveal>
 
           <Reveal immediate delay={0.5}>
-            <p className="mt-5 max-w-xl text-base leading-[1.9] text-mute sm:text-lg">
+            <p className="mt-5 max-w-xl text-base leading-[1.9] text-paper/85 sm:text-lg">
               {t.hero.lead2}
             </p>
           </Reveal>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Magnetic>
-              <Button href="/internships" size="lg">
+              <Button href="/internships" variant="inverse" size="lg">
                 {t.hero.seeInternships}
                 <svg
                   viewBox="0 0 24 24"
@@ -82,7 +71,7 @@ export default function Hero() {
                 </svg>
               </Button>
             </Magnetic>
-            <Button href="/about" variant="outline" size="lg">
+            <Button href="/about" variant="outline-invert" size="lg">
               {t.hero.aboutLink}
             </Button>
           </div>
@@ -90,10 +79,10 @@ export default function Hero() {
       </ScrollFadeOut>
 
       {/* scroll cue */}
-      <div className="pointer-events-none absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-3 text-mute sm:flex">
+      <div className="pointer-events-none absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-3 text-paper/70 sm:flex">
         <span className="eyebrow text-[0.625rem]">{t.scroll}</span>
-        <span className="relative block h-10 w-px overflow-hidden bg-line">
-          <span className="animate-cue absolute inset-x-0 top-0 h-4 bg-ink" />
+        <span className="relative block h-10 w-px overflow-hidden bg-paper/25">
+          <span className="animate-cue absolute inset-x-0 top-0 h-4 bg-paper" />
         </span>
       </div>
     </section>
