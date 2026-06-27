@@ -111,7 +111,7 @@ export default function EventsPage() {
         </Container>
 
         {/* 端から端まで横に流れる写真ストリップ（ホバーで一時停止） */}
-        <div className="marquee relative mt-12 overflow-hidden">
+        <Reveal className="marquee relative mt-12 overflow-hidden">
           {/* 左右のフェード */}
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-fog to-transparent sm:w-24" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-fog to-transparent sm:w-24" />
@@ -133,7 +133,7 @@ export default function EventsPage() {
               ),
             )}
           </div>
-        </div>
+        </Reveal>
       </Section>
 
       <JoinCTA />

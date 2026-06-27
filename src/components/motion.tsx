@@ -24,6 +24,8 @@ export function Reveal({
   y = 28,
   once = true,
   immediate = false,
+  scale = false,
+  blur = false,
 }: {
   children: ReactNode;
   className?: string;
@@ -33,6 +35,10 @@ export function Reveal({
   /** ファーストビュー固定の要素（ヒーロー等）はマウント時に必ず再生する。
    *  スクロールで入ってくる要素はビューポート検知で再生する。 */
   immediate?: boolean;
+  /** Apple ライクな軽いスケールイン（画像・カード向け）。 */
+  scale?: boolean;
+  /** ぼかし → くっきり（被写体の登場演出）。 */
+  blur?: boolean;
 }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
@@ -41,14 +47,49 @@ export function Reveal({
   const inView = useInView(ref, { once, margin: "0px 0px -12% 0px" });
   const show = immediate || inView;
   if (reduce) return <div className={className}>{children}</div>;
+  const hidden = {
+    opacity: 0,
+    y,
+    scale: scale ? 0.94 : 1,
+    filter: blur ? "blur(14px)" : "blur(0px)",
+  };
+  const shown = { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" };
   return (
     <motion.div
       ref={ref}
       className={className}
-      initial={{ opacity: 0, y }}
-      animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y }}
-      transition={{ duration: 0.85, ease: EASE, delay }}
+      initial={hidden}
+      animate={show ? shown : hidden}
+      transition={{ duration: blur ? 1.05 : 0.85, ease: EASE, delay }}
     >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ----------------------------------------------------- ScrollFadeOut */
+/** スクロールで上方へ抜けるときに、内容をふわっと薄れさせて少し縮める。
+ *  Apple のヒーローが次のセクションへ溶けるように消える挙動に寄せている。 */
+
+export function ScrollFadeOut({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
+  if (reduce) return <div className={className}>{children}</div>;
+  return (
+    <motion.div ref={ref} style={{ opacity, y, scale }} className={className}>
       {children}
     </motion.div>
   );
@@ -104,8 +145,13 @@ const staggerParent: Variants = {
   show: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
 };
 const staggerChild: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE } },
+  hidden: { opacity: 0, y: 24, scale: 0.97 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.8, ease: EASE },
+  },
 };
 
 export function Stagger({

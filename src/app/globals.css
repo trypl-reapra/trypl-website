@@ -6,13 +6,19 @@
    ============================================================ */
 
 @theme inline {
-  /* Type families. Latin glyphs resolve to the Latin font first,
-     Japanese glyphs fall through to Zen Kaku Gothic New. */
-  --font-sans: var(--font-inter), var(--font-zen), ui-sans-serif, system-ui,
-    -apple-system, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
-  --font-display: var(--font-space), var(--font-zen), var(--font-inter),
-    ui-sans-serif, system-ui, sans-serif;
-  --font-jp: var(--font-zen), var(--font-inter), ui-sans-serif, sans-serif;
+  /* Type families — Apple を踏襲し、まず San Francisco（Apple のシステム
+     フォント）と日本語の Hiragino / Yu Gothic を優先。非 Apple 環境では
+     next/font の Inter / Zen Kaku Gothic にフォールバックする。 */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "SF Pro Display", var(--font-inter), "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", Meiryo,
+    var(--font-zen), system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    var(--font-inter), "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic", var(--font-zen), system-ui, sans-serif;
+  --font-jp: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Bold",
+    "Yu Gothic", var(--font-zen), -apple-system, BlinkMacSystemFont,
+    var(--font-inter), sans-serif;
 
   /* Monochrome scale */
   --color-paper: #ffffff;
@@ -56,8 +62,12 @@
     color: var(--color-ink);
     font-family: var(--font-sans);
     font-feature-settings: "palt" 1; /* tighter JP kerning */
-    letter-spacing: 0.01em;
-    line-height: 1.7;
+    /* Apple ライクな締まった字面と滑らかな描画。 */
+    letter-spacing: -0.003em;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     overflow-x: hidden;
   }
 

@@ -1,4 +1,10 @@
-import { RevealLines, Reveal, Parallax, Magnetic } from "@/components/motion";
+import {
+  RevealLines,
+  Reveal,
+  Parallax,
+  Magnetic,
+  ScrollFadeOut,
+} from "@/components/motion";
 import { RingsSvg, DashRing } from "@/components/decor";
 import { Button, Eyebrow } from "@/components/ui";
 
@@ -32,7 +38,7 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-paper to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-paper to-transparent" />
 
-      <div className="relative z-10 mx-auto w-full min-w-0 max-w-[1280px]">
+      <ScrollFadeOut className="relative z-10 mx-auto w-full min-w-0 max-w-[1280px]">
         <div className="min-w-0 max-w-3xl">
           <Eyebrow>REAPRA発・実践型コミュニティ</Eyebrow>
 
@@ -81,7 +87,7 @@ export default function Hero() {
             </Button>
           </div>
         </div>
-      </div>
+      </ScrollFadeOut>
 
       {/* scroll cue */}
       <div className="pointer-events-none absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-3 text-mute sm:flex">

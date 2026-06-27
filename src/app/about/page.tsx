@@ -162,7 +162,7 @@ export default function AboutPage() {
             </div>
 
             {/* large portrait, top-aligned with the heading */}
-            <Reveal className="order-1 lg:order-2 lg:sticky lg:top-28">
+            <Reveal scale blur className="order-1 lg:order-2 lg:sticky lg:top-28">
               <figure>
                 <Image
                   src={representative.photo!}
