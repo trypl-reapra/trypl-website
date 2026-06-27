@@ -137,37 +137,39 @@ export default function AboutPage() {
       {/* Message — 代表メッセージ */}
       <Section tone="fog">
         <Container>
-          <Eyebrow>Message · 代表メッセージ</Eyebrow>
-          <Reveal>
-            <h2 className="mt-7 max-w-3xl font-jp text-[clamp(1.7rem,4vw,3rem)] font-bold leading-[1.4] tracking-[-0.02em]">
-              {representativeMessage.title}
-            </h2>
-          </Reveal>
-
-          <div className="mt-14 grid items-start gap-10 lg:grid-cols-[1.35fr_0.65fr] lg:gap-16">
-            {/* greeting text */}
-            <div className="order-2 max-w-2xl lg:order-1">
-              {representativeMessage.body.map((p, i) => (
-                <Reveal key={i} delay={0.05 + i * 0.05}>
-                  <p
-                    className={
-                      "leading-[1.95] text-mute" + (i > 0 ? " mt-6" : "")
-                    }
-                  >
-                    {p}
-                  </p>
-                </Reveal>
-              ))}
+          <div className="grid items-start gap-12 lg:grid-cols-[1fr_0.82fr] lg:gap-20">
+            {/* eyebrow + heading + greeting */}
+            <div className="order-2 lg:order-1">
+              <Eyebrow>Message · 代表メッセージ</Eyebrow>
+              <Reveal>
+                <h2 className="mt-7 font-jp text-[clamp(1.6rem,3.4vw,2.6rem)] font-bold leading-[1.45] tracking-[-0.02em]">
+                  {representativeMessage.title}
+                </h2>
+              </Reveal>
+              <div className="mt-8 max-w-2xl">
+                {representativeMessage.body.map((p, i) => (
+                  <Reveal key={i} delay={0.05 + i * 0.05}>
+                    <p
+                      className={
+                        "leading-[1.95] text-mute" + (i > 0 ? " mt-6" : "")
+                      }
+                    >
+                      {p}
+                    </p>
+                  </Reveal>
+                ))}
+              </div>
             </div>
 
-            {/* large portrait */}
-            <Reveal className="order-1 lg:order-2" delay={0.1}>
+            {/* large portrait, top-aligned with the heading */}
+            <Reveal className="order-1 lg:order-2 lg:sticky lg:top-28">
               <figure>
                 <Image
                   src={representative.photo!}
                   alt={representative.name}
-                  width={800}
-                  height={800}
+                  width={900}
+                  height={1080}
+                  priority
                   className="aspect-[4/5] w-full rounded-3xl object-cover"
                 />
                 <figcaption className="mt-5">

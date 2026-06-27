@@ -4,7 +4,7 @@ import { Button, Eyebrow } from "@/components/ui";
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-paper text-ink">
+    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-paper px-page pb-20 pt-28 text-ink sm:pt-24">
       {/* faint geometric grid */}
       <div className="pointer-events-none absolute inset-0 bg-grid bg-grid-fade opacity-[0.9]" />
 
@@ -29,11 +29,11 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-paper to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-paper to-transparent" />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1280px] px-page">
-        <div className="max-w-4xl">
+      <div className="relative z-10 mx-auto w-full min-w-0 max-w-[1280px]">
+        <div className="min-w-0 max-w-3xl">
           <Eyebrow>REAPRA発・実践型コミュニティ</Eyebrow>
 
-          <h1 className="mt-7 font-jp text-[clamp(2.7rem,9vw,7.5rem)] font-bold leading-[0.98] tracking-[-0.03em]">
+          <h1 className="mt-6 font-jp text-[clamp(2.35rem,6.4vw,5.25rem)] font-bold leading-[1.04] tracking-[-0.03em]">
             <RevealLines
               immediate
               lines={["社会とつながり、", "やりながら学ぶ。"]}
@@ -41,18 +41,14 @@ export default function Hero() {
             />
           </h1>
 
-          <RevealLines
-            immediate
-            className="mt-8 max-w-xl text-base leading-relaxed text-mute sm:text-lg"
-            delay={0.45}
-            lines={[
-              "「何者かになりたい」と願う。未知の世界に足を踏み入れる。",
-              "社会の肌触りを感じながら、仲間と共に問い続ける。",
-            ]}
-          />
+          <Reveal immediate delay={0.4}>
+            <p className="mt-7 max-w-xl text-base leading-[1.9] text-mute sm:text-lg">
+              「何者かになりたい」と願う。未知の世界に足を踏み入れる。社会の肌触りを感じながら、仲間と共に問い続ける。
+            </p>
+          </Reveal>
 
-          <Reveal immediate delay={0.6}>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-mute sm:text-lg">
+          <Reveal immediate delay={0.5}>
+            <p className="mt-5 max-w-xl text-base leading-[1.9] text-mute sm:text-lg">
               TrypL（トリプル）は、学生の「やりたい」を「実践」に変え、社会と接続するためのコミュニティです。私たちは、一人ひとりの内発的な動機を大切にしながら、共に未来を切り拓く場を提供します。
             </p>
           </Reveal>
