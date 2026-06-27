@@ -8,7 +8,10 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden bg-ink text-paper-dim">
+    <footer
+      data-nav-theme="dark"
+      className="relative overflow-hidden bg-ink text-paper-dim"
+    >
       {/* 巨大な幾何マーク（薄く） */}
       <div className="pointer-events-none absolute -right-24 -top-24 h-[360px] w-[360px] opacity-[0.05]">
         <LogoMark tone="paper" className="h-full w-full" />

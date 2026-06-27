@@ -4,7 +4,10 @@ import { Button, Eyebrow } from "@/components/ui";
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-paper px-page pb-20 pt-28 text-ink sm:pt-24">
+    <section
+      data-nav-theme="light"
+      className="relative flex min-h-[100svh] items-center overflow-hidden bg-paper px-page pb-20 pt-28 text-ink sm:pt-24"
+    >
       {/* faint geometric grid */}
       <div className="pointer-events-none absolute inset-0 bg-grid bg-grid-fade opacity-[0.9]" />
 

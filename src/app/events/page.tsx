@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import PageHeader from "@/components/PageHeader";
 import JoinCTA from "@/components/home/JoinCTA";
 import { Container, Section, Button, Eyebrow } from "@/components/ui";
@@ -87,6 +88,40 @@ export default function EventsPage() {
               <StaggerItem key={k.title} className="bg-paper p-8 sm:p-10">
                 <h3 className="font-jp text-xl font-bold">{k.title}</h3>
                 <p className="mt-4 text-sm leading-relaxed text-mute">{k.body}</p>
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </Container>
+      </Section>
+
+      {/* Gallery — イベントの様子 */}
+      <Section tone="fog">
+        <Container>
+          <Eyebrow>Gallery · イベントの様子</Eyebrow>
+          <Reveal>
+            <h2 className="mt-7 font-jp text-[clamp(1.8rem,4.5vw,3rem)] font-bold tracking-[-0.02em]">
+              これまでの開催から。
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="mt-6 max-w-2xl leading-relaxed text-mute">
+              発表、対話、交流。実際の現場に触れながら、仲間とともに学び合う場をつくっています。
+            </p>
+          </Reveal>
+
+          <Stagger className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
+            {events.photos.map((p) => (
+              <StaggerItem key={p.src}>
+                <figure className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-mist">
+                  <Image
+                    src={p.src}
+                    alt={p.alt}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+                  />
+                  <span className="pointer-events-none absolute inset-0 bg-ink/0 transition-colors duration-500 group-hover:bg-ink/10" />
+                </figure>
               </StaggerItem>
             ))}
           </Stagger>

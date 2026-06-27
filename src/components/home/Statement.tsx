@@ -22,7 +22,10 @@ const pillars = [
 
 export default function Statement() {
   return (
-    <section className="relative overflow-hidden bg-ink text-paper-dim">
+    <section
+      data-nav-theme="dark"
+      className="relative overflow-hidden bg-ink text-paper-dim"
+    >
       {/* brand words marquee, edge to edge */}
       <div className="border-b border-line-dark py-7 text-paper">
         <Marquee

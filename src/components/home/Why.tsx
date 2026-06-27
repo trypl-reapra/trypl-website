@@ -10,7 +10,7 @@ const shifts = [
 
 export default function Why() {
   return (
-    <section className="bg-fog text-ink">
+    <section data-nav-theme="light" className="bg-fog text-ink">
       <Container className="py-24 sm:py-32 lg:py-40">
         <div className="grid gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
           <div>

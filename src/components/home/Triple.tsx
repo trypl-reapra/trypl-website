@@ -34,7 +34,7 @@ export default function Triple() {
   /* reduced-motion / no-JS friendly: static three columns */
   if (reduce) {
     return (
-      <section className="bg-paper text-ink">
+      <section data-nav-theme="light" className="bg-paper text-ink">
         <Container className="py-24 sm:py-32">
           <Eyebrow>The name · TrypL</Eyebrow>
           <h2 className="mt-7 font-jp text-[clamp(1.9rem,5vw,3.5rem)] font-bold tracking-[-0.02em]">
@@ -59,6 +59,7 @@ export default function Triple() {
   return (
     <section
       ref={ref}
+      data-nav-theme="light"
       className="relative bg-paper text-ink"
       style={{ height: `${n * 100}vh` }}
     >

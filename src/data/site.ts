@@ -34,6 +34,13 @@ export const cta = { label: "参加する", href: "/join" } as const;
 /** イベント情報。Luma で参加受付・カレンダーを公開している。 */
 export const events = {
   lumaUrl: "https://luma.com/55yk6nif",
+  /** 過去開催の様子（public/events 配下）。 */
+  photos: [
+    { src: "/events/event-1.jpg", alt: "TrypL イベントでの発表の様子" },
+    { src: "/events/event-3.jpg", alt: "TrypL イベントでのグループ対話の様子" },
+    { src: "/events/event-2.jpg", alt: "TrypL イベントでの発表・質疑の様子" },
+    { src: "/events/event-4.jpg", alt: "TrypL イベントでの交流の様子" },
+  ],
 } as const;
 
 /** 名前に込めた3つの意味（3つのL） */

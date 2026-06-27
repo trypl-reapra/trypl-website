@@ -4,7 +4,10 @@ import { Button, Container, Eyebrow } from "@/components/ui";
 
 export default function JoinCTA() {
   return (
-    <section className="relative overflow-hidden bg-ink text-paper-dim">
+    <section
+      data-nav-theme="dark"
+      className="relative overflow-hidden bg-ink text-paper-dim"
+    >
       {/* faint rings */}
       <Parallax
         speed={0.1}

@@ -80,7 +80,10 @@ function LinkRow({
 
 export default function LinksPage() {
   return (
-    <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-paper px-page pb-20 pt-28 text-ink">
+    <section
+      data-nav-theme="light"
+      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-paper px-page pb-20 pt-28 text-ink"
+    >
       <div className="pointer-events-none absolute inset-0 bg-grid bg-grid-fade opacity-50" />
 
       <div className="relative w-full max-w-lg">

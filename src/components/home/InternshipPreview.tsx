@@ -7,7 +7,7 @@ export default function InternshipPreview() {
   const items = getAllInternships().slice(0, 3);
 
   return (
-    <section className="bg-paper text-ink">
+    <section data-nav-theme="light" className="bg-paper text-ink">
       <Container className="py-24 sm:py-32 lg:py-40">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-xl">

@@ -3,7 +3,7 @@ import { Container, Eyebrow } from "@/components/ui";
 
 export default function Who() {
   return (
-    <section className="bg-ink text-paper-dim">
+    <section data-nav-theme="dark" className="bg-ink text-paper-dim">
       <Container className="py-24 sm:py-32 lg:py-40">
         <Eyebrow className="text-mute-dark">Who · 求める人物像</Eyebrow>
 

@@ -43,6 +43,7 @@ export function Section({
   return (
     <section
       id={id}
+      data-nav-theme={tone === "dark" ? "dark" : "light"}
       className={cn(
         "relative scroll-mt-24 pb-24 sm:pb-32 lg:pb-40",
         topPad && "pt-24 sm:pt-32 lg:pt-40",

@@ -13,7 +13,10 @@ export default function PageHeader({
 }) {
   const lines = Array.isArray(title) ? title : [title];
   return (
-    <section className="relative overflow-hidden bg-paper pb-16 pt-36 text-ink sm:pb-24 sm:pt-44">
+    <section
+      data-nav-theme="light"
+      className="relative overflow-hidden bg-paper pb-16 pt-36 text-ink sm:pb-24 sm:pt-44"
+    >
       <div className="pointer-events-none absolute inset-0 bg-grid bg-grid-fade opacity-60" />
       <Container className="relative">
         <Eyebrow>{eyebrow}</Eyebrow>

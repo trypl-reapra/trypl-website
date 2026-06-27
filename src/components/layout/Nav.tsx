@@ -9,9 +9,13 @@ import { Logo } from "@/components/logo";
 import { cn } from "@/lib/cn";
 import { nav, cta } from "@/data/site";
 
+type Theme = "light" | "dark";
+
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  // 背後にあるセクションの明暗（data-nav-theme）に追従する配色テーマ。
+  const [theme, setTheme] = useState<Theme>("light");
   const pathname = usePathname();
   const lenis = useLenis();
 
@@ -21,6 +25,28 @@ export default function Nav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // ナビ直下（ビューポート最上部）に来ているセクションの明暗を検知して配色を切替。
+  useEffect(() => {
+    const targets = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-nav-theme]"),
+    );
+    if (!targets.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            const t = (e.target as HTMLElement).dataset.navTheme;
+            if (t === "dark" || t === "light") setTheme(t);
+          }
+        });
+      },
+      // ビューポート最上部の細いラインに交差したセクションを「ナビの背後」とみなす。
+      { rootMargin: "0px 0px -100% 0px", threshold: 0 },
+    );
+    targets.forEach((t) => io.observe(t));
+    return () => io.disconnect();
+  }, [pathname]);
 
   // ルート変更でメニューを閉じる
   useEffect(() => setOpen(false), [pathname]);
@@ -32,23 +58,31 @@ export default function Nav() {
     else lenis.start();
   }, [open, lenis]);
 
+  const dark = theme === "dark" && !open;
+
   return (
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500",
-          scrolled || open
-            ? "border-b border-line/80 bg-paper/75 backdrop-blur-xl"
-            : "border-b border-transparent bg-transparent",
+          "fixed inset-x-0 top-0 z-50 border-b transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          scrolled || open ? "backdrop-blur-xl" : "backdrop-blur-0",
+          scrolled && !open
+            ? dark
+              ? "border-paper/10 bg-ink/40"
+              : "border-ink/10 bg-paper/55"
+            : "border-transparent bg-transparent",
         )}
       >
         <nav className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-page">
           <Link
             href="/"
             aria-label="TrypL ホーム"
-            className="relative z-50 text-ink"
+            className={cn(
+              "relative z-50 transition-colors duration-500",
+              dark ? "text-paper" : "text-ink",
+            )}
           >
-            <Logo />
+            <Logo tone={dark ? "paper" : "ink"} />
           </Link>
 
           {/* desktop */}
@@ -58,8 +92,11 @@ export default function Nav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "link-underline text-sm text-ink/80 transition-colors hover:text-ink",
-                  pathname === item.href && "text-ink",
+                  "link-underline text-sm transition-colors duration-500",
+                  dark
+                    ? "text-paper/75 hover:text-paper"
+                    : "text-ink/80 hover:text-ink",
+                  pathname === item.href && (dark ? "text-paper" : "text-ink"),
                 )}
               >
                 {item.label}
@@ -67,7 +104,12 @@ export default function Nav() {
             ))}
             <Link
               href={cta.href}
-              className="inline-flex h-9 items-center rounded-full bg-ink px-5 text-sm font-medium text-paper transition-colors hover:bg-ink-soft"
+              className={cn(
+                "inline-flex h-9 items-center rounded-full px-5 text-sm font-medium transition-colors duration-500",
+                dark
+                  ? "bg-paper text-ink hover:bg-fog"
+                  : "bg-ink text-paper hover:bg-ink-soft",
+              )}
             >
               {cta.label}
             </Link>
@@ -84,13 +126,15 @@ export default function Nav() {
             <span className="relative block h-3 w-6">
               <span
                 className={cn(
-                  "absolute left-0 block h-[1.5px] w-6 bg-ink transition-all duration-300",
+                  "absolute left-0 block h-[1.5px] w-6 transition-all duration-300",
+                  open || dark ? "bg-paper" : "bg-ink",
                   open ? "top-1/2 -translate-y-1/2 rotate-45" : "top-0",
                 )}
               />
               <span
                 className={cn(
-                  "absolute bottom-0 left-0 block h-[1.5px] w-6 bg-ink transition-all duration-300",
+                  "absolute bottom-0 left-0 block h-[1.5px] w-6 transition-all duration-300",
+                  open || dark ? "bg-paper" : "bg-ink",
                   open ? "bottom-1/2 translate-y-1/2 -rotate-45" : "",
                 )}
               />

@@ -4,6 +4,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
+import ScrollProgress from "@/components/layout/ScrollProgress";
 import { site } from "@/data/site";
 
 const inter = Inter({
@@ -79,6 +80,7 @@ export default function RootLayout({
           本文へスキップ
         </a>
         <SmoothScroll>
+          <ScrollProgress />
           <Nav />
           <main id="main">{children}</main>
           <Footer />
