@@ -10,6 +10,7 @@ import { cookies } from "next/headers";
 
 const SECRET = process.env.AUTH_SECRET || "trypl-insecure-dev-secret";
 const ADMIN_PW = process.env.ADMIN_PASSWORD || "";
+const ADMIN_USER = process.env.ADMIN_USERNAME || "admin";
 const MEMBER_PW = process.env.MEMBER_PASSWORD || "";
 
 export type Role = "admin" | "member";
@@ -22,10 +23,21 @@ function safeEq(a: string, b: string): boolean {
   return timingSafeEqual(ab, bb);
 }
 
-export function checkPassword(role: Role, pw: string): boolean {
-  const expected = role === "admin" ? ADMIN_PW : MEMBER_PW;
-  if (!expected) return false;
-  return safeEq(pw, expected);
+/**
+ * 1つのログインフォームで判定する。
+ * - 管理者ユーザー名＋管理者パスワードが一致 → admin
+ * - それ以外でメンバー用パスワードが一致 → member（ユーザー名は任意）
+ */
+export function authenticate(username: string, password: string): Role | null {
+  if (
+    ADMIN_PW &&
+    safeEq(username.trim(), ADMIN_USER) &&
+    safeEq(password, ADMIN_PW)
+  ) {
+    return "admin";
+  }
+  if (MEMBER_PW && safeEq(password, MEMBER_PW)) return "member";
+  return null;
 }
 
 export function sign(role: Role): string {

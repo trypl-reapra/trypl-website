@@ -31,18 +31,37 @@ export type AdminInternship = {
   createdAt: string;
 };
 
+/** 既存（コード管理）の募集に対する上書き。slug をキーに保存。 */
+export type Override = Partial<{
+  hidden: boolean;
+  company: string;
+  title: string;
+  location: string;
+  compensation: string;
+  summary: string;
+  applyUrl: string;
+}>;
+
 const KV_URL = process.env.KV_REST_API_URL;
 const KV_TOKEN = process.env.KV_REST_API_TOKEN;
 const useKV = !!(KV_URL && KV_TOKEN);
 
 const K_CONTACTS = "trypl:contacts";
 const K_INTERNSHIPS = "trypl:internships";
+const K_OVERRIDES = "trypl:overrides";
 
-// ---- in-memory fallback (per serverless instance) ----
-const mem: { contacts: Contact[]; internships: AdminInternship[] } = {
-  contacts: [],
-  internships: [],
+// ---- in-memory fallback ----
+// globalThis に載せて、同一プロセス内の別バンドル（API ルートとページ等）でも
+// 同じ状態を共有する。※プロセスを跨ぐ恒久共有には KV が必要。
+type Mem = {
+  contacts: Contact[];
+  internships: AdminInternship[];
+  overrides: Record<string, Override>;
 };
+const g = globalThis as unknown as { __tryplMem?: Mem };
+const mem: Mem =
+  g.__tryplMem ??
+  (g.__tryplMem = { contacts: [], internships: [], overrides: {} });
 
 async function kv(command: (string | number)[]): Promise<unknown> {
   const res = await fetch(KV_URL!, {
@@ -149,6 +168,39 @@ export async function setInternshipHidden(
     i.id === id ? { ...i, hidden } : i,
   );
   await saveAllInternships(items);
+}
+
+export async function updateInternship(
+  id: string,
+  patch: Partial<Omit<AdminInternship, "id" | "createdAt">>,
+): Promise<void> {
+  const items = (await listAdminInternships()).map((i) =>
+    i.id === id ? { ...i, ...patch } : i,
+  );
+  await saveAllInternships(items);
+}
+
+/* -------------------------------------- overrides (code internships) */
+
+export async function getOverrides(): Promise<Record<string, Override>> {
+  if (useKV) {
+    const raw = (await kv(["GET", K_OVERRIDES])) as string | null;
+    return raw ? (JSON.parse(raw) as Record<string, Override>) : {};
+  }
+  return mem.overrides;
+}
+
+export async function setOverride(
+  slug: string,
+  patch: Override,
+): Promise<void> {
+  const all = await getOverrides();
+  const next = { ...all, [slug]: { ...all[slug], ...patch } };
+  if (useKV) {
+    await kv(["SET", K_OVERRIDES, JSON.stringify(next)]);
+  } else {
+    mem.overrides = next;
+  }
 }
 
 export const storeMode = useKV ? "kv" : "memory";

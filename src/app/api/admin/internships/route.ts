@@ -3,12 +3,28 @@ import { currentRole } from "@/lib/auth";
 import {
   addInternship,
   deleteInternship,
+  getOverrides,
   listAdminInternships,
-  setInternshipHidden,
+  setOverride,
+  updateInternship,
+  type Override,
 } from "@/lib/store";
+import { getAllInternships } from "@/data/internships";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+type Row = {
+  source: "code" | "admin";
+  key: string;
+  company: string;
+  title: string;
+  location: string;
+  compensation: string;
+  summary: string;
+  applyUrl: string;
+  hidden: boolean;
+};
 
 async function guard() {
   return (await currentRole()) === "admin";
@@ -17,7 +33,35 @@ async function guard() {
 export async function GET() {
   if (!(await guard()))
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  return NextResponse.json({ internships: await listAdminInternships() });
+
+  const overrides = await getOverrides();
+  const code: Row[] = getAllInternships().map((i) => {
+    const ov = overrides[i.slug] ?? {};
+    return {
+      source: "code",
+      key: i.slug,
+      company: ov.company ?? i.company,
+      title: ov.title ?? i.title,
+      location: ov.location ?? i.location,
+      compensation: ov.compensation ?? i.compensation,
+      summary: ov.summary ?? i.summary,
+      applyUrl: ov.applyUrl ?? i.applyUrl,
+      hidden: !!ov.hidden,
+    };
+  });
+  const admin: Row[] = (await listAdminInternships()).map((a) => ({
+    source: "admin",
+    key: a.id,
+    company: a.company,
+    title: a.title,
+    location: a.location,
+    compensation: a.compensation,
+    summary: a.summary,
+    applyUrl: a.applyUrl,
+    hidden: a.hidden,
+  }));
+
+  return NextResponse.json({ admin, code });
 }
 
 export async function POST(req: Request) {
@@ -42,23 +86,44 @@ export async function POST(req: Request) {
   return NextResponse.json({ ok: true, item });
 }
 
+function cleanPatch(b: Record<string, unknown>): Override {
+  const p: Override = {};
+  if (typeof b.hidden === "boolean") p.hidden = b.hidden;
+  for (const f of [
+    "company",
+    "title",
+    "location",
+    "compensation",
+    "summary",
+    "applyUrl",
+  ] as const) {
+    if (typeof b[f] === "string") p[f] = (b[f] as string).slice(0, 1000);
+  }
+  return p;
+}
+
 export async function PATCH(req: Request) {
   if (!(await guard()))
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const b = (await req.json().catch(() => ({}))) as {
-    id?: string;
-    hidden?: boolean;
-  };
-  if (!b.id) return NextResponse.json({ error: "id が必要です" }, { status: 400 });
-  await setInternshipHidden(b.id, !!b.hidden);
+  const b = (await req.json().catch(() => ({}))) as Record<string, unknown>;
+  const source = b.source;
+  const key = String(b.key ?? "");
+  if (!key || (source !== "code" && source !== "admin"))
+    return NextResponse.json({ error: "不正なリクエストです" }, { status: 400 });
+  const patch = cleanPatch(b);
+  if (source === "code") await setOverride(key, patch);
+  else await updateInternship(key, patch);
   return NextResponse.json({ ok: true });
 }
 
 export async function DELETE(req: Request) {
   if (!(await guard()))
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const b = (await req.json().catch(() => ({}))) as { id?: string };
-  if (!b.id) return NextResponse.json({ error: "id が必要です" }, { status: 400 });
-  await deleteInternship(b.id);
+  const b = (await req.json().catch(() => ({}))) as Record<string, unknown>;
+  const source = b.source;
+  const key = String(b.key ?? "");
+  if (!key) return NextResponse.json({ error: "key が必要です" }, { status: 400 });
+  if (source === "admin") await deleteInternship(key);
+  else await setOverride(key, { hidden: true });
   return NextResponse.json({ ok: true });
 }

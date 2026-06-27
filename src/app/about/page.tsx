@@ -5,7 +5,7 @@ import JoinCTA from "@/components/home/JoinCTA";
 import { Container, Section, Eyebrow } from "@/components/ui";
 import { Reveal, RevealLines, Stagger, StaggerItem } from "@/components/motion";
 import { triple } from "@/data/site";
-import { representative, representativeMessage, milestones } from "@/data/team";
+import { representative, representativeMessage } from "@/data/team";
 
 export const metadata: Metadata = {
   title: "TrypLとは",
@@ -190,29 +190,6 @@ export default function AboutPage() {
               </figure>
             </Reveal>
           </div>
-        </Container>
-      </Section>
-
-      {/* Roadmap */}
-      <Section tone="light">
-        <Container>
-          <Eyebrow>Roadmap</Eyebrow>
-          <Reveal>
-            <h2 className="mt-7 font-jp text-[clamp(1.9rem,5vw,3.5rem)] font-bold tracking-[-0.02em]">
-              これからの歩み
-            </h2>
-          </Reveal>
-          <Stagger className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-line bg-line lg:grid-cols-4">
-            {milestones.map((m) => (
-              <StaggerItem key={m.phase} className="bg-paper p-7 sm:p-8">
-                <span className="font-display text-xs tracking-widest text-mute">
-                  {m.phase}
-                </span>
-                <h3 className="mt-5 text-lg font-semibold">{m.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-mute">{m.body}</p>
-              </StaggerItem>
-            ))}
-          </Stagger>
         </Container>
       </Section>
 

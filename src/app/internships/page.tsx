@@ -8,7 +8,7 @@ import {
   getUsedCategories,
   type Internship,
 } from "@/data/internships";
-import { listPublicAdminInternships } from "@/lib/store";
+import { getOverrides, listPublicAdminInternships } from "@/lib/store";
 import { site } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -21,7 +21,11 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function InternshipsPage() {
-  const adminItems = await listPublicAdminInternships();
+  const [adminItems, overrides] = await Promise.all([
+    listPublicAdminInternships(),
+    getOverrides(),
+  ]);
+
   const mapped: Internship[] = adminItems.map((a) => ({
     slug: `admin-${a.id}`,
     company: a.company,
@@ -44,7 +48,26 @@ export default async function InternshipsPage() {
     postedAt: a.createdAt.slice(0, 10),
     featured: false,
   }));
-  const items = [...mapped, ...getAllInternships()].sort((x, y) =>
+
+  // 既存（コード）募集に管理画面の上書き（非表示・編集）を適用。
+  const codeItems = getAllInternships()
+    .filter((i) => !overrides[i.slug]?.hidden)
+    .map((i) => {
+      const ov = overrides[i.slug];
+      return ov
+        ? {
+            ...i,
+            company: ov.company ?? i.company,
+            title: ov.title ?? i.title,
+            location: ov.location ?? i.location,
+            compensation: ov.compensation ?? i.compensation,
+            summary: ov.summary ?? i.summary,
+            applyUrl: ov.applyUrl ?? i.applyUrl,
+          }
+        : i;
+    });
+
+  const items = [...mapped, ...codeItems].sort((x, y) =>
     y.postedAt.localeCompare(x.postedAt),
   );
   const categories = getUsedCategories();

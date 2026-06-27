@@ -4,13 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { LogoMark } from "@/components/logo";
-import { cn } from "@/lib/cn";
-
-type Role = "member" | "admin";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [role, setRole] = useState<Role>("member");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "error">("idle");
   const [error, setError] = useState("");
@@ -23,17 +20,20 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role, password }),
+        body: JSON.stringify({ username, password }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "ログインに失敗しました");
-      router.push(role === "admin" ? "/admin" : "/members");
+      router.push(data.role === "admin" ? "/admin" : "/members");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "ログインに失敗しました");
       setState("error");
     }
   }
+
+  const inputCls =
+    "w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm outline-none transition-colors focus:border-ink";
 
   return (
     <section
@@ -48,44 +48,38 @@ export default function LoginPage() {
         className="relative w-full max-w-sm"
       >
         <div className="flex flex-col items-center text-center">
-          <LogoMark className="h-11 w-11" />
+          <span className="eyebrow text-mute">Members only</span>
+          <LogoMark className="mt-5 h-11 w-11" />
           <h1 className="mt-5 font-jp text-2xl font-bold tracking-tight">
-            メンバーログイン
+            メンバー限定ログイン
           </h1>
-          <p className="mt-2 text-sm text-mute">
-            TrypL メンバー / 運営者向けのログインです。
+          <p className="mt-3 text-sm leading-relaxed text-mute">
+            TrypL のメンバーになった方だけがアクセスできる、限定エリアです。
           </p>
         </div>
 
-        {/* role toggle */}
-        <div className="mt-8 grid grid-cols-2 gap-1 rounded-full border border-line p-1">
-          {(["member", "admin"] as Role[]).map((r) => (
-            <button
-              key={r}
-              type="button"
-              onClick={() => setRole(r)}
-              className={cn(
-                "rounded-full py-2 text-sm font-medium transition-colors",
-                role === r ? "bg-ink text-paper" : "text-mute hover:text-ink",
-              )}
-            >
-              {r === "member" ? "メンバー" : "管理者"}
-            </button>
-          ))}
-        </div>
-
-        <form onSubmit={submit} className="mt-6 space-y-4">
+        <form onSubmit={submit} className="mt-8 space-y-4">
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">
-              {role === "admin" ? "管理者パスワード" : "メンバー用パスワード"}
-            </span>
+            <span className="mb-2 block text-sm font-medium">ユーザー名</span>
+            <input
+              type="text"
+              required
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+              className={inputCls}
+              placeholder="お名前 / ユーザー名"
+            />
+          </label>
+          <label className="block">
+            <span className="mb-2 block text-sm font-medium">パスワード</span>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
-              className="w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm outline-none transition-colors focus:border-ink"
+              className={inputCls}
               placeholder="••••••••"
             />
           </label>
@@ -102,7 +96,9 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-6 text-center text-xs leading-relaxed text-mute">
-          パスワードが不明な場合は運営にお問い合わせください。
+          メンバー用パスワードは運営からお知らせします。
+          <br />
+          運営者は管理者アカウントでログインすると管理画面に進みます。
         </p>
       </motion.div>
     </section>

@@ -13,8 +13,9 @@ type Contact = {
   message: string;
   createdAt: string;
 };
-type AdminInternship = {
-  id: string;
+type Row = {
+  source: "code" | "admin";
+  key: string;
   company: string;
   title: string;
   location: string;
@@ -22,25 +23,28 @@ type AdminInternship = {
   summary: string;
   applyUrl: string;
   hidden: boolean;
-  createdAt: string;
 };
 
 const inputCls =
   "w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm outline-none transition-colors focus:border-ink";
 
 function fmt(iso: string) {
-  // クライアントのロケールに依存しない簡易表記。
   return iso.replace("T", " ").slice(0, 16);
 }
 
-export default function AdminDashboard({
-  storeMode,
-}: {
-  storeMode: string;
-}) {
+async function api(method: string, body?: unknown) {
+  await fetch("/api/admin/internships", {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+}
+
+export default function AdminDashboard({ storeMode }: { storeMode: string }) {
   const [tab, setTab] = useState<"contacts" | "internships">("contacts");
   const [contacts, setContacts] = useState<Contact[] | null>(null);
-  const [items, setItems] = useState<AdminInternship[] | null>(null);
+  const [code, setCode] = useState<Row[] | null>(null);
+  const [admin, setAdmin] = useState<Row[] | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
@@ -50,13 +54,16 @@ export default function AdminDashboard({
       fetch("/api/admin/internships").then((r) => r.json()),
     ]);
     setContacts(c.contacts ?? []);
-    setItems(i.internships ?? []);
+    setCode(i.code ?? []);
+    setAdmin(i.admin ?? []);
     setLoading(false);
   }, []);
 
   useEffect(() => {
     load();
   }, [load]);
+
+  const internCount = (code?.length ?? 0) + (admin?.length ?? 0);
 
   return (
     <div className="min-h-[100svh] bg-fog pt-28 pb-24 text-ink">
@@ -76,11 +83,6 @@ export default function AdminDashboard({
                   ? "border-ink/20 text-mute"
                   : "border-amber-400/50 bg-amber-50 text-amber-700",
               )}
-              title={
-                storeMode === "kv"
-                  ? "Vercel KV に永続化されています"
-                  : "インメモリ保存（KV未設定）：インスタンス再起動で消えます"
-              }
             >
               保存: {storeMode === "kv" ? "KV（恒久）" : "メモリ（暫定）"}
             </span>
@@ -88,11 +90,10 @@ export default function AdminDashboard({
           </div>
         </div>
 
-        {/* tabs */}
         <div className="mt-8 flex gap-1 rounded-full border border-line bg-paper p-1 sm:w-fit">
           {([
             ["contacts", `お問い合わせ${contacts ? ` (${contacts.length})` : ""}`],
-            ["internships", `募集管理${items ? ` (${items.length})` : ""}`],
+            ["internships", `募集管理${code ? ` (${internCount})` : ""}`],
           ] as const).map(([k, label]) => (
             <button
               key={k}
@@ -122,7 +123,11 @@ export default function AdminDashboard({
           ) : tab === "contacts" ? (
             <ContactsTab contacts={contacts ?? []} />
           ) : (
-            <InternshipsTab items={items ?? []} reload={load} />
+            <InternshipsTab
+              code={code ?? []}
+              admin={admin ?? []}
+              reload={load}
+            />
           )}
         </div>
       </div>
@@ -173,11 +178,118 @@ function ContactsTab({ contacts }: { contacts: Contact[] }) {
   );
 }
 
+function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
+  const [editing, setEditing] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  async function toggle() {
+    setBusy(true);
+    await api("PATCH", {
+      source: row.source,
+      key: row.key,
+      hidden: !row.hidden,
+    });
+    setBusy(false);
+    reload();
+  }
+  async function save(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    setBusy(true);
+    await api("PATCH", {
+      source: row.source,
+      key: row.key,
+      company: fd.get("company"),
+      title: fd.get("title"),
+      location: fd.get("location"),
+      compensation: fd.get("compensation"),
+      summary: fd.get("summary"),
+      applyUrl: fd.get("applyUrl"),
+    });
+    setBusy(false);
+    setEditing(false);
+    reload();
+  }
+  async function remove() {
+    if (!confirm("この募集を削除（非表示）しますか？")) return;
+    setBusy(true);
+    await api("DELETE", { source: row.source, key: row.key });
+    setBusy(false);
+    reload();
+  }
+
+  return (
+    <div
+      className={cn(
+        "rounded-2xl border border-line bg-paper p-5",
+        row.hidden && "opacity-60",
+      )}
+    >
+      {editing ? (
+        <form onSubmit={save} className="space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <input name="company" defaultValue={row.company} placeholder="企業名" className={inputCls} />
+            <input name="location" defaultValue={row.location} placeholder="勤務地" className={inputCls} />
+          </div>
+          <input name="title" defaultValue={row.title} placeholder="タイトル" className={inputCls} />
+          <input name="compensation" defaultValue={row.compensation} placeholder="報酬" className={inputCls} />
+          <textarea name="summary" defaultValue={row.summary} rows={3} placeholder="概要" className={inputCls + " resize-y"} />
+          <input name="applyUrl" defaultValue={row.applyUrl} placeholder="応募URL" className={inputCls} />
+          <div className="flex gap-3 pt-1 text-sm">
+            <button type="submit" disabled={busy} className="rounded-full bg-ink px-5 py-2 font-medium text-paper disabled:opacity-60">
+              保存
+            </button>
+            <button type="button" onClick={() => setEditing(false)} className="px-3 py-2 text-mute hover:text-ink">
+              キャンセル
+            </button>
+          </div>
+        </form>
+      ) : (
+        <>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-xs text-mute">{row.company}</p>
+              <h3 className="mt-1 font-semibold leading-snug">{row.title}</h3>
+            </div>
+            {row.hidden && (
+              <span className="shrink-0 rounded-full border border-line px-2.5 py-1 text-xs text-mute">
+                非表示
+              </span>
+            )}
+          </div>
+          {row.summary && (
+            <p className="mt-3 line-clamp-2 text-sm text-mute">{row.summary}</p>
+          )}
+          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-mute">
+            {row.location && <span>{row.location}</span>}
+            {row.compensation && <span>{row.compensation}</span>}
+          </div>
+          <div className="mt-4 flex flex-wrap gap-4 border-t border-line pt-4 text-sm">
+            <button type="button" disabled={busy} onClick={toggle} className="font-medium text-ink hover:underline">
+              {row.hidden ? "公開する" : "非表示にする"}
+            </button>
+            <button type="button" onClick={() => setEditing(true)} className="font-medium text-ink hover:underline">
+              編集
+            </button>
+            {row.source === "admin" && (
+              <button type="button" disabled={busy} onClick={remove} className="font-medium text-red-600 hover:underline">
+                削除
+              </button>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function InternshipsTab({
-  items,
+  code,
+  admin,
   reload,
 }: {
-  items: AdminInternship[];
+  code: Row[];
+  admin: Row[];
   reload: () => void;
 }) {
   const [busy, setBusy] = useState(false);
@@ -202,116 +314,64 @@ function InternshipsTab({
     });
     setBusy(false);
     if (!res.ok) {
-      const d = await res.json();
-      setErr(d.error || "追加に失敗しました");
+      setErr((await res.json()).error || "追加に失敗しました");
       return;
     }
     (e.target as HTMLFormElement).reset();
     reload();
   }
 
-  async function toggle(id: string, hidden: boolean) {
-    await fetch("/api/admin/internships", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, hidden }),
-    });
-    reload();
-  }
-  async function remove(id: string) {
-    await fetch("/api/admin/internships", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
-    reload();
-  }
-
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr]">
-      {/* add form */}
-      <form
-        onSubmit={add}
-        className="h-fit rounded-2xl border border-line bg-paper p-6"
-      >
+    <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
+      <form onSubmit={add} className="h-fit rounded-2xl border border-line bg-paper p-6">
         <h2 className="font-jp text-lg font-bold">募集を追加</h2>
         <p className="mt-1 text-sm text-mute">
-          ここで追加した募集は、募集一覧ページに即時で公開されます。
+          追加した募集は募集一覧ページに即時公開されます。
         </p>
         <div className="mt-5 space-y-3">
           <input name="company" required placeholder="企業名（例：株式会社ジコウ）" className={inputCls} />
           <input name="title" required placeholder="募集タイトル" className={inputCls} />
           <div className="grid grid-cols-2 gap-3">
             <input name="location" placeholder="勤務地" className={inputCls} />
-            <input name="compensation" placeholder="報酬（例：時給1,200円〜）" className={inputCls} />
+            <input name="compensation" placeholder="報酬" className={inputCls} />
           </div>
           <textarea name="summary" rows={3} placeholder="概要" className={inputCls + " resize-y"} />
           <input name="applyUrl" placeholder="応募URL（mailto: も可）" className={inputCls} />
         </div>
         {err && <p className="mt-3 text-sm text-red-600">{err}</p>}
-        <button
-          type="submit"
-          disabled={busy}
-          className="mt-5 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper hover:bg-ink-soft disabled:opacity-60"
-        >
+        <button type="submit" disabled={busy} className="mt-5 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper hover:bg-ink-soft disabled:opacity-60">
           {busy ? "追加中…" : "追加する"}
         </button>
       </form>
 
-      {/* list */}
-      <div>
-        {!items.length ? (
-          <p className="rounded-2xl border border-line bg-paper p-8 text-sm text-mute">
-            管理画面から追加した募集はまだありません。（既存のサンプル募集はコード側で管理されています）
-          </p>
-        ) : (
-          <div className="space-y-3">
-            {items.map((i) => (
-              <div
-                key={i.id}
-                className={cn(
-                  "rounded-2xl border border-line bg-paper p-5",
-                  i.hidden && "opacity-60",
-                )}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-xs text-mute">{i.company}</p>
-                    <h3 className="mt-1 font-semibold leading-snug">{i.title}</h3>
-                  </div>
-                  {i.hidden && (
-                    <span className="shrink-0 rounded-full border border-line px-2.5 py-1 text-xs text-mute">
-                      非表示
-                    </span>
-                  )}
-                </div>
-                {i.summary && (
-                  <p className="mt-3 line-clamp-2 text-sm text-mute">{i.summary}</p>
-                )}
-                <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-mute">
-                  {i.location && <span>{i.location}</span>}
-                  {i.compensation && <span>{i.compensation}</span>}
-                </div>
-                <div className="mt-4 flex gap-3 border-t border-line pt-4 text-sm">
-                  <button
-                    type="button"
-                    onClick={() => toggle(i.id, !i.hidden)}
-                    className="font-medium text-ink hover:underline"
-                  >
-                    {i.hidden ? "公開する" : "非表示にする"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => remove(i.id)}
-                    className="font-medium text-red-600 hover:underline"
-                  >
-                    削除
-                  </button>
-                </div>
-              </div>
+      <div className="space-y-8">
+        <div>
+          <h3 className="text-sm font-semibold text-mute">
+            管理画面で追加した募集（{admin.length}）
+          </h3>
+          {admin.length ? (
+            <div className="mt-4 space-y-3">
+              {admin.map((r) => (
+                <InternshipRow key={r.key} row={r} reload={reload} />
+              ))}
+            </div>
+          ) : (
+            <p className="mt-4 rounded-2xl border border-line bg-paper p-6 text-sm text-mute">
+              まだありません。左のフォームから追加できます。
+            </p>
+          )}
+        </div>
+
+        <div>
+          <h3 className="text-sm font-semibold text-mute">
+            既存の募集（{code.length}）
+          </h3>
+          <div className="mt-4 space-y-3">
+            {code.map((r) => (
+              <InternshipRow key={r.key} row={r} reload={reload} />
             ))}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
