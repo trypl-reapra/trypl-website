@@ -3,7 +3,12 @@ import PageHeader from "@/components/PageHeader";
 import InternshipsBrowser from "@/components/internships/InternshipsBrowser";
 import { Container, Section, Button, Eyebrow } from "@/components/ui";
 import { Reveal } from "@/components/motion";
-import { getAllInternships, getUsedCategories } from "@/data/internships";
+import {
+  getAllInternships,
+  getUsedCategories,
+  type Internship,
+} from "@/data/internships";
+import { listPublicAdminInternships } from "@/lib/store";
 import { site } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -12,8 +17,36 @@ export const metadata: Metadata = {
     "REAPRA および投資先企業でのインターン募集要項。コミュニティ・事業開発・リサーチ・マーケティングなど、実践の現場を横断する機会を掲載しています。",
 };
 
-export default function InternshipsPage() {
-  const items = getAllInternships();
+// 管理画面で追加した募集を反映するためリクエスト時に描画する。
+export const dynamic = "force-dynamic";
+
+export default async function InternshipsPage() {
+  const adminItems = await listPublicAdminInternships();
+  const mapped: Internship[] = adminItems.map((a) => ({
+    slug: `admin-${a.id}`,
+    company: a.company,
+    companyTag: "管理画面で追加",
+    title: a.title,
+    category: "business",
+    location: a.location || "—",
+    workStyle: "remote",
+    commitment: "—",
+    duration: "—",
+    compensation: a.compensation || "応相談",
+    summary: a.summary || "",
+    about: a.summary || "",
+    responsibilities: [],
+    requirements: [],
+    welcome: [],
+    tags: [],
+    applyUrl: a.applyUrl || "#",
+    applyLabel: "応募する",
+    postedAt: a.createdAt.slice(0, 10),
+    featured: false,
+  }));
+  const items = [...mapped, ...getAllInternships()].sort((x, y) =>
+    y.postedAt.localeCompare(x.postedAt),
+  );
   const categories = getUsedCategories();
 
   return (

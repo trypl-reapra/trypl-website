@@ -16,7 +16,9 @@ export default function Footer() {
     { label: t.nav.internships, href: "/internships" },
     { label: t.nav.events, href: "/events" },
     { label: t.nav.links, href: "/links" },
+    { label: t.footer.contact, href: "/contact" },
     { label: t.cta, href: cta.href },
+    { label: t.footer.login, href: "/login" },
   ];
 
   return (

@@ -48,7 +48,14 @@ type Dict = {
   who: { eyebrow: string; titleLines: string[]; lead: string };
   preview: { eyebrow: string; title: string; lead: string; all: string };
   join: { eyebrow: string; title: string; body: string; primary: string; secondary: string };
-  footer: { desc: string; explore: string; follow: string; poweredBy: string };
+  footer: {
+    desc: string;
+    explore: string;
+    follow: string;
+    poweredBy: string;
+    contact: string;
+    login: string;
+  };
 };
 
 export const dict: Record<Locale, Dict> = {
@@ -136,6 +143,8 @@ export const dict: Record<Locale, Dict> = {
       explore: "Explore",
       follow: "Follow",
       poweredBy: "Powered by",
+      contact: "お問い合わせ",
+      login: "メンバーログイン",
     },
   },
 
@@ -223,6 +232,8 @@ export const dict: Record<Locale, Dict> = {
       explore: "Explore",
       follow: "Follow",
       poweredBy: "Powered by",
+      contact: "Contact",
+      login: "Member login",
     },
   },
 
@@ -310,6 +321,8 @@ export const dict: Record<Locale, Dict> = {
       explore: "Explore",
       follow: "Follow",
       poweredBy: "Powered by",
+      contact: "문의하기",
+      login: "멤버 로그인",
     },
   },
 };
