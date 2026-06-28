@@ -13,13 +13,12 @@ export default function Who() {
     >
       {/* 右→左へ流れるランドスケープのループ背景 */}
       <video
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+        className="pointer-events-none absolute inset-0 h-full w-full bg-ink object-cover"
         autoPlay
         loop
         muted
         playsInline
         preload="auto"
-        poster="/media/video/who-poster.jpg"
         aria-hidden="true"
       >
         <source src="/media/video/who.mp4" type="video/mp4" />

@@ -18,13 +18,12 @@ export default function Hero() {
     >
       {/* ループ背景動画（イベントの様子から生成・無音） */}
       <video
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+        className="pointer-events-none absolute inset-0 h-full w-full bg-ink object-cover"
         autoPlay
         loop
         muted
         playsInline
         preload="auto"
-        poster="/media/video/hero-poster.jpg"
         aria-hidden="true"
       >
         <source src="/media/video/hero.mp4" type="video/mp4" />
