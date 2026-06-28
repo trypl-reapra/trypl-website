@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { listMembers } from "@/lib/store";
 import { getInternship } from "@/data/internships";
 import ApplyForm from "@/components/internships/ApplyForm";
 
@@ -24,13 +25,19 @@ export default async function ApplyPage({
   if (!session?.user)
     redirect(`/members?next=${encodeURIComponent(`/internships/${slug}/apply`)}`);
 
+  const email = session.user.email ?? "";
+  const me = email
+    ? (await listMembers()).find((m) => m.email === email)
+    : null;
+
   return (
     <ApplyForm
       slug={slug}
       company={internship.company}
       title={internship.title}
-      name={session.user.name ?? ""}
-      email={session.user.email ?? ""}
+      email={email}
+      defaultName={me?.profile?.fullName || session.user.name || ""}
+      profile={me?.profile ?? null}
     />
   );
 }

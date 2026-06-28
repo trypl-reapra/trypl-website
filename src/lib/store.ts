@@ -31,6 +31,16 @@ export type AdminInternship = {
   createdAt: string;
 };
 
+/** 応募に必要な最低限のプロフィール（会員が応募時に登録）。 */
+export type MemberProfile = {
+  fullName: string;
+  furigana?: string;
+  school: string;
+  department?: string;
+  year: string;
+  phone: string;
+};
+
 /** 会員登録したメンバー（Google / Apple でログインした人）。 */
 export type Member = {
   id: string;
@@ -41,6 +51,8 @@ export type Member = {
   createdAt: string;
   /** 創設メンバー（管理画面で指定）。会員証がゴールドになる。 */
   founder?: boolean;
+  /** 応募用プロフィール（一度入力すると次回以降は自動入力される）。 */
+  profile?: MemberProfile;
 };
 
 /** 募集への応募（会員が応募ボタンから送信）。 */
@@ -49,8 +61,9 @@ export type Application = {
   slug: string;
   company: string;
   title: string;
-  name: string;
   email: string;
+  /** 応募者の最低限プロフィール（応募時点のスナップショット）。 */
+  profile: MemberProfile;
   message: string;
   createdAt: string;
 };
@@ -195,6 +208,17 @@ export async function setMemberFounder(
 ): Promise<void> {
   const items = (await listMembers()).map((m) =>
     m.email === email ? { ...m, founder } : m,
+  );
+  await saveAllMembers(items);
+}
+
+/** 応募プロフィールを保存（本人が応募時に入力）。 */
+export async function setMemberProfile(
+  email: string,
+  profile: MemberProfile,
+): Promise<void> {
+  const items = (await listMembers()).map((m) =>
+    m.email === email ? { ...m, profile } : m,
   );
   await saveAllMembers(items);
 }

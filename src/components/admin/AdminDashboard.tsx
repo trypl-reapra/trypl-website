@@ -38,8 +38,15 @@ type Application = {
   slug: string;
   company: string;
   title: string;
-  name: string;
   email: string;
+  profile: {
+    fullName: string;
+    furigana?: string;
+    school: string;
+    department?: string;
+    year: string;
+    phone: string;
+  };
   message: string;
   createdAt: string;
 };
@@ -229,8 +236,14 @@ function ApplicationsTab({ apps }: { apps: Application[] }) {
         >
           <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
             <div className="min-w-0">
-              <span className="font-medium">{ap.name || "（名前未設定）"}</span>
-              <span className="ml-3 text-sm text-mute">{ap.email}</span>
+              <span className="font-medium">
+                {ap.profile?.fullName || "（名前未設定）"}
+              </span>
+              {ap.profile?.furigana && (
+                <span className="ml-2 text-xs text-mute">
+                  {ap.profile.furigana}
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-3 text-xs text-mute">
               <span className="rounded-full border border-line px-2.5 py-1">
@@ -239,7 +252,14 @@ function ApplicationsTab({ apps }: { apps: Application[] }) {
               <span className="tabular-nums">{fmt(ap.createdAt)}</span>
             </div>
           </summary>
-          <p className="mt-4 whitespace-pre-wrap border-t border-line pt-4 text-sm leading-relaxed text-mute">
+          <div className="mt-4 grid gap-x-6 gap-y-1.5 border-t border-line pt-4 text-sm text-mute sm:grid-cols-2">
+            <span>学校：{ap.profile?.school || "—"}</span>
+            <span>学年：{ap.profile?.year || "—"}</span>
+            <span>学部・学科：{ap.profile?.department || "—"}</span>
+            <span>電話：{ap.profile?.phone || "—"}</span>
+            <span className="sm:col-span-2">メール：{ap.email}</span>
+          </div>
+          <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-ink">
             {ap.message}
           </p>
           <a
