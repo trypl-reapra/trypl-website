@@ -127,7 +127,8 @@ const ja = {
   },
   events: {
     upcomingEyebrow: "Schedule · 開催予定",
-    upcomingHeading: "次回以降のイベント。",
+    upcomingHeading: "イベントスケジュール",
+    ended: "終了",
     register: "申し込む",
     online: "オンライン",
     offline: "会場",
@@ -509,7 +510,8 @@ const en: Pages = {
   },
   events: {
     upcomingEyebrow: "Schedule",
-    upcomingHeading: "Upcoming events.",
+    upcomingHeading: "Event schedule",
+    ended: "Ended",
     register: "Register",
     online: "Online",
     offline: "Venue",
@@ -889,7 +891,8 @@ const ko: Pages = {
   },
   events: {
     upcomingEyebrow: "Schedule",
-    upcomingHeading: "다가오는 이벤트.",
+    upcomingHeading: "이벤트 일정",
+    ended: "종료",
     register: "신청하기",
     online: "온라인",
     offline: "오프라인",

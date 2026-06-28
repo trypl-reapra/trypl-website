@@ -1,7 +1,7 @@
 "use client";
 
 import { RevealLines, Reveal, ScrollFadeOut } from "@/components/motion";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Button, Eyebrow } from "@/components/ui";
 import JoinCtaButton from "@/components/JoinCtaButton";
 import { useT } from "@/i18n/LocaleProvider";
@@ -9,6 +9,7 @@ import { site } from "@/data/site";
 
 export default function Hero() {
   const t = useT();
+  const [videoOn, setVideoOn] = useState(false);
   // eyebrow 内の "REAPRA" を公式サイトへのリンクにする。
   const eyebrowParts = t.hero.eyebrow.split("REAPRA");
   return (
@@ -18,13 +19,15 @@ export default function Hero() {
     >
       {/* ループ背景動画（イベントの様子から生成・無音） */}
       <video
-        className="pointer-events-none absolute inset-0 h-full w-full bg-ink object-cover"
+        className={`pointer-events-none absolute inset-0 h-full w-full bg-ink object-cover transition-opacity duration-[1400ms] ease-out ${videoOn ? "opacity-100" : "opacity-0"}`}
         autoPlay
         loop
         muted
         playsInline
         preload="auto"
         aria-hidden="true"
+        onPlaying={() => setVideoOn(true)}
+        onLoadedData={() => setVideoOn(true)}
       >
         <source src="/media/video/hero.mp4" type="video/mp4" />
       </video>

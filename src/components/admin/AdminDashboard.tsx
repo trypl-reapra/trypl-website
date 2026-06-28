@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import LogoutButton from "./LogoutButton";
 import { cn } from "@/lib/cn";
 import { DEFAULT_HEADER_IMAGES } from "@/data/internships";
+import { profileComplete } from "@/lib/profile";
 
 type Contact = {
   id: string;
@@ -1089,9 +1090,16 @@ function OverviewTab({
     { label: "その他", value: sc.other, color: "#a78bfa" },
     { label: "未登録", value: sc.none, color: "#d4d4d8" },
   ];
+  const registered = members.filter(
+    (m) => !m.founder && profileComplete(m.profile),
+  ).length;
+  const unregistered = members.filter(
+    (m) => !m.founder && !profileComplete(m.profile),
+  ).length;
   const typeSegs = [
     { label: "創設メンバー", value: founders, color: "#d4af37" },
-    { label: "通常メンバー", value: Math.max(0, members.length - founders), color: "#3f3f46" },
+    { label: "通常メンバー（登録済）", value: registered, color: "#3f3f46" },
+    { label: "未登録", value: unregistered, color: "#d4d4d8" },
   ];
 
   const cards: [string, number][] = [
@@ -1138,9 +1146,9 @@ function OverviewTab({
             />
           </div>
         </div>
-        <div className="mt-6 flex h-40 items-end gap-1.5">
+        <div className="mt-6 flex h-40 items-stretch gap-1.5">
           {series.map((v, i) => (
-            <div key={i} className="flex flex-1 flex-col items-center gap-1.5">
+            <div key={i} className="flex h-full flex-1 flex-col items-center gap-1.5">
               <div className="flex w-full flex-1 items-end">
                 <div
                   className="w-full rounded-t bg-ink/80"

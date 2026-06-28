@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { RevealLines, Reveal } from "@/components/motion";
 import { Container, Eyebrow } from "@/components/ui";
 import { useT } from "@/i18n/LocaleProvider";
 
 export default function Who() {
   const t = useT();
+  const [videoOn, setVideoOn] = useState(false);
   return (
     <section
       data-nav-theme="dark"
@@ -13,13 +15,15 @@ export default function Who() {
     >
       {/* 右→左へ流れるランドスケープのループ背景 */}
       <video
-        className="pointer-events-none absolute inset-0 h-full w-full bg-ink object-cover"
+        className={`pointer-events-none absolute inset-0 h-full w-full bg-ink object-cover transition-opacity duration-[1400ms] ease-out ${videoOn ? "opacity-100" : "opacity-0"}`}
         autoPlay
         loop
         muted
         playsInline
         preload="auto"
         aria-hidden="true"
+        onPlaying={() => setVideoOn(true)}
+        onLoadedData={() => setVideoOn(true)}
       >
         <source src="/media/video/who.mp4" type="video/mp4" />
       </video>

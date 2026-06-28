@@ -37,6 +37,7 @@ export default function EventsContent({
 }) {
   const t = usePages();
   const e = t.events;
+  const today = new Date().toISOString().slice(0, 10);
   return (
     <>
       <PageHeader
@@ -59,7 +60,12 @@ export default function EventsContent({
             <Stagger className="mt-12 space-y-5">
               {upcoming.map((ev) => (
                 <StaggerItem key={ev.id}>
-                  <article className="overflow-hidden rounded-2xl border border-line bg-paper transition-all duration-500 hover:-translate-y-0.5 hover:border-ink hover:shadow-[0_30px_70px_-45px_rgba(0,0,0,0.4)] sm:flex">
+                  <article
+                    className={
+                      "overflow-hidden rounded-2xl border border-line bg-paper transition-all duration-500 hover:-translate-y-0.5 hover:border-ink hover:shadow-[0_30px_70px_-45px_rgba(0,0,0,0.4)] sm:flex " +
+                      (ev.date < today ? "opacity-70" : "")
+                    }
+                  >
                     {ev.image && (
                       <div className="relative aspect-[16/10] shrink-0 sm:aspect-auto sm:w-60">
                         <Image
@@ -86,6 +92,11 @@ export default function EventsContent({
                           <span className="inline-flex items-center rounded-full border border-line px-2.5 py-0.5 text-xs">
                             {ev.online ? e.online : ev.place || e.offline}
                           </span>
+                          {ev.date < today && (
+                            <span className="inline-flex items-center rounded-full bg-mist px-2.5 py-0.5 text-xs text-mute">
+                              {e.ended}
+                            </span>
+                          )}
                         </div>
                         <h3 className="mt-3 font-jp text-xl font-bold tracking-tight sm:text-2xl">
                           {ev.title}

@@ -79,3 +79,19 @@ export const brandWords = [
   "実践する",
   "可能性を広げる",
 ] as const;
+
+/** 既定で表示するニュース。管理画面の追加分と併せてホームに表示される。 */
+export const defaultPress = [
+  {
+    id: "launch-2026",
+    title: "TrypL公式サイトを公開しました。",
+    outlet: "TrypL",
+    url: "https://trypl.vercel.app",
+    date: "2026-06-29",
+    summary:
+      "REAPRA発・実践型インターンコミュニティ「TrypL」の公式サイトを公開しました。",
+    image: "/media/image/events/event-1.jpg",
+    hidden: false,
+    createdAt: "2026-06-29T00:00:00.000Z",
+  },
+];
