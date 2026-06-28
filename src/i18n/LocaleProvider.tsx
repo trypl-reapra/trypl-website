@@ -31,15 +31,12 @@ function isLocale(v: string | null): v is Locale {
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("ja");
 
-  // 初期化：保存値 → ブラウザ言語 の順で決定。
+  // 初期化：初回アクセスは常に日本語。
+  // ユーザーが言語スイッチャーで明示的に選んだ場合のみ、その選択（保存値）を尊重する。
+  // ブラウザ言語による自動切り替えは行わない。
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (isLocale(saved)) {
-      setLocaleState(saved);
-      return;
-    }
-    const browser = navigator.language.slice(0, 2);
-    if (isLocale(browser)) setLocaleState(browser);
+    if (isLocale(saved)) setLocaleState(saved);
   }, []);
 
   // <html lang> を同期。

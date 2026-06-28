@@ -53,17 +53,17 @@ export const socials: Social[] = [
   {
     key: "tiktok",
     label: "TikTok",
-    handle: "@trypl.jp",
-    href: "#",
-    available: false,
+    handle: "@trypl_official",
+    href: "https://www.tiktok.com/@trypl_official",
+    available: true,
     role: "発信",
   },
   {
     key: "threads",
     label: "Threads",
-    handle: "@trypl.jp",
-    href: "#",
-    available: false,
+    handle: "@trypl_official",
+    href: "https://www.threads.com/@trypl_official",
+    available: true,
     role: "拡散",
   },
   {
@@ -84,10 +84,10 @@ export const socials: Social[] = [
   },
   {
     key: "line",
-    label: "LINE",
-    handle: "@trypl",
-    href: "#",
-    available: false,
+    label: "LINE公式",
+    handle: "友だち追加",
+    href: "https://lin.ee/8mMyO9Qc",
+    available: true,
     role: "接点管理",
   },
   {
