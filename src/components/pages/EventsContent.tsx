@@ -8,7 +8,33 @@ import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { events } from "@/data/site";
 import { usePages } from "@/i18n/pages";
 
-export default function EventsContent() {
+type EventItem = {
+  id: string;
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  place: string;
+  online: boolean;
+  description: string;
+  registerUrl: string;
+  image?: string;
+};
+
+const WD = ["日", "月", "火", "水", "木", "金", "土"];
+function fmtDate(d: string) {
+  const dt = new Date(d + "T00:00:00");
+  if (Number.isNaN(dt.getTime())) return d;
+  return `${dt.getFullYear()}.${String(dt.getMonth() + 1).padStart(2, "0")}.${String(
+    dt.getDate(),
+  ).padStart(2, "0")}（${WD[dt.getDay()]}）`;
+}
+
+export default function EventsContent({
+  upcoming = [],
+}: {
+  upcoming?: EventItem[];
+}) {
   const t = usePages();
   const e = t.events;
   return (
@@ -19,7 +45,62 @@ export default function EventsContent() {
         lead={t.headers.events.lead}
       />
 
-      <Section tone="dark" topPad={false}>
+      {upcoming.length > 0 && (
+        <Section tone="light" topPad={false}>
+          <Container>
+            <Eyebrow>{e.upcomingEyebrow}</Eyebrow>
+            <Reveal>
+              <h2 className="mt-7 font-jp text-[clamp(1.8rem,4.5vw,3rem)] font-bold tracking-[-0.02em]">
+                {e.upcomingHeading}
+              </h2>
+            </Reveal>
+            <Stagger className="mt-12 space-y-5">
+              {upcoming.map((ev) => (
+                <StaggerItem key={ev.id}>
+                  <article className="grid gap-5 overflow-hidden rounded-2xl border border-line bg-paper p-6 transition-colors hover:border-ink sm:grid-cols-[1fr_auto] sm:items-center sm:p-8">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-medium text-mute">
+                        <span className="tabular-nums text-ink">
+                          {fmtDate(ev.date)}
+                        </span>
+                        {(ev.startTime || ev.endTime) && (
+                          <span className="tabular-nums">
+                            {ev.startTime}
+                            {ev.endTime ? `–${ev.endTime}` : ""}
+                          </span>
+                        )}
+                        <span className="inline-flex items-center rounded-full border border-line px-2.5 py-0.5 text-xs">
+                          {ev.online ? e.online : ev.place || e.offline}
+                        </span>
+                      </div>
+                      <h3 className="mt-3 font-jp text-xl font-bold tracking-tight sm:text-2xl">
+                        {ev.title}
+                      </h3>
+                      {ev.description && (
+                        <p className="mt-3 max-w-2xl whitespace-pre-wrap text-sm leading-relaxed text-mute">
+                          {ev.description}
+                        </p>
+                      )}
+                      {!ev.online && ev.place && (
+                        <p className="mt-3 text-sm text-mute">📍 {ev.place}</p>
+                      )}
+                    </div>
+                    {ev.registerUrl && (
+                      <div className="sm:pl-4">
+                        <Button href={ev.registerUrl} size="md">
+                          {e.register}
+                        </Button>
+                      </div>
+                    )}
+                  </article>
+                </StaggerItem>
+              ))}
+            </Stagger>
+          </Container>
+        </Section>
+      )}
+
+      <Section tone="dark" topPad={upcoming.length === 0 ? false : undefined}>
         <Container>
           <div className="rounded-3xl border border-line-dark p-8 sm:p-12">
             <Eyebrow className="text-mute-dark">{e.calEyebrow}</Eyebrow>

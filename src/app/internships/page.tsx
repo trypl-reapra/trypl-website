@@ -42,6 +42,7 @@ export default async function InternshipsPage() {
     tags: [],
     applyUrl: a.applyUrl || "#",
     applyLabel: "応募する",
+    headerImage: a.headerImage,
     postedAt: a.createdAt.slice(0, 10),
     featured: false,
   }));

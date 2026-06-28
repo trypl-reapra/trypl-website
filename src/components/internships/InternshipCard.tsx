@@ -26,7 +26,7 @@ export default function InternshipCard({
     <>
       {/* ホバー時に、この募集のヘッダー画像を背景として表示 */}
       <Image
-        src={headerImageFor(i.slug)}
+        src={i.headerImage || headerImageFor(i.slug)}
         alt=""
         aria-hidden="true"
         fill

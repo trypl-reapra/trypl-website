@@ -50,7 +50,7 @@ export default function InternshipDetailPanel({
       {/* 横長のヘッダー画像（iPhone 壁紙風）。閉じる・企業名をオーバーレイ。 */}
       <div className="relative h-36 shrink-0 sm:h-48">
         <Image
-          src={headerImageFor(i.slug)}
+          src={i.headerImage || headerImageFor(i.slug)}
           alt=""
           fill
           sizes="(max-width: 768px) 100vw, 768px"

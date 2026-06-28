@@ -65,6 +65,8 @@ export type Internship = {
   tags: string[];
   applyUrl: string;
   applyLabel: string;
+  /** 管理画面で設定したヘッダー画像（未設定なら headerImageFor で自動割当）。 */
+  headerImage?: string;
   featured?: boolean;
   /** ISO 日付 */
   postedAt: string;
@@ -420,6 +422,9 @@ const HEADER_POOL = [
   "/media/image/internship/8.jpg",
   "/media/image/internship/9.jpg",
 ];
+
+/** 管理画面の画像ピッカーで選べるデフォルト画像。 */
+export const DEFAULT_HEADER_IMAGES = HEADER_POOL;
 
 const HEADER_BY_SLUG: Record<string, string> = {
   "jicou-ai-business": "/media/image/internship/1.jpg",

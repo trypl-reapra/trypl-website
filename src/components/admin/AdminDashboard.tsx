@@ -1,9 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import LogoutButton from "./LogoutButton";
 import { cn } from "@/lib/cn";
+import { DEFAULT_HEADER_IMAGES } from "@/data/internships";
 
 type Contact = {
   id: string;
@@ -51,6 +53,29 @@ type Withdrawal = {
   memberSince: string;
   withdrawnAt: string;
 };
+type EventItem = {
+  id: string;
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  place: string;
+  online: boolean;
+  description: string;
+  registerUrl: string;
+  hidden: boolean;
+  createdAt: string;
+};
+type PressItem = {
+  id: string;
+  title: string;
+  outlet: string;
+  url: string;
+  date: string;
+  summary: string;
+  hidden: boolean;
+  createdAt: string;
+};
 type Application = {
   id: string;
   slug: string;
@@ -79,23 +104,35 @@ async function api(method: string, body?: unknown) {
 
 export default function AdminDashboard({ storeMode }: { storeMode: string }) {
   const [tab, setTab] = useState<
-    "contacts" | "applications" | "internships" | "members"
-  >("contacts");
+    | "overview"
+    | "contacts"
+    | "applications"
+    | "internships"
+    | "members"
+    | "events"
+    | "press"
+  >("overview");
   const [contacts, setContacts] = useState<Contact[] | null>(null);
   const [code, setCode] = useState<Row[] | null>(null);
   const [admin, setAdmin] = useState<Row[] | null>(null);
   const [members, setMembers] = useState<Member[] | null>(null);
   const [withdrawals, setWithdrawals] = useState<Withdrawal[] | null>(null);
   const [apps, setApps] = useState<Application[] | null>(null);
+  const [events, setEvents] = useState<EventItem[] | null>(null);
+  const [press, setPress] = useState<PressItem[] | null>(null);
+  const [stats, setStats] = useState<Record<string, number> | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [c, i, mb, ap] = await Promise.all([
+    const [c, i, mb, ap, ev, pr, st] = await Promise.all([
       fetch("/api/admin/contacts").then((r) => r.json()),
       fetch("/api/admin/internships").then((r) => r.json()),
       fetch("/api/admin/members").then((r) => r.json()),
       fetch("/api/admin/applications").then((r) => r.json()),
+      fetch("/api/admin/events").then((r) => r.json()),
+      fetch("/api/admin/press").then((r) => r.json()),
+      fetch("/api/admin/stats").then((r) => r.json()),
     ]);
     setContacts(c.contacts ?? []);
     setCode(i.code ?? []);
@@ -103,6 +140,9 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
     setMembers(mb.members ?? []);
     setWithdrawals(mb.withdrawals ?? []);
     setApps(ap.applications ?? []);
+    setEvents(ev.events ?? []);
+    setPress(pr.press ?? []);
+    setStats(st.stats ?? {});
     setLoading(false);
   }, []);
 
@@ -137,19 +177,22 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
           </div>
         </div>
 
-        <div className="mt-8 flex gap-1 rounded-full border border-line bg-paper p-1 sm:w-fit">
+        <div className="mt-8 flex flex-wrap items-center gap-1 rounded-2xl border border-line bg-paper p-1">
           {([
+            ["overview", "概要"],
             ["contacts", `お問い合わせ${contacts ? ` (${contacts.length})` : ""}`],
             ["applications", `応募${apps ? ` (${apps.length})` : ""}`],
-            ["internships", `募集管理${code ? ` (${internCount})` : ""}`],
             ["members", `メンバー${members ? ` (${members.length})` : ""}`],
+            ["internships", `募集管理${code ? ` (${internCount})` : ""}`],
+            ["events", `イベント${events ? ` (${events.length})` : ""}`],
+            ["press", `プレス${press ? ` (${press.length})` : ""}`],
           ] as const).map(([k, label]) => (
             <button
               key={k}
               type="button"
               onClick={() => setTab(k)}
               className={cn(
-                "flex-1 rounded-full px-5 py-2 text-sm font-medium transition-colors sm:flex-none",
+                "rounded-full px-4 py-2 text-sm font-medium transition-colors",
                 tab === k ? "bg-ink text-paper" : "text-mute hover:text-ink",
               )}
             >
@@ -159,7 +202,7 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
           <button
             type="button"
             onClick={load}
-            className="rounded-full px-4 py-2 text-sm text-mute hover:text-ink"
+            className="ml-auto rounded-full px-4 py-2 text-sm text-mute hover:text-ink"
             title="再読み込み"
           >
             ↻
@@ -169,6 +212,17 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
         <div className="mt-8">
           {loading ? (
             <p className="text-sm text-mute">読み込み中…</p>
+          ) : tab === "overview" ? (
+            <OverviewTab
+              stats={stats ?? {}}
+              members={members ?? []}
+              withdrawals={withdrawals ?? []}
+              apps={apps ?? []}
+              contacts={contacts ?? []}
+              events={events ?? []}
+              press={press ?? []}
+              internCount={internCount}
+            />
           ) : tab === "contacts" ? (
             <ContactsTab contacts={contacts ?? []} />
           ) : tab === "applications" ? (
@@ -179,6 +233,10 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
               withdrawals={withdrawals ?? []}
               reload={load}
             />
+          ) : tab === "events" ? (
+            <EventsTab events={events ?? []} reload={load} />
+          ) : tab === "press" ? (
+            <PressTab press={press ?? []} reload={load} />
           ) : (
             <InternshipsTab
               code={code ?? []}
@@ -634,6 +692,7 @@ function InternshipsTab({
 }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+  const [headerImage, setHeaderImage] = useState("");
 
   async function add(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -650,6 +709,7 @@ function InternshipsTab({
         compensation: fd.get("compensation"),
         summary: fd.get("summary"),
         applyUrl: fd.get("applyUrl"),
+        headerImage,
       }),
     });
     setBusy(false);
@@ -658,6 +718,7 @@ function InternshipsTab({
       return;
     }
     (e.target as HTMLFormElement).reset();
+    setHeaderImage("");
     reload();
   }
 
@@ -677,6 +738,34 @@ function InternshipsTab({
           </div>
           <textarea name="summary" rows={3} placeholder="概要" className={inputCls + " resize-y"} />
           <input name="applyUrl" placeholder="応募URL（mailto: も可）" className={inputCls} />
+
+          <div>
+            <p className="mb-2 text-sm font-medium">ヘッダー画像</p>
+            <div className="grid grid-cols-3 gap-2">
+              {DEFAULT_HEADER_IMAGES.map((src) => (
+                <button
+                  key={src}
+                  type="button"
+                  onClick={() => setHeaderImage(src)}
+                  className={cn(
+                    "relative aspect-[4/3] overflow-hidden rounded-lg border-2 transition-colors",
+                    headerImage === src ? "border-ink" : "border-transparent hover:border-line",
+                  )}
+                >
+                  <Image src={src} alt="" fill sizes="120px" className="object-cover" />
+                </button>
+              ))}
+            </div>
+            <input
+              value={headerImage}
+              onChange={(e) => setHeaderImage(e.target.value)}
+              placeholder="または画像URLを入力"
+              className={inputCls + " mt-2"}
+            />
+            <p className="mt-1 text-xs text-mute">
+              未選択の場合は自動で画像が割り当てられます。
+            </p>
+          </div>
         </div>
         {err && <p className="mt-3 text-sm text-red-600">{err}</p>}
         <button type="submit" disabled={busy} className="mt-5 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper hover:bg-ink-soft disabled:opacity-60">
@@ -712,6 +801,441 @@ function InternshipsTab({
             ))}
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------------------------------- overview */
+
+function lastDays(n: number): string[] {
+  const out: string[] = [];
+  const now = new Date();
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(now.getDate() - i);
+    out.push(d.toISOString().slice(0, 10));
+  }
+  return out;
+}
+
+function OverviewTab({
+  stats,
+  members,
+  withdrawals,
+  apps,
+  contacts,
+  events,
+  press,
+  internCount,
+}: {
+  stats: Record<string, number>;
+  members: Member[];
+  withdrawals: Withdrawal[];
+  apps: Application[];
+  contacts: Contact[];
+  events: EventItem[];
+  press: PressItem[];
+  internCount: number;
+}) {
+  const founders = members.filter((m) => m.founder).length;
+  const frozen = members.filter((m) => m.frozen).length;
+  const days = lastDays(14);
+  const series = days.map((d) => stats[`day:${d}`] || 0);
+  const max = Math.max(1, ...series);
+  const cards: [string, number][] = [
+    ["累計アクセス", stats.total || 0],
+    ["メンバー", members.length],
+    ["創設メンバー", founders],
+    ["凍結", frozen],
+    ["退会", withdrawals.length],
+    ["応募", apps.length],
+    ["お問い合わせ", contacts.length],
+    ["募集", internCount],
+    ["イベント", events.length],
+    ["プレス", press.length],
+  ];
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {cards.map(([label, value]) => (
+          <div key={label} className="rounded-2xl border border-line bg-paper p-5">
+            <p className="text-xs text-mute">{label}</p>
+            <p className="mt-2 font-display text-3xl font-bold tabular-nums">
+              {value}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-2xl border border-line bg-paper p-6">
+        <div className="flex items-baseline justify-between">
+          <h3 className="font-jp font-bold">アクセス数（直近14日）</h3>
+          <span className="text-xs text-mute">累計 {stats.total || 0} PV</span>
+        </div>
+        <div className="mt-6 flex h-40 items-end gap-1.5">
+          {series.map((v, i) => (
+            <div key={i} className="flex flex-1 flex-col items-center gap-1.5">
+              <div className="flex w-full flex-1 items-end">
+                <div
+                  className="w-full rounded-t bg-ink/80"
+                  style={{ height: `${Math.max(2, (v / max) * 100)}%` }}
+                  title={`${days[i]}: ${v} PV`}
+                />
+              </div>
+              <span className="text-[9px] tabular-nums text-mute">
+                {days[i].slice(5)}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="text-xs text-mute">
+        ※ アクセス数は管理画面を除く全ページのページビュー。KV 有効時のみ恒久集計されます。
+      </p>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------- events */
+
+function EventsTab({
+  events,
+  reload,
+}: {
+  events: EventItem[];
+  reload: () => void;
+}) {
+  return (
+    <div className="space-y-8">
+      <EventForm reload={reload} />
+      {events.length === 0 ? (
+        <Empty>まだイベントがありません。上のフォームから追加してください。</Empty>
+      ) : (
+        <div className="space-y-3">
+          {events.map((ev) => (
+            <EventRow key={ev.id} ev={ev} reload={reload} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const EMPTY_EVENT = {
+  title: "",
+  date: "",
+  startTime: "",
+  endTime: "",
+  place: "",
+  online: false,
+  description: "",
+  registerUrl: "",
+};
+
+function EventForm({ reload }: { reload: () => void }) {
+  const [f, setF] = useState({ ...EMPTY_EVENT });
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  function set<K extends keyof typeof f>(k: K, v: (typeof f)[K]) {
+    setF((s) => ({ ...s, [k]: v }));
+  }
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setErr("");
+    if (!f.title || !f.date) {
+      setErr("タイトルと日付は必須です");
+      return;
+    }
+    setBusy(true);
+    const res = await fetch("/api/admin/events", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(f),
+    });
+    setBusy(false);
+    if (res.ok) {
+      setF({ ...EMPTY_EVENT });
+      reload();
+    } else setErr("追加に失敗しました");
+  }
+  return (
+    <form onSubmit={submit} className="rounded-2xl border border-line bg-paper p-6">
+      <h2 className="font-jp text-lg font-bold">イベントを追加</h2>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <input
+          className={inputCls + " sm:col-span-2"}
+          placeholder="タイトル *"
+          value={f.title}
+          onChange={(e) => set("title", e.target.value)}
+        />
+        <input
+          type="date"
+          className={inputCls}
+          value={f.date}
+          onChange={(e) => set("date", e.target.value)}
+        />
+        <div className="flex gap-2">
+          <input
+            type="time"
+            className={inputCls}
+            value={f.startTime}
+            onChange={(e) => set("startTime", e.target.value)}
+          />
+          <input
+            type="time"
+            className={inputCls}
+            value={f.endTime}
+            onChange={(e) => set("endTime", e.target.value)}
+          />
+        </div>
+        <input
+          className={inputCls}
+          placeholder="場所（会場名・住所など）"
+          value={f.place}
+          onChange={(e) => set("place", e.target.value)}
+        />
+        <label className="flex items-center gap-2 text-sm text-mute">
+          <input
+            type="checkbox"
+            checked={f.online}
+            onChange={(e) => set("online", e.target.checked)}
+          />
+          オンライン開催
+        </label>
+        <input
+          className={inputCls + " sm:col-span-2"}
+          placeholder="申込URL（Luma 等）"
+          value={f.registerUrl}
+          onChange={(e) => set("registerUrl", e.target.value)}
+        />
+        <textarea
+          className={inputCls + " sm:col-span-2"}
+          rows={3}
+          placeholder="説明"
+          value={f.description}
+          onChange={(e) => set("description", e.target.value)}
+        />
+      </div>
+      {err && <p className="mt-2 text-sm text-red-600">{err}</p>}
+      <button
+        type="submit"
+        disabled={busy}
+        className="mt-4 inline-flex h-10 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper disabled:opacity-60"
+      >
+        {busy ? "追加中…" : "追加する"}
+      </button>
+    </form>
+  );
+}
+
+function EventRow({ ev, reload }: { ev: EventItem; reload: () => void }) {
+  const [busy, setBusy] = useState(false);
+  async function act(method: string, body: unknown) {
+    setBusy(true);
+    await fetch("/api/admin/events", {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    reload();
+    setBusy(false);
+  }
+  return (
+    <div
+      className={cn(
+        "flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-paper p-5",
+        ev.hidden ? "border-line opacity-60" : "border-line",
+      )}
+    >
+      <div className="min-w-0">
+        <span className="text-sm tabular-nums text-mute">
+          {ev.date} {ev.startTime}
+        </span>
+        <span className="ml-3 font-medium">{ev.title}</span>
+        <span className="ml-2 text-xs text-mute">
+          {ev.online ? "オンライン" : ev.place}
+        </span>
+      </div>
+      <div className="flex items-center gap-2 text-xs">
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => act("PATCH", { id: ev.id, hidden: !ev.hidden })}
+          className="rounded-full border border-line px-3 py-1 hover:border-ink"
+        >
+          {ev.hidden ? "公開する" : "非表示にする"}
+        </button>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => {
+            if (window.confirm("このイベントを削除しますか？"))
+              act("DELETE", { id: ev.id });
+          }}
+          className="rounded-full border border-red-200 px-3 py-1 text-red-600 hover:bg-red-50"
+        >
+          削除
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------- press */
+
+function PressTab({
+  press,
+  reload,
+}: {
+  press: PressItem[];
+  reload: () => void;
+}) {
+  return (
+    <div className="space-y-8">
+      <PressForm reload={reload} />
+      {press.length === 0 ? (
+        <Empty>まだプレス掲載がありません。上のフォームから追加してください。</Empty>
+      ) : (
+        <div className="space-y-3">
+          {press.map((p) => (
+            <PressRow key={p.id} p={p} reload={reload} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const EMPTY_PRESS = { title: "", outlet: "", url: "", date: "", summary: "" };
+
+function PressForm({ reload }: { reload: () => void }) {
+  const [f, setF] = useState({ ...EMPTY_PRESS });
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  function set<K extends keyof typeof f>(k: K, v: (typeof f)[K]) {
+    setF((s) => ({ ...s, [k]: v }));
+  }
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setErr("");
+    if (!f.title || !f.date) {
+      setErr("タイトルと日付は必須です");
+      return;
+    }
+    setBusy(true);
+    const res = await fetch("/api/admin/press", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(f),
+    });
+    setBusy(false);
+    if (res.ok) {
+      setF({ ...EMPTY_PRESS });
+      reload();
+    } else setErr("追加に失敗しました");
+  }
+  return (
+    <form onSubmit={submit} className="rounded-2xl border border-line bg-paper p-6">
+      <h2 className="font-jp text-lg font-bold">ニュース／プレスを追加</h2>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <input
+          className={inputCls + " sm:col-span-2"}
+          placeholder="見出し *"
+          value={f.title}
+          onChange={(e) => set("title", e.target.value)}
+        />
+        <input
+          className={inputCls}
+          placeholder="媒体名（例：日本経済新聞）"
+          value={f.outlet}
+          onChange={(e) => set("outlet", e.target.value)}
+        />
+        <input
+          type="date"
+          className={inputCls}
+          value={f.date}
+          onChange={(e) => set("date", e.target.value)}
+        />
+        <input
+          className={inputCls + " sm:col-span-2"}
+          placeholder="記事URL"
+          value={f.url}
+          onChange={(e) => set("url", e.target.value)}
+        />
+        <textarea
+          className={inputCls + " sm:col-span-2"}
+          rows={2}
+          placeholder="概要（任意）"
+          value={f.summary}
+          onChange={(e) => set("summary", e.target.value)}
+        />
+      </div>
+      {err && <p className="mt-2 text-sm text-red-600">{err}</p>}
+      <button
+        type="submit"
+        disabled={busy}
+        className="mt-4 inline-flex h-10 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper disabled:opacity-60"
+      >
+        {busy ? "追加中…" : "追加する"}
+      </button>
+    </form>
+  );
+}
+
+function PressRow({ p, reload }: { p: PressItem; reload: () => void }) {
+  const [busy, setBusy] = useState(false);
+  async function act(method: string, body: unknown) {
+    setBusy(true);
+    await fetch("/api/admin/press", {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    reload();
+    setBusy(false);
+  }
+  return (
+    <div
+      className={cn(
+        "flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-paper p-5",
+        p.hidden ? "border-line opacity-60" : "border-line",
+      )}
+    >
+      <div className="min-w-0">
+        <span className="text-sm tabular-nums text-mute">{p.date}</span>
+        <span className="ml-3 font-medium">{p.title}</span>
+        <span className="ml-2 text-xs text-mute">{p.outlet}</span>
+      </div>
+      <div className="flex items-center gap-2 text-xs">
+        {p.url && (
+          <a
+            href={p.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-underline text-ink"
+          >
+            記事
+          </a>
+        )}
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => act("PATCH", { id: p.id, hidden: !p.hidden })}
+          className="rounded-full border border-line px-3 py-1 hover:border-ink"
+        >
+          {p.hidden ? "公開する" : "非表示にする"}
+        </button>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => {
+            if (window.confirm("この掲載を削除しますか？")) act("DELETE", { id: p.id });
+          }}
+          className="rounded-full border border-red-200 px-3 py-1 text-red-600 hover:bg-red-50"
+        >
+          削除
+        </button>
       </div>
     </div>
   );

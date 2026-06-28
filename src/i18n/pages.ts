@@ -126,6 +126,11 @@ const ja = {
     reapraLink: "REAPRA について詳しくはこちら",
   },
   events: {
+    upcomingEyebrow: "Schedule · 開催予定",
+    upcomingHeading: "次回以降のイベント。",
+    register: "申し込む",
+    online: "オンライン",
+    offline: "会場",
     calEyebrow: "Upcoming · 開催予定",
     calHeading: "開催予定をチェック。",
     calBody:
@@ -457,6 +462,11 @@ const en: Pages = {
     reapraLink: "Learn more about REAPRA",
   },
   events: {
+    upcomingEyebrow: "Schedule",
+    upcomingHeading: "Upcoming events.",
+    register: "Register",
+    online: "Online",
+    offline: "Venue",
     calEyebrow: "Upcoming",
     calHeading: "Check the schedule.",
     calBody:
@@ -786,6 +796,11 @@ const ko: Pages = {
     reapraLink: "REAPRA에 대해 자세히 보기",
   },
   events: {
+    upcomingEyebrow: "Schedule",
+    upcomingHeading: "다가오는 이벤트.",
+    register: "신청하기",
+    online: "온라인",
+    offline: "오프라인",
     calEyebrow: "Upcoming",
     calHeading: "일정을 확인하세요.",
     calBody:
