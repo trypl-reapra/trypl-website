@@ -55,6 +55,7 @@ type Dict = {
     poweredBy: string;
     contact: string;
     login: string;
+    logout: string;
   };
 };
 
@@ -145,6 +146,7 @@ export const dict: Record<Locale, Dict> = {
       poweredBy: "Powered by",
       contact: "お問い合わせ",
       login: "メンバーログイン",
+      logout: "ログアウト",
     },
   },
 
@@ -234,6 +236,7 @@ export const dict: Record<Locale, Dict> = {
       poweredBy: "Powered by",
       contact: "Contact",
       login: "Member login",
+      logout: "Log out",
     },
   },
 
@@ -323,6 +326,7 @@ export const dict: Record<Locale, Dict> = {
       poweredBy: "Powered by",
       contact: "문의하기",
       login: "멤버 로그인",
+      logout: "로그아웃",
     },
   },
 };

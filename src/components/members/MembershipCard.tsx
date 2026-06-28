@@ -12,6 +12,23 @@ type Props = {
   memberSince: string | null;
 };
 
+function CopyIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
+      <rect x="9" y="9" width="11" height="11" rx="2.5" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
+      <path d="M5 12.5l4 4 10-10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function sinceLabel(iso: string | null): string {
   if (!iso) return new Date().getFullYear().toString();
   const d = new Date(iso);
@@ -28,6 +45,16 @@ export default function MembershipCard({
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [t, setT] = useState({ rx: 0, ry: 0, gx: 70, gy: 0, active: false });
+  const [copied, setCopied] = useState(false);
+
+  async function copyId() {
+    if (!memberId) return;
+    try {
+      await navigator.clipboard.writeText(memberId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {}
+  }
 
   function onMove(e: React.PointerEvent) {
     const el = ref.current;
@@ -142,9 +169,19 @@ export default function MembershipCard({
               <p className="text-[9px] font-medium uppercase tracking-[0.22em] text-paper/40">
                 Member ID
               </p>
-              <p className="mt-1 font-mono text-sm tracking-wider text-paper/85">
-                {memberId ?? "TRYPL-000000"}
-              </p>
+              <div className="mt-1 flex items-center gap-2">
+                <span className="font-mono text-sm tracking-wider text-paper/85">
+                  {memberId ?? "TRYPL-000000"}
+                </span>
+                <button
+                  type="button"
+                  onClick={copyId}
+                  aria-label="Copy Member ID"
+                  className="grid h-6 w-6 place-items-center rounded-md text-paper/55 transition-colors hover:bg-white/10 hover:text-paper"
+                >
+                  {copied ? <CheckIcon /> : <CopyIcon />}
+                </button>
+              </div>
             </div>
             <div className="text-right">
               <p className="text-[9px] font-medium uppercase tracking-[0.22em] text-paper/40">

@@ -4,9 +4,10 @@ import { Fragment } from "react";
 import Image from "next/image";
 import PageHeader from "@/components/PageHeader";
 import JoinCTA from "@/components/home/JoinCTA";
-import { Container, Section, Eyebrow } from "@/components/ui";
+import { Container, Section, Eyebrow, Button } from "@/components/ui";
 import { Reveal, RevealLines, Stagger, StaggerItem } from "@/components/motion";
 import { representative } from "@/data/team";
+import { site } from "@/data/site";
 import { usePages } from "@/i18n/pages";
 
 export default function AboutContent() {
@@ -78,17 +79,7 @@ export default function AboutContent() {
                     )}
                     <span className="leading-none">
                       <span className="block text-4xl font-bold tracking-tight text-ink sm:text-6xl">
-                        {w.en === "pLay" ? (
-                          <>
-                            p
-                            <span className="text-ink underline decoration-2 underline-offset-4">
-                              L
-                            </span>
-                            ay
-                          </>
-                        ) : (
-                          w.en
-                        )}
+                        {w.en}
                       </span>
                       <span className="mt-3 block font-jp text-sm font-medium text-mute sm:text-base">
                         {w.jp}
@@ -119,6 +110,16 @@ export default function AboutContent() {
               </Reveal>
               <Reveal delay={0.25}>
                 <p className="mt-6 leading-relaxed text-mute-dark">{a.reapraP2}</p>
+              </Reveal>
+              <Reveal delay={0.3}>
+                <Button
+                  href={site.parent.url}
+                  variant="outline-invert"
+                  size="lg"
+                  className="mt-9"
+                >
+                  {a.reapraLink}
+                </Button>
               </Reveal>
             </div>
           </div>
@@ -184,6 +185,7 @@ export default function AboutContent() {
                     )}
                   </div>
                   <p className="mt-1 text-sm text-mute">{a.repRole}</p>
+                  <p className="text-sm text-mute">{a.repOrg}</p>
                 </figcaption>
               </figure>
             </Reveal>

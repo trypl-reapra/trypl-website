@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLenis } from "lenis/react";
+import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/logo";
 import LangSwitcher from "@/components/layout/LangSwitcher";
@@ -21,6 +22,8 @@ export default function Nav() {
   const pathname = usePathname();
   const lenis = useLenis();
   const t = useT();
+  const { status } = useSession();
+  const authed = status === "authenticated";
 
   const navItems = [
     { label: t.nav.about, href: "/about" },
@@ -116,17 +119,32 @@ export default function Nav() {
               </Link>
             ))}
             <LangSwitcher dark={dark} />
-            <Link
-              href={cta.href}
-              className={cn(
-                "inline-flex h-9 items-center rounded-full px-5 text-sm font-medium transition-colors duration-500",
-                dark
-                  ? "bg-paper text-ink hover:bg-fog"
-                  : "bg-ink text-paper hover:bg-ink-soft",
-              )}
-            >
-              {t.cta}
-            </Link>
+            {authed ? (
+              <button
+                type="button"
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className={cn(
+                  "inline-flex h-9 items-center rounded-full px-5 text-sm font-medium transition-colors duration-500",
+                  dark
+                    ? "bg-paper text-ink hover:bg-fog"
+                    : "bg-ink text-paper hover:bg-ink-soft",
+                )}
+              >
+                {t.footer.logout}
+              </button>
+            ) : (
+              <Link
+                href={cta.href}
+                className={cn(
+                  "inline-flex h-9 items-center rounded-full px-5 text-sm font-medium transition-colors duration-500",
+                  dark
+                    ? "bg-paper text-ink hover:bg-fog"
+                    : "bg-ink text-paper hover:bg-ink-soft",
+                )}
+              >
+                {t.cta}
+              </Link>
+            )}
           </div>
 
           {/* mobile toggle */}
@@ -197,12 +215,22 @@ export default function Nav() {
                 className="space-y-6"
               >
                 <LangSwitcher dark />
-                <Link
-                  href={cta.href}
-                  className="inline-flex h-14 w-full items-center justify-center rounded-full bg-paper text-base font-medium text-ink"
-                >
-                  {t.cta}
-                </Link>
+                {authed ? (
+                  <button
+                    type="button"
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="inline-flex h-14 w-full items-center justify-center rounded-full bg-paper text-base font-medium text-ink"
+                  >
+                    {t.footer.logout}
+                  </button>
+                ) : (
+                  <Link
+                    href={cta.href}
+                    className="inline-flex h-14 w-full items-center justify-center rounded-full bg-paper text-base font-medium text-ink"
+                  >
+                    {t.cta}
+                  </Link>
+                )}
               </motion.div>
             </div>
           </motion.div>

@@ -39,7 +39,7 @@ export default function MembersContent({
         <Container>
           {/* 会員証 */}
           {viaOAuth && (
-            <div className="mb-14">
+            <div className="mb-14 flex flex-col items-center text-center">
               <p className="eyebrow mb-5 text-mute">{m.cardHeading}</p>
               <MembershipCard
                 name={name}

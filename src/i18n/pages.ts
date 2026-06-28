@@ -72,7 +72,7 @@ const ja = {
   about: {
     whatEyebrow: "What",
     whatLede:
-      "TrypL は、REAPRA と連携した「若年層向けインターンシップコミュニティ」です。",
+      "TrypL は、REAPRA 発の「若年層向けインターンシップコミュニティ」です。",
     whatP1:
       "不透明度が増す社会において、若年層が長い時間軸をかけて「株式会社にまつわる仕事＝社会との繋がり」を通じて社会と共創し、熟達でイキイキ生きる（ウェルビーイング）きっかけを掴む——その場と機会を共創するプロジェクトです。",
     whatP2:
@@ -122,6 +122,8 @@ const ja = {
     ],
     repName: "山田 晃義",
     repRole: "TrypL 代表",
+    repOrg: "株式会社リープラジャパン",
+    reapraLink: "REAPRA について詳しくはこちら",
   },
   events: {
     calEyebrow: "Upcoming · 開催予定",
@@ -354,7 +356,7 @@ const en: Pages = {
   about: {
     whatEyebrow: "What",
     whatLede:
-      "TrypL is a “practice-first internship community for youth,” run in partnership with REAPRA.",
+      "TrypL is a “youth-focused internship community,” born from REAPRA.",
     whatP1:
       "In an increasingly uncertain society, TrypL is a project that co-creates the place and the chances for young people to connect with society over a long time horizon — through real work and companies — and to find well-being through mastery.",
     whatP2:
@@ -404,6 +406,8 @@ const en: Pages = {
     ],
     repName: "Akiyoshi Yamada",
     repRole: "TrypL Representative",
+    repOrg: "REAPRA Japan, Inc.",
+    reapraLink: "Learn more about REAPRA",
   },
   events: {
     calEyebrow: "Upcoming",
@@ -634,7 +638,7 @@ const ko: Pages = {
   about: {
     whatEyebrow: "What",
     whatLede:
-      "TrypL은 REAPRA와 연계한 ‘청년 대상 인턴십 커뮤니티’입니다.",
+      "TrypL은 REAPRA에서 시작된 ‘청년 대상 인턴십 커뮤니티’입니다.",
     whatP1:
       "불확실성이 커지는 사회에서, 청년이 긴 시간 축에 걸쳐 ‘회사와 관련된 일=사회와의 연결’을 통해 사회와 공동 창조하고, 숙달로 생기 있게 사는(웰빙) 계기를 잡는—그 장과 기회를 함께 만드는 프로젝트입니다.",
     whatP2:
@@ -684,6 +688,8 @@ const ko: Pages = {
     ],
     repName: "야마다 아키요시",
     repRole: "TrypL 대표",
+    repOrg: "주식회사 리프라 재팬",
+    reapraLink: "REAPRA에 대해 자세히 보기",
   },
   events: {
     calEyebrow: "Upcoming",
