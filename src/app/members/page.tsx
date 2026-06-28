@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { auth, memberProviders } from "@/auth";
 import { listMembers } from "@/lib/store";
+import { profileComplete } from "@/lib/profile";
 import MembersContent from "@/components/pages/MembersContent";
 import MemberRegister from "@/components/members/MemberRegister";
 import FrozenNotice from "@/components/members/FrozenNotice";
+import ProfileGate from "@/components/members/ProfileGate";
 
 export const metadata: Metadata = {
   title: "メンバー",
@@ -42,15 +44,35 @@ export default async function MembersPage() {
   // 凍結中のメンバーには案内のみ表示。
   if (me?.frozen) return <FrozenNotice />;
 
+  const name = session.user.name ?? null;
+  const image = session.user.image ?? null;
+  const memberId = email ? memberCode(email) : null;
+  const memberSince = me?.createdAt ?? null;
+  const profile = me?.profile ?? null;
+
+  // 登録情報が未入力なら、登録画面のみ表示（ゲート）。
+  if (!profileComplete(profile)) {
+    return (
+      <ProfileGate
+        name={name}
+        email={email}
+        image={image}
+        memberId={memberId}
+        memberSince={memberSince}
+        profile={profile}
+      />
+    );
+  }
+
   return (
     <MembersContent
-      name={session.user.name ?? null}
+      name={name}
       email={email}
-      image={session.user.image ?? null}
-      memberId={email ? memberCode(email) : null}
-      memberSince={me?.createdAt ?? null}
+      image={image}
+      memberId={memberId}
+      memberSince={memberSince}
       founder={!!me?.founder}
-      profile={me?.profile ?? null}
+      profile={profile}
     />
   );
 }

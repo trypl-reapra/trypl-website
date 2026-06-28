@@ -29,10 +29,22 @@ type Row = {
 type Profile = {
   fullName: string;
   furigana?: string;
-  school: string;
+  status?: string;
+  affiliation?: string;
   department?: string;
-  year: string;
-  phone: string;
+  grade?: string;
+  jobTitle?: string;
+  note?: string;
+  age?: string;
+  gender?: string;
+  phone?: string;
+};
+
+const STATUS_JP: Record<string, string> = {
+  highschool: "高校生",
+  university: "大学生",
+  working: "社会人",
+  other: "その他",
 };
 type Member = {
   id: string;
@@ -421,13 +433,7 @@ function ApplicationsTab({
               <span className="tabular-nums">{fmt(ap.createdAt)}</span>
             </div>
           </summary>
-          <div className="mt-4 grid gap-x-6 gap-y-1.5 border-t border-line pt-4 text-sm text-mute sm:grid-cols-2">
-            <span>学校：{ap.profile?.school || "—"}</span>
-            <span>学年：{ap.profile?.year || "—"}</span>
-            <span>学部・学科：{ap.profile?.department || "—"}</span>
-            <span>電話：{ap.profile?.phone || "—"}</span>
-            <span className="sm:col-span-2">メール：{ap.email}</span>
-          </div>
+          <ProfileGrid p={ap.profile} email={ap.email} />
           <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-ink">
             {ap.message}
           </p>
@@ -563,10 +569,15 @@ function ProfileGrid({ p, email }: { p?: Profile; email: string }) {
     <div className="mt-4 grid gap-x-6 gap-y-1.5 border-t border-line pt-4 text-sm text-mute sm:grid-cols-2">
       <span>氏名：{p?.fullName || "（未入力）"}</span>
       <span>ふりがな：{p?.furigana || "—"}</span>
-      <span>学校：{p?.school || "（未入力）"}</span>
-      <span>学年：{p?.year || "（未入力）"}</span>
+      <span>区分：{p?.status ? STATUS_JP[p.status] || p.status : "—"}</span>
+      <span>所属：{p?.affiliation || "—"}</span>
       <span>学部・学科：{p?.department || "—"}</span>
-      <span>電話：{p?.phone || "（未入力）"}</span>
+      <span>学年：{p?.grade || "—"}</span>
+      <span>職種：{p?.jobTitle || "—"}</span>
+      <span>年齢：{p?.age || "—"}</span>
+      <span>性別：{p?.gender || "—"}</span>
+      <span>電話：{p?.phone || "—"}</span>
+      {p?.note && <span className="sm:col-span-2">補足：{p.note}</span>}
       <span className="sm:col-span-2">メール：{email}</span>
     </div>
   );

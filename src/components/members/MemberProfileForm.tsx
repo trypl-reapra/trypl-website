@@ -1,53 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { usePages } from "@/i18n/pages";
-
-type Profile = {
-  fullName: string;
-  furigana?: string;
-  school: string;
-  department?: string;
-  year: string;
-  phone: string;
-};
+import { profileComplete, type MemberProfile } from "@/lib/profile";
 
 const inputCls =
   "w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm outline-none transition-colors focus:border-ink";
 
-function Field({
-  label,
-  value,
-  onChange,
-  required,
-  type = "text",
-  placeholder,
-  autoComplete,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  required?: boolean;
-  type?: string;
-  placeholder?: string;
-  autoComplete?: string;
-}) {
+function Label({ text, required, optional }: { text: string; required?: boolean; optional?: string }) {
   return (
-    <label className="block">
-      <span className="mb-2 block text-sm font-medium">
-        {label}
-        {required && <span className="ml-1 text-red-500">*</span>}
-      </span>
-      <input
-        type={type}
-        value={value}
-        required={required}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        onChange={(e) => onChange(e.target.value)}
-        className={inputCls}
-      />
-    </label>
+    <span className="mb-2 block text-sm font-medium">
+      {text}
+      {required && <span className="ml-1 text-red-500">*</span>}
+      {optional && <span className="ml-1 text-xs font-normal text-mute">（{optional}）</span>}
+    </span>
   );
 }
 
@@ -57,132 +24,210 @@ export default function MemberProfileForm({
   defaultName,
 }: {
   email: string;
-  profile: Profile | null;
+  profile: MemberProfile | null;
   defaultName: string;
 }) {
   const t = usePages();
-  const m = t.members;
-  const a = t.apply;
-  const complete = !!(
-    profile?.fullName &&
-    profile?.school &&
-    profile?.year &&
-    profile?.phone
-  );
+  const mp = t.memberProfile;
+  const router = useRouter();
+  const complete = profileComplete(profile);
 
-  const [fullName, setFullName] = useState(profile?.fullName || defaultName);
-  const [furigana, setFurigana] = useState(profile?.furigana || "");
-  const [school, setSchool] = useState(profile?.school || "");
-  const [department, setDepartment] = useState(profile?.department || "");
-  const [year, setYear] = useState(profile?.year || "");
-  const [phone, setPhone] = useState(profile?.phone || "");
-  // 登録済みかつ完了なら最初は折りたたみ表示。
+  const [f, setF] = useState({
+    fullName: profile?.fullName || defaultName,
+    furigana: profile?.furigana || "",
+    status: profile?.status || "",
+    affiliation: profile?.affiliation || "",
+    department: profile?.department || "",
+    grade: profile?.grade || "",
+    jobTitle: profile?.jobTitle || "",
+    note: profile?.note || "",
+    age: profile?.age || "",
+    gender: profile?.gender || "",
+    phone: profile?.phone || "",
+  });
   const [editing, setEditing] = useState(!complete);
-  const [state, setState] = useState<"idle" | "saving" | "saved" | "error">(
-    "idle",
-  );
+  const [state, setState] = useState<"idle" | "saving" | "error">("idle");
+
+  function set<K extends keyof typeof f>(k: K, v: (typeof f)[K]) {
+    setF((s) => ({ ...s, [k]: v }));
+  }
+
+  const canSave =
+    !!f.fullName && !!f.status && (f.status === "other" || !!f.affiliation);
+
+  const affLabel =
+    f.status === "highschool"
+      ? mp.affHighschool
+      : f.status === "university"
+        ? mp.affUniversity
+        : f.status === "working"
+          ? mp.affWorking
+          : "";
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (!canSave) return;
     setState("saving");
     try {
       const res = await fetch("/api/members/profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName,
-          furigana,
-          school,
-          department,
-          year,
-          phone,
-        }),
+        body: JSON.stringify(f),
       });
       if (!res.ok) throw new Error();
-      setState("saved");
       setEditing(false);
+      router.refresh(); // 未登録ゲート→ダッシュボードへ切替
     } catch {
       setState("error");
     }
   }
 
-  return (
-    <div
-      className={
-        "rounded-2xl border p-6 sm:p-7 " +
-        (complete || state === "saved"
-          ? "border-line bg-paper"
-          : "border-amber-300 bg-amber-50/50")
-      }
-    >
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h3 className="font-jp text-lg font-bold">{m.profileHeading}</h3>
-          <p className="mt-1 text-sm text-mute">
-            {complete || state === "saved" ? m.profileLead : m.profileIncomplete}
-          </p>
-        </div>
-        {!editing && (
+  if (!editing && complete) {
+    const statusLabel =
+      { highschool: mp.statusHighschool, university: mp.statusUniversity, working: mp.statusWorking, other: mp.statusOther }[
+        f.status as "highschool"
+      ] || "";
+    return (
+      <div className="rounded-2xl border border-line bg-paper p-6 sm:p-7">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="font-jp text-lg font-bold">{mp.heading}</h3>
+            <p className="mt-1 text-sm text-mute">{mp.lead}</p>
+          </div>
           <button
             type="button"
             onClick={() => setEditing(true)}
             className="rounded-full border border-line px-4 py-1.5 text-sm font-medium text-ink transition-colors hover:border-ink"
           >
-            {m.profileEdit}
+            {mp.edit}
+          </button>
+        </div>
+        <div className="mt-5 grid gap-x-8 gap-y-1.5 text-sm text-mute sm:grid-cols-2">
+          <span>{mp.name}：{f.fullName}</span>
+          <span>{mp.furigana}：{f.furigana || "—"}</span>
+          <span>{mp.statusLabel}：{statusLabel}</span>
+          {affLabel && <span>{affLabel}：{f.affiliation || "—"}</span>}
+          {f.status === "university" && <span>{mp.department}：{f.department || "—"}</span>}
+          {(f.status === "highschool" || f.status === "university") && (
+            <span>{mp.grade}：{f.grade || "—"}</span>
+          )}
+          {f.status === "working" && <span>{mp.jobTitle}：{f.jobTitle || "—"}</span>}
+          {f.status === "other" && <span className="sm:col-span-2">{mp.note}：{f.note || "—"}</span>}
+          <span>{mp.age}：{f.age || "—"}</span>
+          <span>{mp.gender}：{f.gender || "—"}</span>
+          <span>{mp.phone}：{f.phone || "—"}</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={submit} className="rounded-2xl border border-line bg-paper p-6 sm:p-7">
+      {!complete && (
+        <p className="mb-5 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          {mp.incomplete}
+        </p>
+      )}
+      <div className="space-y-4">
+        <label className="block">
+          <Label text={mp.name} required />
+          <input className={inputCls} value={f.fullName} onChange={(e) => set("fullName", e.target.value)} autoComplete="name" />
+        </label>
+        <label className="block">
+          <Label text={mp.furigana} optional={mp.optional} />
+          <input className={inputCls} value={f.furigana} onChange={(e) => set("furigana", e.target.value)} />
+        </label>
+
+        <label className="block">
+          <Label text={mp.statusLabel} required />
+          <select
+            className={inputCls}
+            value={f.status}
+            onChange={(e) => set("status", e.target.value)}
+          >
+            <option value="">{mp.select}</option>
+            <option value="highschool">{mp.statusHighschool}</option>
+            <option value="university">{mp.statusUniversity}</option>
+            <option value="working">{mp.statusWorking}</option>
+            <option value="other">{mp.statusOther}</option>
+          </select>
+        </label>
+
+        {/* 区分に応じた項目 */}
+        {(f.status === "highschool" || f.status === "university" || f.status === "working") && (
+          <label className="block">
+            <Label text={affLabel} required />
+            <input className={inputCls} value={f.affiliation} onChange={(e) => set("affiliation", e.target.value)} />
+          </label>
+        )}
+        {f.status === "university" && (
+          <label className="block">
+            <Label text={mp.department} optional={mp.optional} />
+            <input className={inputCls} value={f.department} onChange={(e) => set("department", e.target.value)} />
+          </label>
+        )}
+        {(f.status === "highschool" || f.status === "university") && (
+          <label className="block">
+            <Label text={mp.grade} optional={mp.optional} />
+            <input className={inputCls} value={f.grade} placeholder={mp.gradePlaceholder} onChange={(e) => set("grade", e.target.value)} />
+          </label>
+        )}
+        {f.status === "working" && (
+          <label className="block">
+            <Label text={mp.jobTitle} optional={mp.optional} />
+            <input className={inputCls} value={f.jobTitle} onChange={(e) => set("jobTitle", e.target.value)} />
+          </label>
+        )}
+        {f.status === "other" && (
+          <label className="block">
+            <Label text={mp.note} optional={mp.optional} />
+            <textarea className={inputCls + " resize-y"} rows={2} value={f.note} onChange={(e) => set("note", e.target.value)} />
+          </label>
+        )}
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <label className="block">
+            <Label text={mp.age} optional={mp.optional} />
+            <input className={inputCls} value={f.age} inputMode="numeric" onChange={(e) => set("age", e.target.value)} />
+          </label>
+          <label className="block">
+            <Label text={mp.gender} optional={mp.optional} />
+            <select className={inputCls} value={f.gender} onChange={(e) => set("gender", e.target.value)}>
+              <option value="">{mp.select}</option>
+              <option value={mp.genderMale}>{mp.genderMale}</option>
+              <option value={mp.genderFemale}>{mp.genderFemale}</option>
+              <option value={mp.genderOther}>{mp.genderOther}</option>
+              <option value={mp.genderNA}>{mp.genderNA}</option>
+            </select>
+          </label>
+          <label className="block">
+            <Label text={mp.phone} optional={mp.optional} />
+            <input className={inputCls} type="tel" value={f.phone} autoComplete="tel" onChange={(e) => set("phone", e.target.value)} />
+          </label>
+        </div>
+
+        <label className="block">
+          <Label text="メール" />
+          <input className={inputCls + " bg-fog text-mute"} value={email} readOnly />
+        </label>
+      </div>
+
+      {state === "error" && <p className="mt-3 text-sm text-red-600">{t.apply.errorDefault}</p>}
+
+      <div className="mt-5 flex flex-wrap items-center gap-3">
+        <button
+          type="submit"
+          disabled={!canSave || state === "saving"}
+          className="inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper transition-colors hover:bg-ink-soft disabled:opacity-50"
+        >
+          {state === "saving" ? mp.saving : mp.save}
+        </button>
+        {complete && (
+          <button type="button" onClick={() => setEditing(false)} className="text-sm text-mute link-underline">
+            {mp.cancel}
           </button>
         )}
       </div>
-
-      {editing ? (
-        <form onSubmit={submit} className="mt-6 space-y-4">
-          <Field label={a.fullNameLabel} value={fullName} onChange={setFullName} required autoComplete="name" />
-          <Field label={a.furiganaLabel} value={furigana} onChange={setFurigana} />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label={a.schoolLabel} value={school} onChange={setSchool} required />
-            <Field label={a.yearLabel} value={year} onChange={setYear} required placeholder={a.yearPlaceholder} />
-          </div>
-          <Field label={a.departmentLabel} value={department} onChange={setDepartment} />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label={a.phoneLabel} value={phone} onChange={setPhone} required type="tel" autoComplete="tel" />
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium">{a.emailLabel}</span>
-              <input type="email" value={email} readOnly className={inputCls + " bg-fog text-mute"} />
-            </label>
-          </div>
-
-          {state === "error" && (
-            <p className="text-sm text-red-600">{a.errorDefault}</p>
-          )}
-
-          <div className="flex flex-wrap items-center gap-3 pt-1">
-            <button
-              type="submit"
-              disabled={state === "saving"}
-              className="inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper transition-colors hover:bg-ink-soft disabled:opacity-60"
-            >
-              {state === "saving" ? m.profileSaving : m.profileSave}
-            </button>
-            {complete && (
-              <button
-                type="button"
-                onClick={() => setEditing(false)}
-                className="text-sm text-mute link-underline"
-              >
-                {m.profileCancel}
-              </button>
-            )}
-          </div>
-        </form>
-      ) : (
-        <div className="mt-5 grid gap-x-8 gap-y-1.5 text-sm text-mute sm:grid-cols-2">
-          <span>{a.fullNameLabel}：{profile?.fullName}</span>
-          <span>{a.furiganaLabel}：{profile?.furigana || "—"}</span>
-          <span>{a.schoolLabel}：{profile?.school}</span>
-          <span>{a.yearLabel}：{profile?.year}</span>
-          <span>{a.departmentLabel}：{profile?.department || "—"}</span>
-          <span>{a.phoneLabel}：{profile?.phone}</span>
-        </div>
-      )}
-    </div>
+    </form>
   );
 }

@@ -9,6 +9,7 @@
  */
 
 import "server-only";
+import type { MemberProfile } from "@/lib/profile";
 
 export type Contact = {
   id: string;
@@ -63,15 +64,8 @@ export type PressItem = {
   createdAt: string;
 };
 
-/** 応募に必要な最低限のプロフィール（会員が応募時に登録）。 */
-export type MemberProfile = {
-  fullName: string;
-  furigana?: string;
-  school: string;
-  department?: string;
-  year: string;
-  phone: string;
-};
+// 会員プロフィールの型はクライアント共通モジュール @/lib/profile に集約（上部で import）。
+export type { MemberProfile } from "@/lib/profile";
 
 /** 会員登録したメンバー（Google / Apple でログインした人）。 */
 export type Member = {

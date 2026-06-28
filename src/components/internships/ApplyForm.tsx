@@ -6,81 +6,39 @@ import { motion } from "framer-motion";
 import { Container, Section } from "@/components/ui";
 import PageHeader from "@/components/PageHeader";
 import { usePages } from "@/i18n/pages";
-
-type Profile = {
-  fullName: string;
-  furigana?: string;
-  school: string;
-  department?: string;
-  year: string;
-  phone: string;
-};
+import type { MemberProfile } from "@/lib/profile";
 
 const inputCls =
   "w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm outline-none transition-colors focus:border-ink";
-
-function Field({
-  label,
-  value,
-  onChange,
-  required,
-  type = "text",
-  placeholder,
-  autoComplete,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  required?: boolean;
-  type?: string;
-  placeholder?: string;
-  autoComplete?: string;
-}) {
-  return (
-    <label className="block">
-      <span className="mb-2 block text-sm font-medium">
-        {label}
-        {required && <span className="ml-1 text-red-500">*</span>}
-      </span>
-      <input
-        type={type}
-        value={value}
-        required={required}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        onChange={(e) => onChange(e.target.value)}
-        className={inputCls}
-      />
-    </label>
-  );
-}
 
 export default function ApplyForm({
   slug,
   company,
   title,
   email,
-  defaultName,
   profile,
 }: {
   slug: string;
   company: string;
   title: string;
   email: string;
-  defaultName: string;
-  profile: Profile | null;
+  profile: MemberProfile;
 }) {
-  const t = usePages().apply;
-  const [fullName, setFullName] = useState(profile?.fullName || defaultName);
-  const [furigana, setFurigana] = useState(profile?.furigana || "");
-  const [school, setSchool] = useState(profile?.school || "");
-  const [department, setDepartment] = useState(profile?.department || "");
-  const [year, setYear] = useState(profile?.year || "");
-  const [phone, setPhone] = useState(profile?.phone || "");
+  const t = usePages();
+  const a = t.apply;
+  const mp = t.memberProfile;
   const [message, setMessage] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">(
     "idle",
   );
+
+  const statusLabel =
+    {
+      highschool: mp.statusHighschool,
+      university: mp.statusUniversity,
+      working: mp.statusWorking,
+      other: mp.statusOther,
+    }[profile.status as "highschool"] || "";
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -89,16 +47,7 @@ export default function ApplyForm({
       const res = await fetch("/api/internships/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          slug,
-          fullName,
-          furigana,
-          school,
-          department,
-          year,
-          phone,
-          message,
-        }),
+        body: JSON.stringify({ slug, message }),
       });
       if (!res.ok) throw new Error();
       setState("done");
@@ -110,8 +59,8 @@ export default function ApplyForm({
   return (
     <>
       <PageHeader
-        eyebrow={t.formEyebrow}
-        title={t.formTitle}
+        eyebrow={a.formEyebrow}
+        title={a.formTitle}
         lead={`${company}｜${title}`}
       />
       <Section tone="light" topPad={false}>
@@ -128,76 +77,34 @@ export default function ApplyForm({
                     <path d="M5 12.5l4 4 10-10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
-                <h2 className="mt-6 font-jp text-2xl font-bold">{t.doneTitle}</h2>
-                <p className="mt-3 text-sm leading-relaxed text-mute">{t.doneBody}</p>
-                <Link
-                  href="/internships"
-                  className="mt-8 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper hover:bg-ink-soft"
-                >
-                  {t.backToListing}
+                <h2 className="mt-6 font-jp text-2xl font-bold">{a.doneTitle}</h2>
+                <p className="mt-3 text-sm leading-relaxed text-mute">{a.doneBody}</p>
+                <Link href="/internships" className="mt-8 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper hover:bg-ink-soft">
+                  {a.backToListing}
                 </Link>
               </motion.div>
             ) : (
               <form onSubmit={submit} className="space-y-5">
-                <p className="eyebrow text-mute">{t.detailsHeading}</p>
-
-                <Field
-                  label={t.fullNameLabel}
-                  value={fullName}
-                  onChange={setFullName}
-                  required
-                  autoComplete="name"
-                />
-                <Field
-                  label={t.furiganaLabel}
-                  value={furigana}
-                  onChange={setFurigana}
-                />
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <Field
-                    label={t.schoolLabel}
-                    value={school}
-                    onChange={setSchool}
-                    required
-                  />
-                  <Field
-                    label={t.yearLabel}
-                    value={year}
-                    onChange={setYear}
-                    required
-                    placeholder={t.yearPlaceholder}
-                  />
-                </div>
-                <Field
-                  label={t.departmentLabel}
-                  value={department}
-                  onChange={setDepartment}
-                />
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <Field
-                    label={t.phoneLabel}
-                    value={phone}
-                    onChange={setPhone}
-                    required
-                    type="tel"
-                    autoComplete="tel"
-                  />
-                  <label className="block">
-                    <span className="mb-2 block text-sm font-medium">
-                      {t.emailLabel}
-                    </span>
-                    <input
-                      type="email"
-                      value={email}
-                      readOnly
-                      className={inputCls + " bg-fog text-mute"}
-                    />
-                  </label>
+                {/* 登録済みプロフィール（読み取り専用） */}
+                <div className="rounded-2xl border border-line bg-fog/40 p-5">
+                  <div className="flex items-center justify-between">
+                    <p className="eyebrow text-mute">{a.detailsHeading}</p>
+                    <Link href="/members" className="text-xs text-mute link-underline">
+                      {mp.edit}
+                    </Link>
+                  </div>
+                  <div className="mt-3 grid gap-x-6 gap-y-1 text-sm text-mute sm:grid-cols-2">
+                    <span>{mp.name}：{profile.fullName}</span>
+                    <span>{mp.statusLabel}：{statusLabel}</span>
+                    {profile.affiliation && <span>{profile.affiliation}</span>}
+                    <span>{a.emailLabel}：{email}</span>
+                    {profile.phone && <span>{mp.phone}：{profile.phone}</span>}
+                  </div>
                 </div>
 
                 <label className="block">
                   <span className="mb-2 block text-sm font-medium">
-                    {t.messageLabel}
+                    {a.messageLabel}
                     <span className="ml-1 text-red-500">*</span>
                   </span>
                   <textarea
@@ -205,13 +112,13 @@ export default function ApplyForm({
                     onChange={(e) => setMessage(e.target.value)}
                     rows={7}
                     required
-                    placeholder={t.messagePlaceholder}
+                    placeholder={a.messagePlaceholder}
                     className={inputCls + " resize-y"}
                   />
                 </label>
 
                 {state === "error" && (
-                  <p className="text-sm text-red-600">{t.errorDefault}</p>
+                  <p className="text-sm text-red-600">{a.errorDefault}</p>
                 )}
 
                 <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -220,18 +127,12 @@ export default function ApplyForm({
                     disabled={state === "sending"}
                     className="inline-flex h-12 items-center justify-center rounded-full bg-ink px-8 text-sm font-medium text-paper transition-colors hover:bg-ink-soft disabled:opacity-60"
                   >
-                    {state === "sending" ? t.sending : t.submit}
+                    {state === "sending" ? a.sending : a.submit}
                   </button>
-                  <Link
-                    href={`/internships/${slug}`}
-                    className="text-sm text-mute link-underline"
-                  >
-                    {t.cancel}
+                  <Link href={`/internships/${slug}`} className="text-sm text-mute link-underline">
+                    {a.cancel}
                   </Link>
                 </div>
-                <p className="pt-2 text-xs leading-relaxed text-mute">
-                  {t.formNote}
-                </p>
               </form>
             )}
           </div>

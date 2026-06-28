@@ -9,15 +9,7 @@ import MemberProfileForm from "@/components/members/MemberProfileForm";
 import DeleteAccountButton from "@/components/members/DeleteAccountButton";
 import { events } from "@/data/site";
 import { usePages } from "@/i18n/pages";
-
-type Profile = {
-  fullName: string;
-  furigana?: string;
-  school: string;
-  department?: string;
-  year: string;
-  phone: string;
-};
+import type { MemberProfile } from "@/lib/profile";
 
 export default function MembersContent({
   name,
@@ -34,7 +26,7 @@ export default function MembersContent({
   memberId: string | null;
   memberSince: string | null;
   founder: boolean;
-  profile: Profile | null;
+  profile: MemberProfile | null;
 }) {
   const t = usePages();
   const m = t.members;
@@ -59,7 +51,7 @@ export default function MembersContent({
               image={image}
               memberId={memberId}
               memberSince={memberSince}
-              founder={founder}
+              variant={founder ? "founder" : "member"}
             />
           </div>
 
