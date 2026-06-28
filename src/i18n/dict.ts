@@ -57,6 +57,8 @@ type Dict = {
     contact: string;
     login: string;
     logout: string;
+    privacy: string;
+    terms: string;
   };
 };
 
@@ -149,6 +151,8 @@ export const dict: Record<Locale, Dict> = {
       contact: "お問い合わせ",
       login: "メンバーログイン",
       logout: "ログアウト",
+      privacy: "プライバシーポリシー",
+      terms: "レギュレーション",
     },
   },
 
@@ -242,6 +246,8 @@ export const dict: Record<Locale, Dict> = {
       contact: "Contact",
       login: "Member login",
       logout: "Log out",
+      privacy: "Privacy Policy",
+      terms: "Regulations",
     },
   },
 
@@ -333,6 +339,8 @@ export const dict: Record<Locale, Dict> = {
       contact: "문의하기",
       login: "멤버 로그인",
       logout: "로그아웃",
+      privacy: "개인정보 처리방침",
+      terms: "커뮤니티 규정",
     },
   },
 };

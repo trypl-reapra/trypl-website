@@ -21,6 +21,8 @@ export default function Footer() {
     { label: t.footer.contact, href: "/contact" },
     { label: t.cta, href: cta.href },
     { label: t.footer.login, href: "/members" },
+    { label: t.footer.privacy, href: "/privacy" },
+    { label: t.footer.terms, href: "/legal" },
   ];
 
   return (

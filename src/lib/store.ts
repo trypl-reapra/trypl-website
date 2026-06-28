@@ -27,6 +27,38 @@ export type AdminInternship = {
   compensation: string;
   summary: string;
   applyUrl: string;
+  /** ヘッダー画像（デフォルト画像のパス or 任意URL）。 */
+  headerImage?: string;
+  hidden: boolean;
+  createdAt: string;
+};
+
+/** イベント（管理画面から登録。日時・場所・説明・申込URL）。 */
+export type EventItem = {
+  id: string;
+  title: string;
+  /** YYYY-MM-DD */
+  date: string;
+  startTime: string;
+  endTime: string;
+  place: string;
+  online: boolean;
+  description: string;
+  registerUrl: string;
+  image?: string;
+  hidden: boolean;
+  createdAt: string;
+};
+
+/** ニュース / プレス掲載（管理画面から登録）。 */
+export type PressItem = {
+  id: string;
+  title: string;
+  outlet: string;
+  url: string;
+  /** YYYY-MM-DD */
+  date: string;
+  summary: string;
   hidden: boolean;
   createdAt: string;
 };
@@ -108,6 +140,9 @@ const K_OVERRIDES = "trypl:overrides";
 const K_MEMBERS = "trypl:members";
 const K_APPLICATIONS = "trypl:applications";
 const K_WITHDRAWALS = "trypl:withdrawals";
+const K_EVENTS = "trypl:events";
+const K_PRESS = "trypl:press";
+const K_STATS = "trypl:stats"; // ハッシュ：total / day:YYYY-MM-DD
 
 // ---- in-memory fallback ----
 // globalThis に載せて、同一プロセス内の別バンドル（API ルートとページ等）でも
@@ -119,6 +154,9 @@ type Mem = {
   members: Member[];
   applications: Application[];
   withdrawals: Withdrawal[];
+  events: EventItem[];
+  press: PressItem[];
+  stats: Record<string, number>;
 };
 const g = globalThis as unknown as { __tryplMem?: Mem };
 const mem: Mem =
@@ -130,6 +168,9 @@ const mem: Mem =
     members: [],
     applications: [],
     withdrawals: [],
+    events: [],
+    press: [],
+    stats: {},
   });
 
 async function kv(command: (string | number)[]): Promise<unknown> {
@@ -411,6 +452,124 @@ export async function setOverride(
   } else {
     mem.overrides = next;
   }
+}
+
+/* --------------------------------------------------------- events */
+
+export async function addEvent(
+  input: Omit<EventItem, "id" | "createdAt" | "hidden">,
+  now: string,
+): Promise<EventItem> {
+  const item: EventItem = { id: rid(), createdAt: now, hidden: false, ...input };
+  if (useKV) await kv(["LPUSH", K_EVENTS, JSON.stringify(item)]);
+  else mem.events.unshift(item);
+  return item;
+}
+
+export async function listEvents(): Promise<EventItem[]> {
+  if (useKV) {
+    const raw = (await kv(["LRANGE", K_EVENTS, 0, -1])) as string[];
+    return (raw || []).map((s) => JSON.parse(s) as EventItem);
+  }
+  return mem.events;
+}
+
+/** 公開用：非表示でないイベントを日付昇順で返す。 */
+export async function listPublicEvents(): Promise<EventItem[]> {
+  return (await listEvents())
+    .filter((e) => !e.hidden)
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+async function saveAllEvents(items: EventItem[]): Promise<void> {
+  if (useKV) {
+    await kv(["DEL", K_EVENTS]);
+    if (items.length)
+      await kv(["RPUSH", K_EVENTS, ...items.map((e) => JSON.stringify(e))]);
+  } else mem.events = items;
+}
+
+export async function deleteEvent(id: string): Promise<void> {
+  await saveAllEvents((await listEvents()).filter((e) => e.id !== id));
+}
+
+export async function setEventHidden(id: string, hidden: boolean): Promise<void> {
+  await saveAllEvents(
+    (await listEvents()).map((e) => (e.id === id ? { ...e, hidden } : e)),
+  );
+}
+
+/* ---------------------------------------------------------- press */
+
+export async function addPress(
+  input: Omit<PressItem, "id" | "createdAt" | "hidden">,
+  now: string,
+): Promise<PressItem> {
+  const item: PressItem = { id: rid(), createdAt: now, hidden: false, ...input };
+  if (useKV) await kv(["LPUSH", K_PRESS, JSON.stringify(item)]);
+  else mem.press.unshift(item);
+  return item;
+}
+
+export async function listPress(): Promise<PressItem[]> {
+  if (useKV) {
+    const raw = (await kv(["LRANGE", K_PRESS, 0, -1])) as string[];
+    return (raw || []).map((s) => JSON.parse(s) as PressItem);
+  }
+  return mem.press;
+}
+
+export async function listPublicPress(): Promise<PressItem[]> {
+  return (await listPress())
+    .filter((p) => !p.hidden)
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+async function saveAllPress(items: PressItem[]): Promise<void> {
+  if (useKV) {
+    await kv(["DEL", K_PRESS]);
+    if (items.length)
+      await kv(["RPUSH", K_PRESS, ...items.map((p) => JSON.stringify(p))]);
+  } else mem.press = items;
+}
+
+export async function deletePress(id: string): Promise<void> {
+  await saveAllPress((await listPress()).filter((p) => p.id !== id));
+}
+
+export async function setPressHidden(id: string, hidden: boolean): Promise<void> {
+  await saveAllPress(
+    (await listPress()).map((p) => (p.id === id ? { ...p, hidden } : p)),
+  );
+}
+
+/* --------------------------------------------------- access stats */
+
+export async function trackView(day: string): Promise<void> {
+  if (useKV) {
+    await kv(["HINCRBY", K_STATS, "total", 1]);
+    await kv(["HINCRBY", K_STATS, `day:${day}`, 1]);
+  } else {
+    mem.stats.total = (mem.stats.total || 0) + 1;
+    const k = `day:${day}`;
+    mem.stats[k] = (mem.stats[k] || 0) + 1;
+  }
+}
+
+export async function getStats(): Promise<Record<string, number>> {
+  if (useKV) {
+    const raw = (await kv(["HGETALL", K_STATS])) as unknown;
+    const out: Record<string, number> = {};
+    if (Array.isArray(raw)) {
+      for (let i = 0; i + 1 < raw.length; i += 2)
+        out[String(raw[i])] = Number(raw[i + 1]) || 0;
+    } else if (raw && typeof raw === "object") {
+      for (const [k, v] of Object.entries(raw as Record<string, unknown>))
+        out[k] = Number(v) || 0;
+    }
+    return out;
+  }
+  return mem.stats;
 }
 
 export const storeMode = useKV ? "kv" : "memory";

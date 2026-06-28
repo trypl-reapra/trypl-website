@@ -58,6 +58,7 @@ export async function GET() {
     compensation: a.compensation,
     summary: a.summary,
     applyUrl: a.applyUrl,
+    headerImage: a.headerImage,
     hidden: a.hidden,
   }));
 
@@ -80,6 +81,7 @@ export async function POST(req: Request) {
       compensation: String(b.compensation ?? "").trim().slice(0, 120),
       summary: String(b.summary ?? "").trim().slice(0, 1000),
       applyUrl: String(b.applyUrl ?? "").trim().slice(0, 500) || "#",
+      headerImage: String(b.headerImage ?? "").trim().slice(0, 500) || undefined,
     },
     new Date().toISOString(),
   );
