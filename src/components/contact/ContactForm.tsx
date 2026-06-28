@@ -2,19 +2,14 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-
-const categories = [
-  "参加について",
-  "取材・メディア",
-  "企業・大学との連携",
-  "採用・インターン掲載",
-  "その他",
-];
+import { usePages } from "@/i18n/pages";
 
 const inputCls =
   "w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm outline-none transition-colors duration-200 placeholder:text-mute/60 focus:border-ink";
 
 export default function ContactForm() {
+  const c = usePages().contact;
+  const categories = c.categories;
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">(
     "idle",
   );
@@ -39,10 +34,10 @@ export default function ContactForm() {
         body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "送信に失敗しました");
+      if (!res.ok) throw new Error(data.error || c.errorDefault);
       setState("done");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "送信に失敗しました");
+      setError(err instanceof Error ? err.message : c.errorDefault);
       setState("error");
     }
   }
@@ -67,10 +62,8 @@ export default function ContactForm() {
               />
             </svg>
           </div>
-          <h3 className="mt-6 font-jp text-2xl font-bold">送信しました</h3>
-          <p className="mt-3 max-w-sm leading-relaxed text-mute">
-            お問い合わせありがとうございます。内容を確認のうえ、担当より折り返しご連絡します。
-          </p>
+          <h3 className="mt-6 font-jp text-2xl font-bold">{c.doneTitle}</h3>
+          <p className="mt-3 max-w-sm leading-relaxed text-mute">{c.doneBody}</p>
         </motion.div>
       ) : (
         <motion.form
@@ -82,11 +75,11 @@ export default function ContactForm() {
         >
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="block">
-              <span className="mb-2 block text-sm font-medium">お名前</span>
-              <input name="name" required maxLength={100} className={inputCls} placeholder="山田 太郎" />
+              <span className="mb-2 block text-sm font-medium">{c.fName}</span>
+              <input name="name" required maxLength={100} className={inputCls} />
             </label>
             <label className="block">
-              <span className="mb-2 block text-sm font-medium">メールアドレス</span>
+              <span className="mb-2 block text-sm font-medium">{c.fEmail}</span>
               <input
                 name="email"
                 type="email"
@@ -99,7 +92,7 @@ export default function ContactForm() {
           </div>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">種別</span>
+            <span className="mb-2 block text-sm font-medium">{c.fCategory}</span>
             <select name="category" className={inputCls} defaultValue={categories[0]}>
               {categories.map((c) => (
                 <option key={c} value={c}>
@@ -110,14 +103,14 @@ export default function ContactForm() {
           </label>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">お問い合わせ内容</span>
+            <span className="mb-2 block text-sm font-medium">{c.fMessage}</span>
             <textarea
               name="message"
               required
               rows={6}
               maxLength={5000}
               className={inputCls + " resize-y"}
-              placeholder="ご相談内容をご記入ください。"
+              placeholder={c.fMessagePlaceholder}
             />
           </label>
 
@@ -130,7 +123,7 @@ export default function ContactForm() {
             disabled={state === "sending"}
             className="inline-flex h-12 items-center justify-center rounded-full bg-ink px-7 text-sm font-medium text-paper transition-colors hover:bg-ink-soft disabled:opacity-60"
           >
-            {state === "sending" ? "送信中…" : "送信する"}
+            {state === "sending" ? c.sending : c.submit}
           </button>
         </motion.form>
       )}

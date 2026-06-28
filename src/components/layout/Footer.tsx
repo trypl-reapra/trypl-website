@@ -6,11 +6,13 @@ import { Container } from "@/components/ui";
 import { site, cta } from "@/data/site";
 import { socials } from "@/data/socials";
 import { useT } from "@/i18n/LocaleProvider";
+import { usePages } from "@/i18n/pages";
 import FooterQuote from "@/components/layout/FooterQuote";
 
 export default function Footer() {
   const year = 2026;
   const t = useT();
+  const pages = usePages();
   const navItems = [
     { label: t.nav.about, href: "/about" },
     { label: t.nav.internships, href: "/internships" },
@@ -36,7 +38,7 @@ export default function Footer() {
           <div className="max-w-sm">
             <Logo className="text-paper" tone="paper" />
             <p className="mt-6 text-sm leading-relaxed text-mute-dark">
-              {site.tagline}
+              {pages.tagline}
               <br />
               {t.footer.desc}
             </p>

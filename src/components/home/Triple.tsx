@@ -10,14 +10,15 @@ import {
   useTransform,
 } from "framer-motion";
 import { Container, Eyebrow } from "@/components/ui";
-import { triple } from "@/data/site";
+import { usePages } from "@/i18n/pages";
 import { cn } from "@/lib/cn";
-
-const TRY = "Try（挑戦）× Practice（実践）× pLay（楽しむ）";
 
 export default function Triple() {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
+  const home = usePages().home;
+  const triple = home.triple;
+  const TRY = home.tryLine;
   const n = triple.length;
   const [active, setActive] = useState(0);
 
@@ -36,9 +37,9 @@ export default function Triple() {
     return (
       <section data-nav-theme="light" className="bg-paper text-ink">
         <Container className="py-24 sm:py-32">
-          <Eyebrow>The name · TrypL</Eyebrow>
+          <Eyebrow>{home.tripleEyebrow}</Eyebrow>
           <h2 className="mt-7 font-jp text-[clamp(1.9rem,5vw,3.5rem)] font-bold tracking-[-0.02em]">
-            名前に込めた、3つのL。
+            {home.tripleHeading}
           </h2>
           <div className="mt-14 grid gap-10 sm:grid-cols-3">
             {triple.map((t) => (
@@ -73,7 +74,7 @@ export default function Triple() {
 
         <Container className="relative">
           <div className="flex items-center justify-between">
-            <Eyebrow>The name · TrypL</Eyebrow>
+            <Eyebrow>{home.tripleEyebrow}</Eyebrow>
             <span className="font-display text-sm tabular-nums text-mute">
               {String(active + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
             </span>

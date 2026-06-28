@@ -1,20 +1,24 @@
+"use client";
+
 import Image from "next/image";
 import { Container, Eyebrow } from "@/components/ui";
 import { Reveal } from "@/components/motion";
 import { events } from "@/data/site";
+import { usePages } from "@/i18n/pages";
 
 /** ホームに置く、写真が横に流れるストリップ（ホバーで一時停止）。 */
 export default function PhotoStrip() {
+  const p = usePages();
   // 途切れず流すため写真を複製。
   const row = [...events.photos, ...events.photos];
 
   return (
     <section data-nav-theme="light" className="overflow-hidden bg-fog py-20 sm:py-28">
       <Container>
-        <Eyebrow>Community · 活動の様子</Eyebrow>
+        <Eyebrow>{p.photoStrip.eyebrow}</Eyebrow>
         <Reveal>
           <h2 className="mt-7 font-jp text-[clamp(1.8rem,4.5vw,3rem)] font-bold tracking-[-0.02em]">
-            現場には、いつも仲間がいる。
+            {p.photoStrip.heading}
           </h2>
         </Reveal>
       </Container>
