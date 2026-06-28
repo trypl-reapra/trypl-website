@@ -125,8 +125,8 @@ export default function MembershipCard({
     const px = (e.clientX - r.left) / r.width - 0.5;
     const py = (e.clientY - r.top) / r.height - 0.5;
     setT({
-      rx: -py * 22, // よく動くように大きめ
-      ry: px * 26,
+      rx: -py * 10, // 最初と同じ控えめなチルト
+      ry: px * 12,
       gx: ((e.clientX - r.left) / r.width) * 100,
       gy: ((e.clientY - r.top) / r.height) * 100,
       active: true,
@@ -147,7 +147,7 @@ export default function MembershipCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       className="w-full max-w-[440px] touch-none"
-      style={{ perspective: 900 }}
+      style={{ perspective: 1200 }}
     >
       <div
         onPointerMove={move}
@@ -155,8 +155,8 @@ export default function MembershipCard({
         className="group relative aspect-[1.585/1] w-full select-none overflow-hidden rounded-[26px] shadow-[0_30px_70px_-30px_rgba(0,0,0,0.8)] will-change-transform"
         style={{
           transformStyle: "preserve-3d",
-          transform: `rotateX(${t.rx}deg) rotateY(${t.ry}deg) scale(${t.active ? 1.05 : 1})`,
-          transition: t.active ? "transform 0.06s ease-out" : "transform 0.5s cubic-bezier(0.16,1,0.3,1)",
+          transform: `rotateX(${t.rx}deg) rotateY(${t.ry}deg) scale(${t.active ? 1.015 : 1})`,
+          transition: t.active ? "transform 0.12s ease-out" : "transform 0.5s cubic-bezier(0.16,1,0.3,1)",
           background: c.bg,
         }}
       >
@@ -169,19 +169,19 @@ export default function MembershipCard({
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            opacity: c.glareBase + (t.active ? 0.6 : 0),
+            opacity: c.glareBase + (t.active ? 0.4 : 0),
             transition: "opacity 0.3s ease",
-            background: `radial-gradient(420px circle at ${t.gx}% ${t.gy}%, ${c.glare}, transparent 55%)`,
+            background: `radial-gradient(440px circle at ${t.gx}% ${t.gy}%, ${c.glare}, transparent 55%)`,
           }}
         />
         {/* 斜めのハイライト帯（傾きで移動して質感を出す） */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            opacity: t.active ? 0.5 : 0.2,
+            opacity: t.active ? 0.32 : 0.15,
             transition: "opacity 0.3s ease",
             background: `linear-gradient(100deg, transparent 42%, ${c.glare} ${hlX / 2 + 25}%, transparent 62%)`,
-            transform: `translateY(${(hlY - 50) * 0.3}%)`,
+            transform: `translateY(${(hlY - 50) * 0.2}%)`,
           }}
         />
         {/* 上辺の淡いハイライト */}
