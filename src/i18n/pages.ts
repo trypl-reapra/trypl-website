@@ -266,7 +266,7 @@ const ja = {
   memberAuth: {
     badge: "Membership",
     title: "TrypL に参加する",
-    desc: "Google または Apple アカウントで会員登録・ログインできます。登録は無料、30秒で完了します。",
+    desc: "Google アカウントで会員登録・ログインできます。登録は無料、30秒で完了します。",
     google: "Google で続ける",
     apple: "Apple で続ける",
     privacy: "続行することで、TrypL の運営方針とプライバシーの取り扱いに同意したものとみなされます。",
@@ -539,7 +539,7 @@ const en: Pages = {
   memberAuth: {
     badge: "Membership",
     title: "Join TrypL",
-    desc: "Sign up or log in with your Google or Apple account. It's free and takes about 30 seconds.",
+    desc: "Sign up or log in with your Google account. It's free and takes about 30 seconds.",
     google: "Continue with Google",
     apple: "Continue with Apple",
     privacy: "By continuing, you agree to TrypL's operating policy and the handling of your data.",
@@ -810,7 +810,7 @@ const ko: Pages = {
   memberAuth: {
     badge: "Membership",
     title: "TrypL에 참여하기",
-    desc: "Google 또는 Apple 계정으로 회원 가입·로그인할 수 있습니다. 무료이며 30초면 완료됩니다.",
+    desc: "Google 계정으로 회원 가입·로그인할 수 있습니다. 무료이며 30초면 완료됩니다.",
     google: "Google로 계속하기",
     apple: "Apple로 계속하기",
     privacy: "계속하면 TrypL의 운영 방침과 개인정보 처리에 동의하는 것으로 간주됩니다.",
