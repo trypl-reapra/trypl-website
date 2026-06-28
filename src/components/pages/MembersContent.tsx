@@ -5,20 +5,17 @@ import PageHeader from "@/components/PageHeader";
 import { Container, Section } from "@/components/ui";
 import MemberLogout from "@/components/members/MemberLogout";
 import MembershipCard from "@/components/members/MembershipCard";
+import DeleteAccountButton from "@/components/members/DeleteAccountButton";
 import { events } from "@/data/site";
 import { usePages } from "@/i18n/pages";
 
 export default function MembersContent({
-  isAdmin,
-  viaOAuth,
   name,
   email,
   image,
   memberId,
   memberSince,
 }: {
-  isAdmin: boolean;
-  viaOAuth: boolean;
   name: string | null;
   email: string | null;
   image: string | null;
@@ -38,18 +35,16 @@ export default function MembersContent({
       <Section tone="light" topPad={false}>
         <Container>
           {/* 会員証 */}
-          {viaOAuth && (
-            <div className="mb-14 flex flex-col items-center text-center">
-              <p className="eyebrow mb-5 text-mute">{m.cardHeading}</p>
-              <MembershipCard
-                name={name}
-                email={email}
-                image={image}
-                memberId={memberId}
-                memberSince={memberSince}
-              />
-            </div>
-          )}
+          <div className="mb-14 flex flex-col items-center text-center">
+            <p className="eyebrow mb-5 text-mute">{m.cardHeading}</p>
+            <MembershipCard
+              name={name}
+              email={email}
+              image={image}
+              memberId={memberId}
+              memberSince={memberSince}
+            />
+          </div>
 
           <div className="grid gap-5 sm:grid-cols-2">
             <Link
@@ -75,15 +70,12 @@ export default function MembersContent({
           </div>
 
           <div className="mt-12 flex flex-wrap items-center gap-4">
-            {isAdmin && (
-              <Link
-                href="/admin"
-                className="inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper hover:bg-ink-soft"
-              >
-                {m.toAdmin}
-              </Link>
-            )}
-            <MemberLogout viaOAuth={viaOAuth} label={m.logout} />
+            <MemberLogout label={m.logout} />
+          </div>
+
+          {/* 退会 */}
+          <div className="mt-16 border-t border-line pt-8">
+            <DeleteAccountButton />
           </div>
         </Container>
       </Section>

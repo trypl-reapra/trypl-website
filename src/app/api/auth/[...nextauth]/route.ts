@@ -1,7 +1,6 @@
 /**
  * Auth.js のルートハンドラ（/api/auth/* を処理）。
- * 既存の /api/auth/login・/api/auth/logout（admin 用の静的ルート）は
- * より具体的なパスとして優先され、そちら以外の /api/auth/* をここが受ける。
+ * 会員・管理者ともに Google（/ Apple）OAuth で認証する。
  */
 import { handlers } from "@/auth";
 

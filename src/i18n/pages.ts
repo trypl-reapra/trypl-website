@@ -268,6 +268,12 @@ const ja = {
     eventsSub: "説明会・座談会・ワークショップの予定。",
     toAdmin: "管理画面へ",
     logout: "ログアウト",
+    deleteAccount: "退会する",
+    deleteConfirm:
+      "本当に退会しますか？会員情報が削除され、ログアウトされます。この操作は取り消せません。",
+    deleteConfirmYes: "退会する",
+    deleteCancel: "キャンセル",
+    deleting: "処理中…",
   },
   memberAuth: {
     badge: "Membership",
@@ -552,6 +558,12 @@ const en: Pages = {
     eventsSub: "Schedule of info sessions, dialogues, and workshops.",
     toAdmin: "Go to admin",
     logout: "Log out",
+    deleteAccount: "Delete my account",
+    deleteConfirm:
+      "Are you sure you want to delete your membership? Your member data will be removed and you'll be signed out. This can't be undone.",
+    deleteConfirmYes: "Delete account",
+    deleteCancel: "Cancel",
+    deleting: "Processing…",
   },
   memberAuth: {
     badge: "Membership",
@@ -834,6 +846,12 @@ const ko: Pages = {
     eventsSub: "설명회·좌담회·워크숍 일정.",
     toAdmin: "관리 화면으로",
     logout: "로그아웃",
+    deleteAccount: "회원 탈퇴",
+    deleteConfirm:
+      "정말 탈퇴하시겠습니까? 회원 정보가 삭제되고 로그아웃됩니다. 이 작업은 되돌릴 수 없습니다.",
+    deleteConfirmYes: "탈퇴하기",
+    deleteCancel: "취소",
+    deleting: "처리 중…",
   },
   memberAuth: {
     badge: "Membership",

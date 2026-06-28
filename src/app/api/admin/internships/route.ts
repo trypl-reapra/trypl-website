@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { currentRole } from "@/lib/auth";
+import { sessionRole } from "@/auth";
 import {
   addInternship,
   deleteInternship,
@@ -27,7 +27,7 @@ type Row = {
 };
 
 async function guard() {
-  return (await currentRole()) === "admin";
+  return (await sessionRole()) === "admin";
 }
 
 export async function GET() {

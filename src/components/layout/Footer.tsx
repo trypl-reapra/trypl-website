@@ -20,7 +20,7 @@ export default function Footer() {
     { label: t.nav.links, href: "/links" },
     { label: t.footer.contact, href: "/contact" },
     { label: t.cta, href: cta.href },
-    { label: t.footer.login, href: "/login" },
+    { label: t.footer.login, href: "/members" },
   ];
 
   return (

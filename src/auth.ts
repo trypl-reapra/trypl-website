@@ -1,17 +1,15 @@
 /**
- * Auth.js (NextAuth v5) — メンバー会員登録 / ログイン用。
+ * Auth.js (NextAuth v5) — 会員 / 管理者の単一認証。
  *
- * メンバーは Google / Apple アカウントで会員登録・ログインする。
- * 各プロバイダは対応する環境変数が設定されている場合のみ有効化される
- * （未設定ならボタンは表示されず、ビルドも通る）。
- *
- * 管理者（admin）は別系統（src/lib/auth.ts の HMAC Cookie）のまま。
- * この Auth.js セッションは「member」ロールのみを扱う。
+ * ・一般メンバー：Google（/ Apple）でログイン＝会員登録。
+ * ・管理者：環境変数 ADMIN_EMAILS に登録したメールの Google アカウントでログインすると
+ *   role が "admin" になり、/admin（管理画面）に入れる。専用のパスワード画面は持たない。
  *
  * 必要な環境変数:
- *   AUTH_SECRET              … セッション署名用（既存のものを流用可）
+ *   AUTH_SECRET            … セッション署名用
  *   AUTH_GOOGLE_ID / AUTH_GOOGLE_SECRET   … Google OAuth
- *   AUTH_APPLE_ID  / AUTH_APPLE_SECRET     … Sign in with Apple
+ *   AUTH_APPLE_ID  / AUTH_APPLE_SECRET     … Sign in with Apple（任意）
+ *   ADMIN_EMAILS           … 管理者の Google メール（カンマ区切りで複数可）
  */
 
 import NextAuth from "next-auth";
@@ -30,6 +28,18 @@ export const memberProviders = {
   any: hasGoogle || hasApple,
 };
 
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "")
+  .split(",")
+  .map((s) => s.trim().toLowerCase())
+  .filter(Boolean);
+
+export type Role = "admin" | "member";
+
+function roleForEmail(email?: string | null): Role {
+  if (email && ADMIN_EMAILS.includes(email.toLowerCase())) return "admin";
+  return "member";
+}
+
 const providers: Provider[] = [];
 if (hasGoogle) providers.push(Google);
 if (hasApple) providers.push(Apple);
@@ -37,30 +47,27 @@ if (hasApple) providers.push(Apple);
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   providers,
-  pages: {
-    // 専用のサインインUIは /members 側で出す。
-    signIn: "/members",
-    error: "/members",
-  },
+  pages: { signIn: "/members", error: "/members" },
   session: { strategy: "jwt" },
   callbacks: {
-    async jwt({ token }) {
-      // Auth.js 経由のログインは常に member ロール。
-      (token as { role?: string }).role = "member";
+    async jwt({ token, user }) {
+      const email = (user?.email ?? token.email) as string | undefined;
+      (token as { role?: Role }).role = roleForEmail(email);
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as { role?: string }).role =
-          (token as { role?: string }).role ?? "member";
+        (session.user as { role?: Role }).role =
+          (token as { role?: Role }).role ?? "member";
       }
       return session;
     },
   },
   events: {
-    // 初回ログイン＝会員登録。メンバー台帳に記録（メール重複は store 側で排除）。
+    // 初回ログイン＝会員登録。管理者アカウントは運営者なので台帳には載せない。
     async signIn({ user, account }) {
       if (!user?.email) return;
+      if (roleForEmail(user.email) === "admin") return;
       try {
         await addMember(
           {
@@ -77,3 +84,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 });
+
+/** 現在のセッションのロールを返す（サーバー専用）。未ログインは null。 */
+export async function sessionRole(): Promise<Role | null> {
+  const s = await auth();
+  if (!s?.user) return null;
+  return (s.user as { role?: Role }).role ?? "member";
+}

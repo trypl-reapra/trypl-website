@@ -160,6 +160,12 @@ export async function listMembers(): Promise<Member[]> {
   return mem.members;
 }
 
+/** 退会：指定メールの会員レコードを削除する。 */
+export async function removeMemberByEmail(email: string): Promise<void> {
+  const items = (await listMembers()).filter((m) => m.email !== email);
+  await saveAllMembers(items);
+}
+
 async function saveAllMembers(items: Member[]): Promise<void> {
   if (useKV) {
     await kv(["DEL", K_MEMBERS]);

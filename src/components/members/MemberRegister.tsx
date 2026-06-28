@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
 import { LogoMark } from "@/components/logo";
@@ -102,11 +101,6 @@ export default function MemberRegister({ providers }: { providers: Providers }) 
           </div>
         )}
 
-        <p className="mt-8 text-center text-xs text-mute">
-          <Link href="/login" className="link-underline">
-            {t.adminLink}
-          </Link>
-        </p>
       </motion.div>
     </section>
   );
