@@ -64,8 +64,13 @@ export type Override = Partial<{
   applyUrl: string;
 }>;
 
-const KV_URL = process.env.KV_REST_API_URL;
-const KV_TOKEN = process.env.KV_REST_API_TOKEN;
+// Vercel Marketplace の Redis 連携（Upstash 等）で注入される環境変数。
+// 連携の構成により KV_REST_API_* か UPSTASH_REDIS_REST_* のどちらかになるため、
+// 両方を受け付ける（どちらの名前でも自動で恒久ストレージに切り替わる）。
+const KV_URL =
+  process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+const KV_TOKEN =
+  process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const useKV = !!(KV_URL && KV_TOKEN);
 
 const K_CONTACTS = "trypl:contacts";
