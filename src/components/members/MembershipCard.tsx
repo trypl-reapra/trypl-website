@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Logo } from "@/components/logo";
+import { Logo, LogoMark } from "@/components/logo";
 
 type Props = {
   name: string | null;
@@ -27,7 +27,7 @@ export default function MembershipCard({
   memberSince,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const [t, setT] = useState({ rx: 0, ry: 0, gx: 50, gy: 0, active: false });
+  const [t, setT] = useState({ rx: 0, ry: 0, gx: 70, gy: 0, active: false });
 
   function onMove(e: React.PointerEvent) {
     const el = ref.current;
@@ -36,15 +36,15 @@ export default function MembershipCard({
     const px = (e.clientX - r.left) / r.width - 0.5;
     const py = (e.clientY - r.top) / r.height - 0.5;
     setT({
-      rx: -py * 10,
-      ry: px * 12,
-      gx: (e.clientX - r.left) / r.width * 100,
-      gy: (e.clientY - r.top) / r.height * 100,
+      rx: -py * 9,
+      ry: px * 11,
+      gx: ((e.clientX - r.left) / r.width) * 100,
+      gy: ((e.clientY - r.top) / r.height) * 100,
       active: true,
     });
   }
   function reset() {
-    setT({ rx: 0, ry: 0, gx: 50, gy: 0, active: false });
+    setT({ rx: 0, ry: 0, gx: 70, gy: 0, active: false });
   }
 
   const displayName = name || (email ? email.split("@")[0] : "TrypL Member");
@@ -61,34 +61,38 @@ export default function MembershipCard({
         ref={ref}
         onPointerMove={onMove}
         onPointerLeave={reset}
-        className="group relative aspect-[1.585/1] w-full select-none overflow-hidden rounded-[26px] shadow-[0_30px_70px_-30px_rgba(0,0,0,0.7)] transition-transform duration-200 ease-out will-change-transform"
+        className="group relative aspect-[1.585/1] w-full select-none overflow-hidden rounded-[26px] shadow-[0_30px_70px_-30px_rgba(0,0,0,0.8)] transition-transform duration-200 ease-out will-change-transform"
         style={{
-          transform: `rotateX(${t.rx}deg) rotateY(${t.ry}deg) scale(${t.active ? 1.015 : 1})`,
+          transform: `rotateX(${t.rx}deg) rotateY(${t.ry}deg) scale(${t.active ? 1.012 : 1})`,
           transformStyle: "preserve-3d",
           background:
-            "linear-gradient(135deg, #0c0c14 0%, #15151f 45%, #1b1430 100%)",
+            "linear-gradient(150deg, #0a0a0c 0%, #121214 55%, #18181d 100%)",
         }}
       >
-        {/* ホログラフィックなにじみ */}
-        <div
-          className="pointer-events-none absolute -inset-1/4 opacity-40 blur-2xl"
-          style={{
-            background:
-              "conic-gradient(from 140deg, #6ee7ff, #a78bfa, #f0abfc, #fda4af, #fcd34d, #6ee7ff)",
-          }}
-        />
-        {/* 細かいグリッドの質感 */}
-        <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.12]" />
-        {/* カーソル追従グレア（光沢） */}
+        {/* フッターと同じ手法：白マークを右に大きく見切れさせ、低不透明度で敷く */}
+        <div className="pointer-events-none absolute right-[-3.5rem] top-1/2 h-[150%] w-[150%] max-w-none -translate-y-1/2 opacity-[0.06]">
+          <LogoMark tone="paper" className="h-full w-full" />
+        </div>
+        {/* ごく薄い質感のグリッド */}
+        <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.06]" />
+        {/* カーソル追従のグレア（白・控えめ） */}
         <div
           className="pointer-events-none absolute inset-0 transition-opacity duration-300"
           style={{
-            opacity: t.active ? 0.9 : 0.35,
-            background: `radial-gradient(550px circle at ${t.gx}% ${t.gy}%, rgba(255,255,255,0.28), rgba(255,255,255,0.06) 25%, transparent 55%)`,
+            opacity: t.active ? 0.5 : 0.18,
+            background: `radial-gradient(480px circle at ${t.gx}% ${t.gy}%, rgba(255,255,255,0.16), transparent 55%)`,
           }}
         />
-        {/* 周縁の縁取り */}
-        <div className="pointer-events-none absolute inset-0 rounded-[26px] ring-1 ring-inset ring-white/15" />
+        {/* 上辺の淡いハイライト */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-1/2"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(255,255,255,0.05), transparent)",
+          }}
+        />
+        {/* 周縁の細い縁取り */}
+        <div className="pointer-events-none absolute inset-0 rounded-[26px] ring-1 ring-inset ring-white/10" />
 
         {/* 中身 */}
         <div className="relative z-10 flex h-full flex-col justify-between p-6 text-paper sm:p-7">
@@ -97,12 +101,12 @@ export default function MembershipCard({
             <span className="text-paper">
               <Logo tone="paper" />
             </span>
-            <span className="rounded-full border border-white/25 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-paper/80">
+            <span className="rounded-full border border-white/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-paper/75">
               Member
             </span>
           </div>
 
-          {/* 中段：チップ ＋ 名前 */}
+          {/* 中段：アバター/チップ ＋ 名前 */}
           <div className="flex items-center gap-4">
             {image ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -110,15 +114,15 @@ export default function MembershipCard({
                 src={image}
                 alt=""
                 referrerPolicy="no-referrer"
-                className="h-12 w-12 shrink-0 rounded-full object-cover ring-2 ring-white/30"
+                className="h-12 w-12 shrink-0 rounded-full object-cover ring-2 ring-white/25"
               />
             ) : (
               <div
                 className="h-9 w-12 shrink-0 rounded-md"
                 style={{
                   background:
-                    "linear-gradient(135deg, #f7e29a 0%, #d9b75a 50%, #b58f3c 100%)",
-                  boxShadow: "inset 0 1px 2px rgba(255,255,255,0.5)",
+                    "linear-gradient(135deg, #d8d8da 0%, #a8a8ad 50%, #7c7c82 100%)",
+                  boxShadow: "inset 0 1px 2px rgba(255,255,255,0.4)",
                 }}
               />
             )}
@@ -127,7 +131,7 @@ export default function MembershipCard({
                 {displayName}
               </p>
               {email && (
-                <p className="truncate text-xs text-paper/55">{email}</p>
+                <p className="truncate text-xs text-paper/50">{email}</p>
               )}
             </div>
           </div>
@@ -135,18 +139,18 @@ export default function MembershipCard({
           {/* 下段：会員ID ＋ 入会年月 */}
           <div className="flex items-end justify-between">
             <div>
-              <p className="text-[9px] font-medium uppercase tracking-[0.22em] text-paper/45">
+              <p className="text-[9px] font-medium uppercase tracking-[0.22em] text-paper/40">
                 Member ID
               </p>
-              <p className="mt-1 font-mono text-sm tracking-wider text-paper/90">
+              <p className="mt-1 font-mono text-sm tracking-wider text-paper/85">
                 {memberId ?? "TRYPL-000000"}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[9px] font-medium uppercase tracking-[0.22em] text-paper/45">
+              <p className="text-[9px] font-medium uppercase tracking-[0.22em] text-paper/40">
                 Member Since
               </p>
-              <p className="mt-1 font-mono text-sm tracking-wider text-paper/90">
+              <p className="mt-1 font-mono text-sm tracking-wider text-paper/85">
                 {sinceLabel(memberSince)}
               </p>
             </div>

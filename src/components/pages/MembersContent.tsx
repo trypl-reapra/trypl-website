@@ -5,7 +5,6 @@ import PageHeader from "@/components/PageHeader";
 import { Container, Section } from "@/components/ui";
 import MemberLogout from "@/components/members/MemberLogout";
 import MembershipCard from "@/components/members/MembershipCard";
-import { events } from "@/data/site";
 import { usePages } from "@/i18n/pages";
 
 export default function MembersContent({
@@ -51,7 +50,7 @@ export default function MembersContent({
             </div>
           )}
 
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5">
             <Link
               href="/internships"
               className="rounded-2xl border border-line p-7 transition-colors hover:border-ink"
@@ -61,17 +60,6 @@ export default function MembersContent({
                 {m.internshipsSub}
               </p>
             </Link>
-            <a
-              href={events.lumaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-2xl border border-line p-7 transition-colors hover:border-ink"
-            >
-              <h3 className="font-jp text-xl font-bold">{m.events}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-mute">
-                {m.eventsSub}
-              </p>
-            </a>
           </div>
 
           <div className="mt-12 flex flex-wrap items-center gap-4">
