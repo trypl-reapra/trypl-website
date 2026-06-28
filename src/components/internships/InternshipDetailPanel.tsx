@@ -138,7 +138,7 @@ export default function InternshipDetailPanel({
                   </div>
                 ))}
               </dl>
-              <ApplyButton applyUrl={i.applyUrl} applyLabel={i.applyLabel} />
+              <ApplyButton slug={i.slug} applyLabel={i.applyLabel} />
             </div>
           </aside>
         </div>

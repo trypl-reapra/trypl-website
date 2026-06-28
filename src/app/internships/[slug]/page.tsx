@@ -160,7 +160,7 @@ export default async function InternshipDetail({
                     </div>
                   ))}
                 </dl>
-                <ApplyButton applyUrl={i.applyUrl} applyLabel={i.applyLabel} />
+                <ApplyButton slug={i.slug} applyLabel={i.applyLabel} />
               </div>
             </div>
           </aside>

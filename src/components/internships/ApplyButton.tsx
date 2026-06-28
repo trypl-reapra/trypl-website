@@ -25,10 +25,10 @@ function Arrow() {
  * - 未ログイン           → 会員登録（/members）へ誘導
  */
 export default function ApplyButton({
-  applyUrl,
+  slug,
   applyLabel,
 }: {
-  applyUrl: string;
+  slug: string;
   applyLabel: string;
 }) {
   const { status } = useSession();
@@ -39,17 +39,14 @@ export default function ApplyButton({
     <>
       <div className="mt-7">
         <Magnetic className="w-full">
-          {authed ? (
-            <Button href={applyUrl} size="lg" className="w-full">
-              {applyLabel}
-              <Arrow />
-            </Button>
-          ) : (
-            <Button href="/members" size="lg" className="w-full">
-              {t.cta}
-              <Arrow />
-            </Button>
-          )}
+          <Button
+            href={authed ? `/internships/${slug}/apply` : "/members"}
+            size="lg"
+            className="w-full"
+          >
+            {authed ? applyLabel : t.cta}
+            <Arrow />
+          </Button>
         </Magnetic>
       </div>
       <p className="mt-4 text-center text-xs text-mute">

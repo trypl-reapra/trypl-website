@@ -291,6 +291,22 @@ const ja = {
     cta: "会員登録して応募",
     note: "応募には無料の会員登録が必要です。",
     authedNote: "ログイン済みです。そのまま応募に進めます。",
+    formEyebrow: "Apply · 応募",
+    formTitle: "この募集に応募する",
+    nameLabel: "お名前",
+    emailLabel: "メールアドレス",
+    messageLabel: "志望動機・メッセージ",
+    messagePlaceholder:
+      "応募理由や、興味を持ったきっかけ、自己紹介などを自由にご記入ください。",
+    submit: "応募を送信",
+    sending: "送信中…",
+    doneTitle: "応募を受け付けました",
+    doneBody:
+      "ご応募ありがとうございます。運営が内容を確認し、登録メール宛にご連絡します。",
+    backToListing: "募集一覧へ戻る",
+    cancel: "募集詳細へ戻る",
+    formNote: "お名前・メールアドレスは、ログイン中のアカウント情報を使用します。",
+    errorDefault: "送信に失敗しました。時間をおいて再度お試しください。",
   },
 };
 
@@ -581,6 +597,22 @@ const en: Pages = {
     cta: "Sign up to apply",
     note: "Applying requires a free member account.",
     authedNote: "You're signed in — go ahead and apply.",
+    formEyebrow: "Apply",
+    formTitle: "Apply to this role",
+    nameLabel: "Name",
+    emailLabel: "Email",
+    messageLabel: "Motivation / message",
+    messagePlaceholder:
+      "Tell us why you're applying, what drew you in, and a little about yourself.",
+    submit: "Submit application",
+    sending: "Sending…",
+    doneTitle: "Application received",
+    doneBody:
+      "Thank you for applying. We'll review it and reach out to your registered email.",
+    backToListing: "Back to internships",
+    cancel: "Back to the listing",
+    formNote: "Your name and email are taken from your signed-in account.",
+    errorDefault: "Failed to send. Please try again in a moment.",
   },
 };
 
@@ -869,6 +901,22 @@ const ko: Pages = {
     cta: "회원가입 후 지원",
     note: "지원하려면 무료 회원 가입이 필요합니다.",
     authedNote: "로그인되어 있어 바로 지원할 수 있습니다.",
+    formEyebrow: "Apply · 지원",
+    formTitle: "이 모집에 지원하기",
+    nameLabel: "이름",
+    emailLabel: "이메일",
+    messageLabel: "지원 동기·메시지",
+    messagePlaceholder:
+      "지원 이유, 관심을 갖게 된 계기, 자기소개 등을 자유롭게 적어 주세요.",
+    submit: "지원서 제출",
+    sending: "전송 중…",
+    doneTitle: "지원이 접수되었습니다",
+    doneBody:
+      "지원해 주셔서 감사합니다. 운영진이 내용을 확인한 뒤 등록된 이메일로 연락드립니다.",
+    backToListing: "모집 목록으로",
+    cancel: "모집 상세로 돌아가기",
+    formNote: "이름·이메일은 로그인된 계정 정보를 사용합니다.",
+    errorDefault: "전송에 실패했습니다. 잠시 후 다시 시도해 주세요.",
   },
 };
 

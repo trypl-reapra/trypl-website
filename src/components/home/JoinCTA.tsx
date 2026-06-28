@@ -1,8 +1,9 @@
 "use client";
 
-import { RevealLines, Reveal, Magnetic, Parallax } from "@/components/motion";
+import { RevealLines, Reveal, Parallax } from "@/components/motion";
 import { RingsSvg } from "@/components/decor";
 import { Button, Container, Eyebrow } from "@/components/ui";
+import JoinCtaButton from "@/components/JoinCtaButton";
 import { useT } from "@/i18n/LocaleProvider";
 
 export default function JoinCTA() {
@@ -36,25 +37,7 @@ export default function JoinCTA() {
         </Reveal>
 
         <div className="mt-12 flex flex-wrap items-center gap-4">
-          <Magnetic>
-            <Button href="/join" variant="inverse" size="lg">
-              {t.join.primary}
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden="true"
-                className="h-4 w-4"
-              >
-                <path
-                  d="M5 12h14M13 6l6 6-6 6"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Button>
-          </Magnetic>
+          <JoinCtaButton variant="inverse" size="lg" loggedOutLabel={t.join.primary} />
           <Button href="/internships" variant="outline-invert" size="lg">
             {t.join.secondary}
           </Button>

@@ -41,6 +41,18 @@ export type Member = {
   createdAt: string;
 };
 
+/** 募集への応募（会員が応募ボタンから送信）。 */
+export type Application = {
+  id: string;
+  slug: string;
+  company: string;
+  title: string;
+  name: string;
+  email: string;
+  message: string;
+  createdAt: string;
+};
+
 /** 既存（コード管理）の募集に対する上書き。slug をキーに保存。 */
 export type Override = Partial<{
   hidden: boolean;
@@ -60,6 +72,7 @@ const K_CONTACTS = "trypl:contacts";
 const K_INTERNSHIPS = "trypl:internships";
 const K_OVERRIDES = "trypl:overrides";
 const K_MEMBERS = "trypl:members";
+const K_APPLICATIONS = "trypl:applications";
 
 // ---- in-memory fallback ----
 // globalThis に載せて、同一プロセス内の別バンドル（API ルートとページ等）でも
@@ -69,6 +82,7 @@ type Mem = {
   internships: AdminInternship[];
   overrides: Record<string, Override>;
   members: Member[];
+  applications: Application[];
 };
 const g = globalThis as unknown as { __tryplMem?: Mem };
 const mem: Mem =
@@ -78,6 +92,7 @@ const mem: Mem =
     internships: [],
     overrides: {},
     members: [],
+    applications: [],
   });
 
 async function kv(command: (string | number)[]): Promise<unknown> {
@@ -175,6 +190,29 @@ async function saveAllMembers(items: Member[]): Promise<void> {
   } else {
     mem.members = items;
   }
+}
+
+/* ----------------------------------------------------- applications */
+
+export async function addApplication(
+  input: Omit<Application, "id" | "createdAt">,
+  now: string,
+): Promise<Application> {
+  const item: Application = { id: rid(), createdAt: now, ...input };
+  if (useKV) {
+    await kv(["LPUSH", K_APPLICATIONS, JSON.stringify(item)]);
+  } else {
+    mem.applications.unshift(item);
+  }
+  return item;
+}
+
+export async function listApplications(): Promise<Application[]> {
+  if (useKV) {
+    const raw = (await kv(["LRANGE", K_APPLICATIONS, 0, -1])) as string[];
+    return (raw || []).map((s) => JSON.parse(s) as Application);
+  }
+  return mem.applications;
 }
 
 /* ----------------------------------------------------- internships */

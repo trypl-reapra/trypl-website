@@ -23,6 +23,7 @@ export const LOCALE_HTML: Record<Locale, string> = {
 type Dict = {
   nav: { about: string; internships: string; events: string; links: string };
   cta: string;
+  ctaMember: string;
   scroll: string;
   hero: {
     eyebrow: string;
@@ -68,6 +69,7 @@ export const dict: Record<Locale, Dict> = {
       links: "リンク",
     },
     cta: "参加する",
+    ctaMember: "会員ページへ",
     scroll: "Scroll",
     hero: {
       eyebrow: "REAPRA発・実践型コミュニティ",
@@ -158,6 +160,7 @@ export const dict: Record<Locale, Dict> = {
       links: "Links",
     },
     cta: "Join",
+    ctaMember: "Member area",
     scroll: "Scroll",
     hero: {
       eyebrow: "A practice-first community, born from REAPRA",
@@ -248,6 +251,7 @@ export const dict: Record<Locale, Dict> = {
       links: "링크",
     },
     cta: "참여하기",
+    ctaMember: "멤버 페이지로",
     scroll: "Scroll",
     hero: {
       eyebrow: "REAPRA에서 시작된 실천형 커뮤니티",

@@ -32,6 +32,16 @@ type Member = {
   provider: string;
   createdAt: string;
 };
+type Application = {
+  id: string;
+  slug: string;
+  company: string;
+  title: string;
+  name: string;
+  email: string;
+  message: string;
+  createdAt: string;
+};
 
 const inputCls =
   "w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm outline-none transition-colors focus:border-ink";
@@ -49,26 +59,29 @@ async function api(method: string, body?: unknown) {
 }
 
 export default function AdminDashboard({ storeMode }: { storeMode: string }) {
-  const [tab, setTab] = useState<"contacts" | "internships" | "members">(
-    "contacts",
-  );
+  const [tab, setTab] = useState<
+    "contacts" | "applications" | "internships" | "members"
+  >("contacts");
   const [contacts, setContacts] = useState<Contact[] | null>(null);
   const [code, setCode] = useState<Row[] | null>(null);
   const [admin, setAdmin] = useState<Row[] | null>(null);
   const [members, setMembers] = useState<Member[] | null>(null);
+  const [apps, setApps] = useState<Application[] | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [c, i, mb] = await Promise.all([
+    const [c, i, mb, ap] = await Promise.all([
       fetch("/api/admin/contacts").then((r) => r.json()),
       fetch("/api/admin/internships").then((r) => r.json()),
       fetch("/api/admin/members").then((r) => r.json()),
+      fetch("/api/admin/applications").then((r) => r.json()),
     ]);
     setContacts(c.contacts ?? []);
     setCode(i.code ?? []);
     setAdmin(i.admin ?? []);
     setMembers(mb.members ?? []);
+    setApps(ap.applications ?? []);
     setLoading(false);
   }, []);
 
@@ -106,6 +119,7 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
         <div className="mt-8 flex gap-1 rounded-full border border-line bg-paper p-1 sm:w-fit">
           {([
             ["contacts", `お問い合わせ${contacts ? ` (${contacts.length})` : ""}`],
+            ["applications", `応募${apps ? ` (${apps.length})` : ""}`],
             ["internships", `募集管理${code ? ` (${internCount})` : ""}`],
             ["members", `メンバー${members ? ` (${members.length})` : ""}`],
           ] as const).map(([k, label]) => (
@@ -136,6 +150,8 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
             <p className="text-sm text-mute">読み込み中…</p>
           ) : tab === "contacts" ? (
             <ContactsTab contacts={contacts ?? []} />
+          ) : tab === "applications" ? (
+            <ApplicationsTab apps={apps ?? []} />
           ) : tab === "members" ? (
             <MembersTab members={members ?? []} />
           ) : (
@@ -184,6 +200,49 @@ function ContactsTab({ contacts }: { contacts: Contact[] }) {
           </p>
           <a
             href={`mailto:${c.email}`}
+            className="link-underline mt-4 inline-block text-sm font-medium"
+          >
+            メールで返信
+          </a>
+        </motion.details>
+      ))}
+    </div>
+  );
+}
+
+function ApplicationsTab({ apps }: { apps: Application[] }) {
+  if (!apps.length)
+    return (
+      <p className="rounded-2xl border border-line bg-paper p-8 text-sm text-mute">
+        まだ応募はありません。会員が募集ページの「応募する」から送信すると、ここに一覧が表示されます。
+      </p>
+    );
+  return (
+    <div className="space-y-3">
+      {apps.map((ap) => (
+        <motion.details
+          key={ap.id}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="group rounded-2xl border border-line bg-paper p-5 sm:p-6"
+        >
+          <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
+            <div className="min-w-0">
+              <span className="font-medium">{ap.name || "（名前未設定）"}</span>
+              <span className="ml-3 text-sm text-mute">{ap.email}</span>
+            </div>
+            <div className="flex items-center gap-3 text-xs text-mute">
+              <span className="rounded-full border border-line px-2.5 py-1">
+                {ap.company}｜{ap.title}
+              </span>
+              <span className="tabular-nums">{fmt(ap.createdAt)}</span>
+            </div>
+          </summary>
+          <p className="mt-4 whitespace-pre-wrap border-t border-line pt-4 text-sm leading-relaxed text-mute">
+            {ap.message}
+          </p>
+          <a
+            href={`mailto:${ap.email}`}
             className="link-underline mt-4 inline-block text-sm font-medium"
           >
             メールで返信
