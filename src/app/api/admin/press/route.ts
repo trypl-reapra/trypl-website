@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { sessionRole } from "@/auth";
 import {
   addPress,
+  clearPress,
   deletePress,
   listPress,
   setPressHidden,
@@ -55,6 +56,10 @@ export async function DELETE(req: Request) {
   if ((await sessionRole()) !== "admin")
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const b = (await req.json().catch(() => ({}))) as Record<string, unknown>;
+  if (b.all) {
+    await clearPress();
+    return NextResponse.json({ ok: true });
+  }
   const id = s(b.id, 60);
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
   await deletePress(id);

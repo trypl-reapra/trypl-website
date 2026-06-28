@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { sessionRole } from "@/auth";
 import {
+  adminRemoveMember,
+  clearMembers,
+  clearWithdrawals,
+  deleteWithdrawal,
   listMembers,
   listWithdrawals,
   setMemberFounder,
@@ -40,5 +44,21 @@ export async function PATCH(req: Request) {
   if (typeof body.frozen === "boolean")
     await setMemberFrozen(email, body.frozen);
 
+  return NextResponse.json({ ok: true });
+}
+
+/** 削除（テスト用）。
+ *  body: { email } メンバー削除 / { withdrawalId } 退会記録削除 /
+ *        { clear: "members" | "withdrawals" } 全消去 */
+export async function DELETE(req: Request) {
+  if ((await sessionRole()) !== "admin")
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const b = (await req.json().catch(() => ({}))) as Record<string, unknown>;
+  if (b.clear === "members") await clearMembers();
+  else if (b.clear === "withdrawals") await clearWithdrawals();
+  else if (typeof b.withdrawalId === "string")
+    await deleteWithdrawal(b.withdrawalId);
+  else if (typeof b.email === "string") await adminRemoveMember(b.email);
+  else return NextResponse.json({ error: "target required" }, { status: 400 });
   return NextResponse.json({ ok: true });
 }

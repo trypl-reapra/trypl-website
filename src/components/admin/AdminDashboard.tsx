@@ -102,6 +102,61 @@ async function api(method: string, body?: unknown) {
   });
 }
 
+async function adminDelete(url: string, body: unknown) {
+  await fetch(url, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+}
+
+/** 個別削除ボタン（テスト用）。 */
+function DelBtn({ onDelete }: { onDelete: () => Promise<void> | void }) {
+  const [busy, setBusy] = useState(false);
+  return (
+    <button
+      type="button"
+      disabled={busy}
+      onClick={async () => {
+        if (!window.confirm("削除しますか？")) return;
+        setBusy(true);
+        await onDelete();
+        setBusy(false);
+      }}
+      className="rounded-full border border-red-200 px-3 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
+    >
+      削除
+    </button>
+  );
+}
+
+/** カテゴリ全消去ボタン（テスト用）。 */
+function ClearAll({
+  label,
+  onClear,
+}: {
+  label: string;
+  onClear: () => Promise<void> | void;
+}) {
+  const [busy, setBusy] = useState(false);
+  return (
+    <button
+      type="button"
+      disabled={busy}
+      onClick={async () => {
+        if (!window.confirm(`${label}：本当にすべて削除しますか？（テスト用）`))
+          return;
+        setBusy(true);
+        await onClear();
+        setBusy(false);
+      }}
+      className="rounded-full border border-red-200 px-4 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
+    >
+      {label}
+    </button>
+  );
+}
+
 export default function AdminDashboard({ storeMode }: { storeMode: string }) {
   const [tab, setTab] = useState<
     | "overview"
@@ -222,11 +277,12 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
               events={events ?? []}
               press={press ?? []}
               internCount={internCount}
+              reload={load}
             />
           ) : tab === "contacts" ? (
-            <ContactsTab contacts={contacts ?? []} />
+            <ContactsTab contacts={contacts ?? []} reload={load} />
           ) : tab === "applications" ? (
-            <ApplicationsTab apps={apps ?? []} />
+            <ApplicationsTab apps={apps ?? []} reload={load} />
           ) : tab === "members" ? (
             <MembersTab
               members={members ?? []}
@@ -250,7 +306,13 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
   );
 }
 
-function ContactsTab({ contacts }: { contacts: Contact[] }) {
+function ContactsTab({
+  contacts,
+  reload,
+}: {
+  contacts: Contact[];
+  reload: () => void;
+}) {
   if (!contacts.length)
     return (
       <p className="rounded-2xl border border-line bg-paper p-8 text-sm text-mute">
@@ -259,6 +321,15 @@ function ContactsTab({ contacts }: { contacts: Contact[] }) {
     );
   return (
     <div className="space-y-3">
+      <div className="flex justify-end">
+        <ClearAll
+          label="お問い合わせを全削除"
+          onClear={async () => {
+            await adminDelete("/api/admin/contacts", { all: true });
+            reload();
+          }}
+        />
+      </div>
       {contacts.map((c) => (
         <motion.details
           key={c.id}
@@ -281,19 +352,33 @@ function ContactsTab({ contacts }: { contacts: Contact[] }) {
           <p className="mt-4 whitespace-pre-wrap border-t border-line pt-4 text-sm leading-relaxed text-mute">
             {c.message}
           </p>
-          <a
-            href={`mailto:${c.email}`}
-            className="link-underline mt-4 inline-block text-sm font-medium"
-          >
-            メールで返信
-          </a>
+          <div className="mt-4 flex items-center gap-4">
+            <a
+              href={`mailto:${c.email}`}
+              className="link-underline inline-block text-sm font-medium"
+            >
+              メールで返信
+            </a>
+            <DelBtn
+              onDelete={async () => {
+                await adminDelete("/api/admin/contacts", { id: c.id });
+                reload();
+              }}
+            />
+          </div>
         </motion.details>
       ))}
     </div>
   );
 }
 
-function ApplicationsTab({ apps }: { apps: Application[] }) {
+function ApplicationsTab({
+  apps,
+  reload,
+}: {
+  apps: Application[];
+  reload: () => void;
+}) {
   if (!apps.length)
     return (
       <p className="rounded-2xl border border-line bg-paper p-8 text-sm text-mute">
@@ -302,6 +387,15 @@ function ApplicationsTab({ apps }: { apps: Application[] }) {
     );
   return (
     <div className="space-y-3">
+      <div className="flex justify-end">
+        <ClearAll
+          label="応募を全削除"
+          onClear={async () => {
+            await adminDelete("/api/admin/applications", { all: true });
+            reload();
+          }}
+        />
+      </div>
       {apps.map((ap) => (
         <motion.details
           key={ap.id}
@@ -337,12 +431,20 @@ function ApplicationsTab({ apps }: { apps: Application[] }) {
           <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-ink">
             {ap.message}
           </p>
-          <a
-            href={`mailto:${ap.email}`}
-            className="link-underline mt-4 inline-block text-sm font-medium"
-          >
-            メールで返信
-          </a>
+          <div className="mt-4 flex items-center gap-4">
+            <a
+              href={`mailto:${ap.email}`}
+              className="link-underline inline-block text-sm font-medium"
+            >
+              メールで返信
+            </a>
+            <DelBtn
+              onDelete={async () => {
+                await adminDelete("/api/admin/applications", { id: ap.id });
+                reload();
+              }}
+            />
+          </div>
         </motion.details>
       ))}
     </div>
@@ -400,13 +502,32 @@ function MembersTab({
             {label}
           </button>
         ))}
+        <span className="ml-auto">
+          {filter === "withdrawn" ? (
+            <ClearAll
+              label="退会記録を全削除"
+              onClear={async () => {
+                await adminDelete("/api/admin/members", { clear: "withdrawals" });
+                reload();
+              }}
+            />
+          ) : (
+            <ClearAll
+              label="メンバーを全削除"
+              onClear={async () => {
+                await adminDelete("/api/admin/members", { clear: "members" });
+                reload();
+              }}
+            />
+          )}
+        </span>
       </div>
 
       {filter === "withdrawn" ? (
         withdrawals.length ? (
           <div className="space-y-3">
             {withdrawals.map((w) => (
-              <WithdrawalRow key={w.id} w={w} />
+              <WithdrawalRow key={w.id} w={w} reload={reload} />
             ))}
           </div>
         ) : (
@@ -540,12 +661,18 @@ function MemberRow({ mb, reload }: { mb: Member; reload: () => void }) {
         >
           メールで連絡
         </a>
+        <DelBtn
+          onDelete={async () => {
+            await adminDelete("/api/admin/members", { email: mb.email });
+            reload();
+          }}
+        />
       </div>
     </motion.details>
   );
 }
 
-function WithdrawalRow({ w }: { w: Withdrawal }) {
+function WithdrawalRow({ w, reload }: { w: Withdrawal; reload: () => void }) {
   return (
     <motion.details
       initial={{ opacity: 0, y: 8 }}
@@ -569,9 +696,17 @@ function WithdrawalRow({ w }: { w: Withdrawal }) {
         </div>
       </summary>
       <ProfileGrid p={w.profile} email={w.email} />
-      <p className="mt-3 text-xs text-mute">
-        入会日：{fmt(w.memberSince)} ／ 退会日：{fmt(w.withdrawnAt)}
-      </p>
+      <div className="mt-3 flex items-center justify-between gap-3">
+        <p className="text-xs text-mute">
+          入会日：{fmt(w.memberSince)} ／ 退会日：{fmt(w.withdrawnAt)}
+        </p>
+        <DelBtn
+          onDelete={async () => {
+            await adminDelete("/api/admin/members", { withdrawalId: w.id });
+            reload();
+          }}
+        />
+      </div>
     </motion.details>
   );
 }
@@ -828,6 +963,7 @@ function OverviewTab({
   events,
   press,
   internCount,
+  reload,
 }: {
   stats: Record<string, number>;
   members: Member[];
@@ -837,6 +973,7 @@ function OverviewTab({
   events: EventItem[];
   press: PressItem[];
   internCount: number;
+  reload: () => void;
 }) {
   const founders = members.filter((m) => m.founder).length;
   const frozen = members.filter((m) => m.frozen).length;
@@ -869,9 +1006,18 @@ function OverviewTab({
       </div>
 
       <div className="rounded-2xl border border-line bg-paper p-6">
-        <div className="flex items-baseline justify-between">
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
           <h3 className="font-jp font-bold">アクセス数（直近14日）</h3>
-          <span className="text-xs text-mute">累計 {stats.total || 0} PV</span>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-mute">累計 {stats.total || 0} PV</span>
+            <ClearAll
+              label="アクセス数をリセット"
+              onClear={async () => {
+                await adminDelete("/api/admin/stats", {});
+                reload();
+              }}
+            />
+          </div>
         </div>
         <div className="mt-6 flex h-40 items-end gap-1.5">
           {series.map((v, i) => (
@@ -913,6 +1059,15 @@ function EventsTab({
         <Empty>まだイベントがありません。上のフォームから追加してください。</Empty>
       ) : (
         <div className="space-y-3">
+          <div className="flex justify-end">
+            <ClearAll
+              label="イベントを全削除"
+              onClear={async () => {
+                await adminDelete("/api/admin/events", { all: true });
+                reload();
+              }}
+            />
+          </div>
           {events.map((ev) => (
             <EventRow key={ev.id} ev={ev} reload={reload} />
           ))}
@@ -1098,6 +1253,15 @@ function PressTab({
         <Empty>まだプレス掲載がありません。上のフォームから追加してください。</Empty>
       ) : (
         <div className="space-y-3">
+          <div className="flex justify-end">
+            <ClearAll
+              label="プレスを全削除"
+              onClear={async () => {
+                await adminDelete("/api/admin/press", { all: true });
+                reload();
+              }}
+            />
+          </div>
           {press.map((p) => (
             <PressRow key={p.id} p={p} reload={reload} />
           ))}

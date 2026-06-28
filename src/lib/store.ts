@@ -217,6 +217,22 @@ export async function listContacts(): Promise<Contact[]> {
   return mem.contacts;
 }
 
+async function saveAllContacts(items: Contact[]): Promise<void> {
+  if (useKV) {
+    await kv(["DEL", K_CONTACTS]);
+    if (items.length)
+      await kv(["RPUSH", K_CONTACTS, ...items.map((c) => JSON.stringify(c))]);
+  } else mem.contacts = items;
+}
+
+export async function deleteContact(id: string): Promise<void> {
+  await saveAllContacts((await listContacts()).filter((c) => c.id !== id));
+}
+
+export async function clearContacts(): Promise<void> {
+  await saveAllContacts([]);
+}
+
 /* --------------------------------------------------------- members */
 
 /**
@@ -283,6 +299,31 @@ export async function listWithdrawals(): Promise<Withdrawal[]> {
     return (raw || []).map((s) => JSON.parse(s) as Withdrawal);
   }
   return mem.withdrawals;
+}
+
+async function saveAllWithdrawals(items: Withdrawal[]): Promise<void> {
+  if (useKV) {
+    await kv(["DEL", K_WITHDRAWALS]);
+    if (items.length)
+      await kv(["RPUSH", K_WITHDRAWALS, ...items.map((w) => JSON.stringify(w))]);
+  } else mem.withdrawals = items;
+}
+
+export async function deleteWithdrawal(id: string): Promise<void> {
+  await saveAllWithdrawals((await listWithdrawals()).filter((w) => w.id !== id));
+}
+
+export async function clearWithdrawals(): Promise<void> {
+  await saveAllWithdrawals([]);
+}
+
+/** 管理者によるメンバー削除（退会ログに残さず完全削除＝テスト用）。 */
+export async function adminRemoveMember(email: string): Promise<void> {
+  await saveAllMembers((await listMembers()).filter((m) => m.email !== email));
+}
+
+export async function clearMembers(): Promise<void> {
+  await saveAllMembers([]);
 }
 
 /** 凍結中か（ログイン・応募の可否判定に使用）。 */
@@ -356,6 +397,22 @@ export async function listApplications(): Promise<Application[]> {
     return (raw || []).map((s) => JSON.parse(s) as Application);
   }
   return mem.applications;
+}
+
+async function saveAllApplications(items: Application[]): Promise<void> {
+  if (useKV) {
+    await kv(["DEL", K_APPLICATIONS]);
+    if (items.length)
+      await kv(["RPUSH", K_APPLICATIONS, ...items.map((a) => JSON.stringify(a))]);
+  } else mem.applications = items;
+}
+
+export async function deleteApplication(id: string): Promise<void> {
+  await saveAllApplications((await listApplications()).filter((a) => a.id !== id));
+}
+
+export async function clearApplications(): Promise<void> {
+  await saveAllApplications([]);
 }
 
 /* ----------------------------------------------------- internships */
@@ -570,6 +627,19 @@ export async function getStats(): Promise<Record<string, number>> {
     return out;
   }
   return mem.stats;
+}
+
+export async function resetStats(): Promise<void> {
+  if (useKV) await kv(["DEL", K_STATS]);
+  else mem.stats = {};
+}
+
+/** イベント / プレスの全消去（テスト用）。 */
+export async function clearEvents(): Promise<void> {
+  await saveAllEvents([]);
+}
+export async function clearPress(): Promise<void> {
+  await saveAllPress([]);
 }
 
 export const storeMode = useKV ? "kv" : "memory";
