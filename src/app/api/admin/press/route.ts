@@ -36,6 +36,7 @@ export async function POST(req: Request) {
       url: s(b.url, 500),
       date,
       summary: s(b.summary, 800),
+      image: s(b.image, 500) || undefined,
     },
     new Date().toISOString(),
   );

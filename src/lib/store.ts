@@ -60,6 +60,7 @@ export type PressItem = {
   /** YYYY-MM-DD */
   date: string;
   summary: string;
+  image?: string;
   hidden: boolean;
   createdAt: string;
 };

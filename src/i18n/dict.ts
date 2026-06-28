@@ -76,7 +76,7 @@ export const dict: Record<Locale, Dict> = {
     press: { eyebrow: "News · 掲載情報", heading: "ニュース／プレス。" },
     scroll: "Scroll",
     hero: {
-      eyebrow: "REAPRA発・実践型コミュニティ",
+      eyebrow: "REAPRA発・実践型コミュニティ。",
       title: ["社会とつながり、", "やりながら学ぶ。"],
       lead1:
         "「何者かになりたい」と願う。未知の世界に足を踏み入れる。社会の肌触りを感じながら、仲間と共に問い続ける。",

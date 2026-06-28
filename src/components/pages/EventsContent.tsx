@@ -57,41 +57,54 @@ export default function EventsContent({
             <Stagger className="mt-12 space-y-5">
               {upcoming.map((ev) => (
                 <StaggerItem key={ev.id}>
-                  <article className="grid gap-5 overflow-hidden rounded-2xl border border-line bg-paper p-6 transition-colors hover:border-ink sm:grid-cols-[1fr_auto] sm:items-center sm:p-8">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-medium text-mute">
-                        <span className="tabular-nums text-ink">
-                          {fmtDate(ev.date)}
-                        </span>
-                        {(ev.startTime || ev.endTime) && (
-                          <span className="tabular-nums">
-                            {ev.startTime}
-                            {ev.endTime ? `–${ev.endTime}` : ""}
-                          </span>
-                        )}
-                        <span className="inline-flex items-center rounded-full border border-line px-2.5 py-0.5 text-xs">
-                          {ev.online ? e.online : ev.place || e.offline}
-                        </span>
-                      </div>
-                      <h3 className="mt-3 font-jp text-xl font-bold tracking-tight sm:text-2xl">
-                        {ev.title}
-                      </h3>
-                      {ev.description && (
-                        <p className="mt-3 max-w-2xl whitespace-pre-wrap text-sm leading-relaxed text-mute">
-                          {ev.description}
-                        </p>
-                      )}
-                      {!ev.online && ev.place && (
-                        <p className="mt-3 text-sm text-mute">📍 {ev.place}</p>
-                      )}
-                    </div>
-                    {ev.registerUrl && (
-                      <div className="sm:pl-4">
-                        <Button href={ev.registerUrl} size="md">
-                          {e.register}
-                        </Button>
+                  <article className="overflow-hidden rounded-2xl border border-line bg-paper transition-all duration-500 hover:-translate-y-0.5 hover:border-ink hover:shadow-[0_30px_70px_-45px_rgba(0,0,0,0.4)] sm:flex">
+                    {ev.image && (
+                      <div className="relative aspect-[16/10] shrink-0 sm:aspect-auto sm:w-60">
+                        <Image
+                          src={ev.image}
+                          alt=""
+                          fill
+                          sizes="(max-width: 640px) 100vw, 240px"
+                          className="object-cover"
+                        />
                       </div>
                     )}
+                    <div className="flex flex-1 flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-7">
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-medium text-mute">
+                          <span className="rounded-full bg-ink px-2.5 py-0.5 text-xs font-semibold tabular-nums text-paper">
+                            {fmtDate(ev.date)}
+                          </span>
+                          {(ev.startTime || ev.endTime) && (
+                            <span className="tabular-nums">
+                              {ev.startTime}
+                              {ev.endTime ? `–${ev.endTime}` : ""}
+                            </span>
+                          )}
+                          <span className="inline-flex items-center rounded-full border border-line px-2.5 py-0.5 text-xs">
+                            {ev.online ? e.online : ev.place || e.offline}
+                          </span>
+                        </div>
+                        <h3 className="mt-3 font-jp text-xl font-bold tracking-tight sm:text-2xl">
+                          {ev.title}
+                        </h3>
+                        {ev.description && (
+                          <p className="mt-2 max-w-2xl whitespace-pre-wrap text-sm leading-relaxed text-mute">
+                            {ev.description}
+                          </p>
+                        )}
+                        {!ev.online && ev.place && (
+                          <p className="mt-2 text-sm text-mute">📍 {ev.place}</p>
+                        )}
+                      </div>
+                      {ev.registerUrl && (
+                        <div className="shrink-0 sm:pl-4">
+                          <Button href={ev.registerUrl} size="md">
+                            {e.register}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </article>
                 </StaggerItem>
               ))}

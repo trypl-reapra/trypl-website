@@ -122,6 +122,45 @@ async function adminDelete(url: string, body: unknown) {
   });
 }
 
+/** 画像ピッカー：デフォルト画像から選択 or 任意URL入力。 */
+function ImagePicker({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div>
+      <p className="mb-2 text-sm font-medium">画像</p>
+      <div className="grid grid-cols-3 gap-2">
+        {DEFAULT_HEADER_IMAGES.map((src) => (
+          <button
+            key={src}
+            type="button"
+            onClick={() => onChange(value === src ? "" : src)}
+            className={cn(
+              "relative aspect-[4/3] overflow-hidden rounded-lg border-2 transition-colors",
+              value === src ? "border-ink" : "border-transparent hover:border-line",
+            )}
+          >
+            <Image src={src} alt="" fill sizes="120px" className="object-cover" />
+          </button>
+        ))}
+      </div>
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="または画像URLを入力"
+        className={inputCls + " mt-2"}
+      />
+      <p className="mt-1 text-xs text-mute">
+        未選択でも投稿できます（画像なしで表示）。
+      </p>
+    </div>
+  );
+}
+
 /** 個別削除ボタン（テスト用）。 */
 function DelBtn({ onDelete }: { onDelete: () => Promise<void> | void }) {
   const [busy, setBusy] = useState(false);
@@ -885,33 +924,7 @@ function InternshipsTab({
           <textarea name="summary" rows={3} placeholder="概要" className={inputCls + " resize-y"} />
           <input name="applyUrl" placeholder="応募URL（mailto: も可）" className={inputCls} />
 
-          <div>
-            <p className="mb-2 text-sm font-medium">ヘッダー画像</p>
-            <div className="grid grid-cols-3 gap-2">
-              {DEFAULT_HEADER_IMAGES.map((src) => (
-                <button
-                  key={src}
-                  type="button"
-                  onClick={() => setHeaderImage(src)}
-                  className={cn(
-                    "relative aspect-[4/3] overflow-hidden rounded-lg border-2 transition-colors",
-                    headerImage === src ? "border-ink" : "border-transparent hover:border-line",
-                  )}
-                >
-                  <Image src={src} alt="" fill sizes="120px" className="object-cover" />
-                </button>
-              ))}
-            </div>
-            <input
-              value={headerImage}
-              onChange={(e) => setHeaderImage(e.target.value)}
-              placeholder="または画像URLを入力"
-              className={inputCls + " mt-2"}
-            />
-            <p className="mt-1 text-xs text-mute">
-              未選択の場合は自動で画像が割り当てられます。
-            </p>
-          </div>
+          <ImagePicker value={headerImage} onChange={setHeaderImage} />
         </div>
         {err && <p className="mt-3 text-sm text-red-600">{err}</p>}
         <button type="submit" disabled={busy} className="mt-5 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper hover:bg-ink-soft disabled:opacity-60">
@@ -1192,6 +1205,7 @@ const EMPTY_EVENT = {
   online: false,
   description: "",
   registerUrl: "",
+  image: "",
 };
 
 function EventForm({ reload }: { reload: () => void }) {
@@ -1277,6 +1291,9 @@ function EventForm({ reload }: { reload: () => void }) {
           value={f.description}
           onChange={(e) => set("description", e.target.value)}
         />
+        <div className="sm:col-span-2">
+          <ImagePicker value={f.image} onChange={(v) => set("image", v)} />
+        </div>
       </div>
       {err && <p className="mt-2 text-sm text-red-600">{err}</p>}
       <button
@@ -1377,7 +1394,7 @@ function PressTab({
   );
 }
 
-const EMPTY_PRESS = { title: "", outlet: "", url: "", date: "", summary: "" };
+const EMPTY_PRESS = { title: "", outlet: "", url: "", date: "", summary: "", image: "" };
 
 function PressForm({ reload }: { reload: () => void }) {
   const [f, setF] = useState({ ...EMPTY_PRESS });
@@ -1440,6 +1457,9 @@ function PressForm({ reload }: { reload: () => void }) {
           value={f.summary}
           onChange={(e) => set("summary", e.target.value)}
         />
+        <div className="sm:col-span-2">
+          <ImagePicker value={f.image} onChange={(v) => set("image", v)} />
+        </div>
       </div>
       {err && <p className="mt-2 text-sm text-red-600">{err}</p>}
       <button
