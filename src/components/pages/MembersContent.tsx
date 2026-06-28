@@ -15,12 +15,14 @@ export default function MembersContent({
   image,
   memberId,
   memberSince,
+  founder,
 }: {
   name: string | null;
   email: string | null;
   image: string | null;
   memberId: string | null;
   memberSince: string | null;
+  founder: boolean;
 }) {
   const t = usePages();
   const m = t.members;
@@ -36,13 +38,16 @@ export default function MembersContent({
         <Container>
           {/* 会員証 */}
           <div className="mb-14 flex flex-col items-center text-center">
-            <p className="eyebrow mb-5 text-mute">{m.cardHeading}</p>
+            <p className="eyebrow mb-5 text-mute">
+              {founder ? m.cardHeadingFounder : m.cardHeading}
+            </p>
             <MembershipCard
               name={name}
               email={email}
               image={image}
               memberId={memberId}
               memberSince={memberSince}
+              founder={founder}
             />
           </div>
 

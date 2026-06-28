@@ -31,6 +31,7 @@ type Member = {
   image: string;
   provider: string;
   createdAt: string;
+  founder?: boolean;
 };
 type Application = {
   id: string;
@@ -153,7 +154,7 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
           ) : tab === "applications" ? (
             <ApplicationsTab apps={apps ?? []} />
           ) : tab === "members" ? (
-            <MembersTab members={members ?? []} />
+            <MembersTab members={members ?? []} reload={load} />
           ) : (
             <InternshipsTab
               code={code ?? []}
@@ -253,43 +254,85 @@ function ApplicationsTab({ apps }: { apps: Application[] }) {
   );
 }
 
-function MembersTab({ members }: { members: Member[] }) {
+function MembersTab({
+  members,
+  reload,
+}: {
+  members: Member[];
+  reload: () => void;
+}) {
   if (!members.length)
     return (
       <p className="rounded-2xl border border-line bg-paper p-8 text-sm text-mute">
-        まだ会員登録はありません。Google / Apple での会員登録が有効になると、ここに一覧が表示されます。
+        まだ会員登録はありません。Google での会員登録が有効になると、ここに一覧が表示されます。
       </p>
     );
   return (
     <div className="space-y-3">
       {members.map((mb) => (
-        <motion.div
-          key={mb.id}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-paper p-5 sm:p-6"
-        >
-          <div className="min-w-0">
-            <span className="font-medium">{mb.name || "（名前未設定）"}</span>
-            <span className="ml-3 text-sm text-mute">{mb.email}</span>
-          </div>
-          <div className="flex items-center gap-3 text-xs text-mute">
-            {mb.provider && (
-              <span className="rounded-full border border-line px-2.5 py-1 capitalize">
-                {mb.provider}
-              </span>
-            )}
-            <span className="tabular-nums">{fmt(mb.createdAt)}</span>
-            <a
-              href={`mailto:${mb.email}`}
-              className="link-underline font-medium text-ink"
-            >
-              連絡
-            </a>
-          </div>
-        </motion.div>
+        <MemberRow key={mb.id} mb={mb} reload={reload} />
       ))}
     </div>
+  );
+}
+
+function MemberRow({ mb, reload }: { mb: Member; reload: () => void }) {
+  const [busy, setBusy] = useState(false);
+
+  async function toggleFounder() {
+    setBusy(true);
+    await fetch("/api/admin/members", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: mb.email, founder: !mb.founder }),
+    });
+    reload();
+    setBusy(false);
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-paper p-5 sm:p-6"
+    >
+      <div className="min-w-0">
+        <span className="font-medium">{mb.name || "（名前未設定）"}</span>
+        {mb.founder && (
+          <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-700">
+            創設メンバー
+          </span>
+        )}
+        <span className="ml-3 text-sm text-mute">{mb.email}</span>
+      </div>
+      <div className="flex items-center gap-3 text-xs text-mute">
+        {mb.provider && (
+          <span className="rounded-full border border-line px-2.5 py-1 capitalize">
+            {mb.provider}
+          </span>
+        )}
+        <span className="tabular-nums">{fmt(mb.createdAt)}</span>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={toggleFounder}
+          className={cn(
+            "rounded-full border px-3 py-1 font-medium transition-colors disabled:opacity-50",
+            mb.founder
+              ? "border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100"
+              : "border-line text-ink hover:border-ink",
+          )}
+        >
+          {mb.founder ? "創設メンバー解除" : "創設メンバーに指定"}
+        </button>
+        <a
+          href={`mailto:${mb.email}`}
+          className="link-underline font-medium text-ink"
+        >
+          連絡
+        </a>
+      </div>
+    </motion.div>
   );
 }
 

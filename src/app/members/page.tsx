@@ -41,6 +41,7 @@ export default async function MembersPage() {
       image={session.user.image ?? null}
       memberId={email ? memberCode(email) : null}
       memberSince={me?.createdAt ?? null}
+      founder={!!me?.founder}
     />
   );
 }

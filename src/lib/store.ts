@@ -39,6 +39,8 @@ export type Member = {
   image: string;
   provider: string;
   createdAt: string;
+  /** 創設メンバー（管理画面で指定）。会員証がゴールドになる。 */
+  founder?: boolean;
 };
 
 /** 募集への応募（会員が応募ボタンから送信）。 */
@@ -183,6 +185,17 @@ export async function listMembers(): Promise<Member[]> {
 /** 退会：指定メールの会員レコードを削除する。 */
 export async function removeMemberByEmail(email: string): Promise<void> {
   const items = (await listMembers()).filter((m) => m.email !== email);
+  await saveAllMembers(items);
+}
+
+/** 創設メンバー指定の切り替え（管理画面から）。 */
+export async function setMemberFounder(
+  email: string,
+  founder: boolean,
+): Promise<void> {
+  const items = (await listMembers()).map((m) =>
+    m.email === email ? { ...m, founder } : m,
+  );
   await saveAllMembers(items);
 }
 
