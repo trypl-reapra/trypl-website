@@ -183,20 +183,23 @@ const ja = {
         title: "深める",
         body: "説明会・座談会・対話の場で、活動やインターンの実際を知る。",
       },
-      { title: "登録する", body: "参加フォームから興味を登録。30秒ほどで完了します。" },
       {
-        title: "つながる",
-        body: "コミュニティ（Slack）に参加し、同世代の仲間や運営とつながる。",
+        title: "会員登録する",
+        body: "このサイトから Google アカウントで会員登録。無料・30秒で完了します。",
       },
       {
-        title: "実践する",
-        body: "自分に合うインターンへ。やりながら学び、熟達への一歩を踏み出す。",
+        title: "つながる",
+        body: "LINE 公式やコミュニティで、同世代の仲間や運営とつながる。",
+      },
+      {
+        title: "応募・実践する",
+        body: "会員限定で、気になる募集に応募。やりながら学び、熟達への一歩を踏み出す。",
       },
     ],
     getStartedEyebrow: "Get started",
     getStartedHeading: "いますぐ、はじめる。",
     getStartedBody:
-      "まずは参加フォームから。その後、LINE で最新情報を受け取り、コミュニティ（Slack）でつながりましょう。",
+      "まずはこのサイトで会員登録（無料・30秒）。その後 LINE で最新情報を受け取り、気になる募集に応募できます。",
     entryReady: "参加フォームへ",
     entryPrep: "参加フォーム（準備中）",
     seeInternships: "募集を見る",
@@ -275,6 +278,11 @@ const ja = {
     prepDesc: "現在、会員登録機能を準備中です。公開までは下記からお気軽にご連絡ください。",
     prepLine: "公式アカウントを友だち追加",
     adminLink: "運営の方はこちら",
+  },
+  apply: {
+    cta: "会員登録して応募",
+    note: "応募には無料の会員登録が必要です。",
+    authedNote: "ログイン済みです。そのまま応募に進めます。",
   },
 };
 
@@ -457,20 +465,23 @@ const en: Pages = {
         title: "Go deeper",
         body: "Learn what the activities and internships are really like, through info sessions and dialogues.",
       },
-      { title: "Register", body: "Register your interest via the form. It takes about 30 seconds." },
       {
-        title: "Connect",
-        body: "Join the community (Slack) and connect with peers and the team.",
+        title: "Sign up",
+        body: "Create a member account with your Google account on this site. Free, ~30 seconds.",
       },
       {
-        title: "Practice",
-        body: "On to an internship that fits you. Learn by doing, and take a step toward mastery.",
+        title: "Connect",
+        body: "Connect with peers and the team via LINE Official and the community.",
+      },
+      {
+        title: "Apply & practice",
+        body: "Members can apply to internships that interest them. Learn by doing, and take a step toward mastery.",
       },
     ],
     getStartedEyebrow: "Get started",
     getStartedHeading: "Start, right now.",
     getStartedBody:
-      "Begin with the form. Then receive updates on LINE and connect in the community (Slack).",
+      "First, sign up on this site (free, ~30s). Then get updates on LINE and apply to internships that interest you.",
     entryReady: "Go to the form",
     entryPrep: "Form (coming soon)",
     seeInternships: "See internships",
@@ -549,6 +560,11 @@ const en: Pages = {
     prepDesc: "Member sign-up is being prepared. Until it launches, feel free to reach us below.",
     prepLine: " Official — add as a friend",
     adminLink: "Operators, log in here",
+  },
+  apply: {
+    cta: "Sign up to apply",
+    note: "Applying requires a free member account.",
+    authedNote: "You're signed in — go ahead and apply.",
   },
 };
 
@@ -729,20 +745,23 @@ const ko: Pages = {
         title: "깊이 알기",
         body: "설명회·좌담회·대화의 장에서 활동과 인턴십의 실제를 알아봅니다.",
       },
-      { title: "등록하기", body: "참가 폼에서 관심을 등록. 30초면 끝납니다." },
       {
-        title: "연결되기",
-        body: "커뮤니티(Slack)에 참여해 또래 동료와 운영진과 이어집니다.",
+        title: "회원 가입",
+        body: "이 사이트에서 Google 계정으로 회원 가입. 무료·30초면 완료됩니다.",
       },
       {
-        title: "실천하기",
-        body: "나에게 맞는 인턴십으로. 하면서 배우고, 숙달로 한 걸음.",
+        title: "연결되기",
+        body: "LINE 공식과 커뮤니티에서 또래 동료·운영진과 이어집니다.",
+      },
+      {
+        title: "지원·실천하기",
+        body: "회원 전용으로 관심 있는 모집에 지원. 하면서 배우고, 숙달로 한 걸음.",
       },
     ],
     getStartedEyebrow: "Get started",
     getStartedHeading: "지금 바로 시작.",
     getStartedBody:
-      "우선 참가 폼에서. 이후 LINE으로 최신 정보를 받고, 커뮤니티(Slack)에서 이어져요.",
+      "먼저 이 사이트에서 회원 가입(무료·30초). 이후 LINE으로 소식을 받고, 관심 있는 모집에 지원할 수 있습니다.",
     entryReady: "참가 폼으로",
     entryPrep: "참가 폼(준비 중)",
     seeInternships: "모집 보기",
@@ -821,6 +840,11 @@ const ko: Pages = {
     prepDesc: "현재 회원 가입 기능을 준비 중입니다. 공개 전까지는 아래로 편하게 연락 주세요.",
     prepLine: " 공식 계정 친구 추가",
     adminLink: "운영자는 여기로",
+  },
+  apply: {
+    cta: "회원가입 후 지원",
+    note: "지원하려면 무료 회원 가입이 필요합니다.",
+    authedNote: "로그인되어 있어 바로 지원할 수 있습니다.",
   },
 };
 

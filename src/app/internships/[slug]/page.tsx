@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Container, Button, Badge } from "@/components/ui";
-import { Magnetic, Reveal } from "@/components/motion";
+import { Container, Badge } from "@/components/ui";
+import { Reveal } from "@/components/motion";
 import InternshipCard from "@/components/internships/InternshipCard";
+import ApplyButton from "@/components/internships/ApplyButton";
 import {
   CATEGORIES,
   WORK_STYLE_LABEL,
@@ -159,30 +160,7 @@ export default async function InternshipDetail({
                     </div>
                   ))}
                 </dl>
-                <div className="mt-7">
-                  <Magnetic className="w-full">
-                    <Button href={i.applyUrl} size="lg" className="w-full">
-                      {i.applyLabel}
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        aria-hidden="true"
-                        className="h-4 w-4"
-                      >
-                        <path
-                          d="M5 12h14M13 6l6 6-6 6"
-                          stroke="currentColor"
-                          strokeWidth="1.6"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </Button>
-                  </Magnetic>
-                </div>
-                <p className="mt-4 text-center text-xs text-mute">
-                  応募前に TrypL への参加もおすすめです
-                </p>
+                <ApplyButton applyUrl={i.applyUrl} applyLabel={i.applyLabel} />
               </div>
             </div>
           </aside>

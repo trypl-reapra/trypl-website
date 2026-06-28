@@ -6,6 +6,7 @@ import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import ScrollProgress from "@/components/layout/ScrollProgress";
 import ScrollReset from "@/components/layout/ScrollReset";
+import { SessionProvider } from "next-auth/react";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
 import { site } from "@/data/site";
 
@@ -81,15 +82,17 @@ export default function RootLayout({
         >
           本文へスキップ
         </a>
-        <LocaleProvider>
-          <SmoothScroll>
-            <ScrollReset />
-            <ScrollProgress />
-            <Nav />
-            <main id="main">{children}</main>
-            <Footer />
-          </SmoothScroll>
-        </LocaleProvider>
+        <SessionProvider>
+          <LocaleProvider>
+            <SmoothScroll>
+              <ScrollReset />
+              <ScrollProgress />
+              <Nav />
+              <main id="main">{children}</main>
+              <Footer />
+            </SmoothScroll>
+          </LocaleProvider>
+        </SessionProvider>
       </body>
     </html>
   );

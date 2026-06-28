@@ -75,8 +75,8 @@ export default function Hero() {
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Magnetic>
-              <Button href="/internships" variant="inverse" size="lg">
-                {t.hero.seeInternships}
+              <Button href="/join" variant="inverse" size="lg">
+                {t.cta}
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"

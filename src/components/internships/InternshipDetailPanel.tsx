@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Button, Badge } from "@/components/ui";
-import { Magnetic } from "@/components/motion";
+import { Badge } from "@/components/ui";
+import ApplyButton from "@/components/internships/ApplyButton";
 import {
   CATEGORIES,
   WORK_STYLE_LABEL,
@@ -138,25 +138,7 @@ export default function InternshipDetailPanel({
                   </div>
                 ))}
               </dl>
-              <div className="mt-7">
-                <Magnetic className="w-full">
-                  <Button href={i.applyUrl} size="lg" className="w-full">
-                    {i.applyLabel}
-                    <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
-                      <path
-                        d="M5 12h14M13 6l6 6-6 6"
-                        stroke="currentColor"
-                        strokeWidth="1.6"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </Button>
-                </Magnetic>
-              </div>
-              <p className="mt-4 text-center text-xs text-mute">
-                応募前に TrypL への参加もおすすめです
-              </p>
+              <ApplyButton applyUrl={i.applyUrl} applyLabel={i.applyLabel} />
             </div>
           </aside>
         </div>
