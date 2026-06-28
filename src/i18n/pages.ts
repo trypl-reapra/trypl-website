@@ -131,6 +131,8 @@ const ja = {
     register: "申し込む",
     online: "オンライン",
     offline: "会場",
+    noUpcoming:
+      "現在、公開中の開催予定はありません。最新情報は各SNSでお知らせします。",
     calEyebrow: "Upcoming · 開催予定",
     calHeading: "開催予定をチェック。",
     calBody:
@@ -511,6 +513,8 @@ const en: Pages = {
     register: "Register",
     online: "Online",
     offline: "Venue",
+    noUpcoming:
+      "No upcoming events are published right now. Follow us on social media for the latest.",
     calEyebrow: "Upcoming",
     calHeading: "Check the schedule.",
     calBody:
@@ -889,6 +893,8 @@ const ko: Pages = {
     register: "신청하기",
     online: "온라인",
     offline: "오프라인",
+    noUpcoming:
+      "현재 공개된 일정이 없습니다. 최신 소식은 SNS에서 안내합니다.",
     calEyebrow: "Upcoming",
     calHeading: "일정을 확인하세요.",
     calBody:

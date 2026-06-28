@@ -45,15 +45,17 @@ export default function EventsContent({
         lead={t.headers.events.lead}
       />
 
-      {upcoming.length > 0 && (
-        <Section tone="light" topPad={false}>
-          <Container>
-            <Eyebrow>{e.upcomingEyebrow}</Eyebrow>
-            <Reveal>
-              <h2 className="mt-7 font-jp text-[clamp(1.8rem,4.5vw,3rem)] font-bold tracking-[-0.02em]">
-                {e.upcomingHeading}
-              </h2>
-            </Reveal>
+      {/* 開催予定（イベント一覧） */}
+      <Section tone="light" topPad={false}>
+        <Container>
+          <Eyebrow>{e.upcomingEyebrow}</Eyebrow>
+          <Reveal>
+            <h2 className="mt-7 font-jp text-[clamp(1.8rem,4.5vw,3rem)] font-bold tracking-[-0.02em]">
+              {e.upcomingHeading}
+            </h2>
+          </Reveal>
+
+          {upcoming.length > 0 ? (
             <Stagger className="mt-12 space-y-5">
               {upcoming.map((ev) => (
                 <StaggerItem key={ev.id}>
@@ -109,60 +111,15 @@ export default function EventsContent({
                 </StaggerItem>
               ))}
             </Stagger>
-          </Container>
-        </Section>
-      )}
-
-      <Section tone="dark" topPad={upcoming.length === 0 ? false : undefined}>
-        <Container>
-          <div className="rounded-3xl border border-line-dark p-8 sm:p-12">
-            <Eyebrow className="text-mute-dark">{e.calEyebrow}</Eyebrow>
-            <h2 className="mt-6 font-jp text-3xl font-bold tracking-tight text-paper sm:text-4xl">
-              {e.calHeading}
-            </h2>
-            <p className="mt-5 max-w-xl leading-relaxed text-mute-dark">
-              {e.calBody}
+          ) : (
+            <p className="mt-10 rounded-2xl border border-line bg-paper p-10 text-center text-sm leading-relaxed text-mute">
+              {e.noUpcoming}
             </p>
-            <div className="mt-9 flex flex-wrap gap-4">
-              <Button href={events.lumaUrl} variant="inverse" size="lg">
-                {e.calBtn}
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-4 w-4">
-                  <path
-                    d="M7 17L17 7M7 7h10v10"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Button>
-              <Button href="/internships" variant="outline-invert" size="lg">
-                {e.seeInternships}
-              </Button>
-            </div>
-          </div>
+          )}
         </Container>
       </Section>
 
-      <Section tone="light">
-        <Container>
-          <Eyebrow>{e.hostEyebrow}</Eyebrow>
-          <Reveal>
-            <h2 className="mt-7 font-jp text-[clamp(1.8rem,4.5vw,3rem)] font-bold tracking-[-0.02em]">
-              {e.hostHeading}
-            </h2>
-          </Reveal>
-          <Stagger className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3">
-            {e.kinds.map((k) => (
-              <StaggerItem key={k.title} className="bg-paper p-8 sm:p-10">
-                <h3 className="font-jp text-xl font-bold">{k.title}</h3>
-                <p className="mt-4 text-sm leading-relaxed text-mute">{k.body}</p>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </Container>
-      </Section>
-
+      {/* 活動の様子 */}
       <Section tone="fog">
         <Container>
           <Eyebrow>{e.galleryEyebrow}</Eyebrow>
@@ -170,11 +127,6 @@ export default function EventsContent({
             <h2 className="mt-7 font-jp text-[clamp(1.8rem,4.5vw,3rem)] font-bold tracking-[-0.02em]">
               {e.galleryHeading}
             </h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="mt-6 max-w-2xl leading-relaxed text-mute">
-              {e.galleryLead}
-            </p>
           </Reveal>
         </Container>
 
