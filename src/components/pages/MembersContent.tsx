@@ -5,9 +5,19 @@ import PageHeader from "@/components/PageHeader";
 import { Container, Section } from "@/components/ui";
 import MemberLogout from "@/components/members/MemberLogout";
 import MembershipCard from "@/components/members/MembershipCard";
+import MemberProfileForm from "@/components/members/MemberProfileForm";
 import DeleteAccountButton from "@/components/members/DeleteAccountButton";
 import { events } from "@/data/site";
 import { usePages } from "@/i18n/pages";
+
+type Profile = {
+  fullName: string;
+  furigana?: string;
+  school: string;
+  department?: string;
+  year: string;
+  phone: string;
+};
 
 export default function MembersContent({
   name,
@@ -16,6 +26,7 @@ export default function MembersContent({
   memberId,
   memberSince,
   founder,
+  profile,
 }: {
   name: string | null;
   email: string | null;
@@ -23,6 +34,7 @@ export default function MembersContent({
   memberId: string | null;
   memberSince: string | null;
   founder: boolean;
+  profile: Profile | null;
 }) {
   const t = usePages();
   const m = t.members;
@@ -48,6 +60,15 @@ export default function MembersContent({
               memberId={memberId}
               memberSince={memberSince}
               founder={founder}
+            />
+          </div>
+
+          {/* 会員登録後の個人情報（プロフィール）登録 */}
+          <div className="mb-10">
+            <MemberProfileForm
+              email={email ?? ""}
+              profile={profile}
+              defaultName={name ?? ""}
             />
           </div>
 

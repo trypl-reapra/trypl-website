@@ -50,6 +50,7 @@ export default async function MembersPage() {
       memberId={email ? memberCode(email) : null}
       memberSince={me?.createdAt ?? null}
       founder={!!me?.founder}
+      profile={me?.profile ?? null}
     />
   );
 }
