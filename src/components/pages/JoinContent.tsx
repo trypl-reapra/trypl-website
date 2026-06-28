@@ -4,7 +4,7 @@ import PageHeader from "@/components/PageHeader";
 import { Container, Section, Button, Eyebrow } from "@/components/ui";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { site } from "@/data/site";
-import { entryForm, socials } from "@/data/socials";
+import { socials } from "@/data/socials";
 import { usePages } from "@/i18n/pages";
 
 export default function JoinContent() {
@@ -66,13 +66,8 @@ export default function JoinContent() {
             </p>
 
             <div className="mt-9 flex flex-wrap gap-4">
-              <Button
-                href={entryForm.available ? entryForm.href : "#"}
-                variant="inverse"
-                size="lg"
-                aria-disabled={!entryForm.available}
-              >
-                {entryForm.available ? j.entryReady : j.entryPrep}
+              <Button href="/members" variant="inverse" size="lg">
+                {t.memberAuth.title}
               </Button>
               <Button href="/internships" variant="outline-invert" size="lg">
                 {j.seeInternships}

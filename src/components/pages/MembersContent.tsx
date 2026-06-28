@@ -3,13 +3,25 @@
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { Container, Section } from "@/components/ui";
-import LogoutButton from "@/components/admin/LogoutButton";
+import MemberLogout from "@/components/members/MemberLogout";
 import { events } from "@/data/site";
 import { usePages } from "@/i18n/pages";
 
-export default function MembersContent({ role }: { role: "member" | "admin" }) {
+export default function MembersContent({
+  isAdmin,
+  viaOAuth,
+  name,
+  email,
+}: {
+  isAdmin: boolean;
+  viaOAuth: boolean;
+  name: string | null;
+  email: string | null;
+}) {
   const t = usePages();
   const m = t.members;
+  const who = name || email;
+
   return (
     <>
       <PageHeader
@@ -19,6 +31,14 @@ export default function MembersContent({ role }: { role: "member" | "admin" }) {
       />
       <Section tone="light" topPad={false}>
         <Container>
+          {who && (
+            <p className="mb-10 text-sm text-mute">
+              {m.welcome}
+              <span className="font-medium text-ink">{who}</span>
+              {m.welcomeSuffix}
+            </p>
+          )}
+
           <div className="grid gap-5 sm:grid-cols-2">
             <Link
               href="/internships"
@@ -42,8 +62,8 @@ export default function MembersContent({ role }: { role: "member" | "admin" }) {
             </a>
           </div>
 
-          <div className="mt-12 flex items-center gap-4">
-            {role === "admin" && (
+          <div className="mt-12 flex flex-wrap items-center gap-4">
+            {isAdmin && (
               <Link
                 href="/admin"
                 className="inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper hover:bg-ink-soft"
@@ -51,7 +71,7 @@ export default function MembersContent({ role }: { role: "member" | "admin" }) {
                 {m.toAdmin}
               </Link>
             )}
-            <LogoutButton />
+            <MemberLogout viaOAuth={viaOAuth} label={m.logout} />
           </div>
         </Container>
       </Section>

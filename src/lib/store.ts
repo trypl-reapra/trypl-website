@@ -31,6 +31,16 @@ export type AdminInternship = {
   createdAt: string;
 };
 
+/** 会員登録したメンバー（Google / Apple でログインした人）。 */
+export type Member = {
+  id: string;
+  email: string;
+  name: string;
+  image: string;
+  provider: string;
+  createdAt: string;
+};
+
 /** 既存（コード管理）の募集に対する上書き。slug をキーに保存。 */
 export type Override = Partial<{
   hidden: boolean;
@@ -49,6 +59,7 @@ const useKV = !!(KV_URL && KV_TOKEN);
 const K_CONTACTS = "trypl:contacts";
 const K_INTERNSHIPS = "trypl:internships";
 const K_OVERRIDES = "trypl:overrides";
+const K_MEMBERS = "trypl:members";
 
 // ---- in-memory fallback ----
 // globalThis に載せて、同一プロセス内の別バンドル（API ルートとページ等）でも
@@ -57,11 +68,17 @@ type Mem = {
   contacts: Contact[];
   internships: AdminInternship[];
   overrides: Record<string, Override>;
+  members: Member[];
 };
 const g = globalThis as unknown as { __tryplMem?: Mem };
 const mem: Mem =
   g.__tryplMem ??
-  (g.__tryplMem = { contacts: [], internships: [], overrides: {} });
+  (g.__tryplMem = {
+    contacts: [],
+    internships: [],
+    overrides: {},
+    members: [],
+  });
 
 async function kv(command: (string | number)[]): Promise<unknown> {
   const res = await fetch(KV_URL!, {
@@ -105,6 +122,53 @@ export async function listContacts(): Promise<Contact[]> {
     return (raw || []).map((s) => JSON.parse(s) as Contact);
   }
   return mem.contacts;
+}
+
+/* --------------------------------------------------------- members */
+
+/**
+ * 会員登録（OAuth ログイン）を台帳に記録する。
+ * 同じメールアドレスが既にあれば、名前・画像などを最新に更新するだけ。
+ */
+export async function addMember(
+  input: Omit<Member, "id" | "createdAt">,
+  now: string,
+): Promise<Member> {
+  const existing = (await listMembers()).find((m) => m.email === input.email);
+  if (existing) {
+    const updated: Member = { ...existing, ...input };
+    const items = (await listMembers()).map((m) =>
+      m.email === input.email ? updated : m,
+    );
+    await saveAllMembers(items);
+    return updated;
+  }
+  const member: Member = { id: rid(), createdAt: now, ...input };
+  if (useKV) {
+    await kv(["LPUSH", K_MEMBERS, JSON.stringify(member)]);
+  } else {
+    mem.members.unshift(member);
+  }
+  return member;
+}
+
+export async function listMembers(): Promise<Member[]> {
+  if (useKV) {
+    const raw = (await kv(["LRANGE", K_MEMBERS, 0, -1])) as string[];
+    return (raw || []).map((s) => JSON.parse(s) as Member);
+  }
+  return mem.members;
+}
+
+async function saveAllMembers(items: Member[]): Promise<void> {
+  if (useKV) {
+    await kv(["DEL", K_MEMBERS]);
+    if (items.length) {
+      await kv(["RPUSH", K_MEMBERS, ...items.map((m) => JSON.stringify(m))]);
+    }
+  } else {
+    mem.members = items;
+  }
 }
 
 /* ----------------------------------------------------- internships */

@@ -24,6 +24,14 @@ type Row = {
   applyUrl: string;
   hidden: boolean;
 };
+type Member = {
+  id: string;
+  email: string;
+  name: string;
+  image: string;
+  provider: string;
+  createdAt: string;
+};
 
 const inputCls =
   "w-full rounded-lg border border-line bg-paper px-3 py-2 text-sm outline-none transition-colors focus:border-ink";
@@ -41,21 +49,26 @@ async function api(method: string, body?: unknown) {
 }
 
 export default function AdminDashboard({ storeMode }: { storeMode: string }) {
-  const [tab, setTab] = useState<"contacts" | "internships">("contacts");
+  const [tab, setTab] = useState<"contacts" | "internships" | "members">(
+    "contacts",
+  );
   const [contacts, setContacts] = useState<Contact[] | null>(null);
   const [code, setCode] = useState<Row[] | null>(null);
   const [admin, setAdmin] = useState<Row[] | null>(null);
+  const [members, setMembers] = useState<Member[] | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     setLoading(true);
-    const [c, i] = await Promise.all([
+    const [c, i, mb] = await Promise.all([
       fetch("/api/admin/contacts").then((r) => r.json()),
       fetch("/api/admin/internships").then((r) => r.json()),
+      fetch("/api/admin/members").then((r) => r.json()),
     ]);
     setContacts(c.contacts ?? []);
     setCode(i.code ?? []);
     setAdmin(i.admin ?? []);
+    setMembers(mb.members ?? []);
     setLoading(false);
   }, []);
 
@@ -94,6 +107,7 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
           {([
             ["contacts", `お問い合わせ${contacts ? ` (${contacts.length})` : ""}`],
             ["internships", `募集管理${code ? ` (${internCount})` : ""}`],
+            ["members", `メンバー${members ? ` (${members.length})` : ""}`],
           ] as const).map(([k, label]) => (
             <button
               key={k}
@@ -122,6 +136,8 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
             <p className="text-sm text-mute">読み込み中…</p>
           ) : tab === "contacts" ? (
             <ContactsTab contacts={contacts ?? []} />
+          ) : tab === "members" ? (
+            <MembersTab members={members ?? []} />
           ) : (
             <InternshipsTab
               code={code ?? []}
@@ -173,6 +189,46 @@ function ContactsTab({ contacts }: { contacts: Contact[] }) {
             メールで返信
           </a>
         </motion.details>
+      ))}
+    </div>
+  );
+}
+
+function MembersTab({ members }: { members: Member[] }) {
+  if (!members.length)
+    return (
+      <p className="rounded-2xl border border-line bg-paper p-8 text-sm text-mute">
+        まだ会員登録はありません。Google / Apple での会員登録が有効になると、ここに一覧が表示されます。
+      </p>
+    );
+  return (
+    <div className="space-y-3">
+      {members.map((mb) => (
+        <motion.div
+          key={mb.id}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-paper p-5 sm:p-6"
+        >
+          <div className="min-w-0">
+            <span className="font-medium">{mb.name || "（名前未設定）"}</span>
+            <span className="ml-3 text-sm text-mute">{mb.email}</span>
+          </div>
+          <div className="flex items-center gap-3 text-xs text-mute">
+            {mb.provider && (
+              <span className="rounded-full border border-line px-2.5 py-1 capitalize">
+                {mb.provider}
+              </span>
+            )}
+            <span className="tabular-nums">{fmt(mb.createdAt)}</span>
+            <a
+              href={`mailto:${mb.email}`}
+              className="link-underline font-medium text-ink"
+            >
+              連絡
+            </a>
+          </div>
+        </motion.div>
       ))}
     </div>
   );
