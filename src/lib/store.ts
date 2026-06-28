@@ -10,6 +10,7 @@
 
 import "server-only";
 import type { MemberProfile } from "@/lib/profile";
+import { defaultPress } from "@/data/site";
 
 export type Contact = {
   id: string;
@@ -567,7 +568,27 @@ export async function addPress(
   return item;
 }
 
+// 初期ニュース（公式サイト公開など）を一度だけ KV に投入する。
+// これにより管理画面でも編集・削除できる正規データになる。削除後は再投入しない。
+let pressSeedChecked = false;
+async function ensurePressSeed(): Promise<void> {
+  if (pressSeedChecked) return;
+  pressSeedChecked = true;
+  try {
+    if (useKV) {
+      const flag = (await kv(["GET", "trypl:seeded:press"])) as string | null;
+      if (flag) return;
+      for (const p of defaultPress)
+        await kv(["RPUSH", K_PRESS, JSON.stringify(p)]);
+      await kv(["SET", "trypl:seeded:press", "1"]);
+    } else if (mem.press.length === 0) {
+      mem.press.unshift(...(defaultPress as PressItem[]));
+    }
+  } catch {}
+}
+
 export async function listPress(): Promise<PressItem[]> {
+  await ensurePressSeed();
   if (useKV) {
     const raw = (await kv(["LRANGE", K_PRESS, 0, -1])) as string[];
     return (raw || []).map((s) => JSON.parse(s) as PressItem);

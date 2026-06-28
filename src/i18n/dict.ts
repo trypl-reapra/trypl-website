@@ -73,7 +73,7 @@ export const dict: Record<Locale, Dict> = {
     },
     cta: "参加する",
     ctaMember: "会員ページへ",
-    press: { eyebrow: "News · 掲載情報", heading: "ニュース／プレス。" },
+    press: { eyebrow: "Press", heading: "プレス" },
     scroll: "Scroll",
     hero: {
       eyebrow: "REAPRA発・実践型コミュニティ。",
@@ -167,7 +167,7 @@ export const dict: Record<Locale, Dict> = {
     },
     cta: "Join",
     ctaMember: "Member area",
-    press: { eyebrow: "News · Press", heading: "News & press." },
+    press: { eyebrow: "Press", heading: "Press" },
     scroll: "Scroll",
     hero: {
       eyebrow: "A practice-first community, born from REAPRA",
@@ -263,7 +263,7 @@ export const dict: Record<Locale, Dict> = {
     },
     cta: "참여하기",
     ctaMember: "멤버 페이지로",
-    press: { eyebrow: "News · 미디어", heading: "뉴스 / 프레스." },
+    press: { eyebrow: "Press", heading: "프레스" },
     scroll: "Scroll",
     hero: {
       eyebrow: "REAPRA에서 시작된 실천형 커뮤니티",
