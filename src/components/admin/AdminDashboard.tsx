@@ -86,6 +86,8 @@ type PressItem = {
   url: string;
   date: string;
   summary: string;
+  body?: string;
+  image?: string;
   hidden: boolean;
   createdAt: string;
 };
@@ -1402,7 +1404,7 @@ function PressTab({
   );
 }
 
-const EMPTY_PRESS = { title: "", outlet: "", url: "", date: "", summary: "", image: "" };
+const EMPTY_PRESS = { title: "", outlet: "", url: "", date: "", summary: "", body: "", image: "" };
 
 function PressForm({ reload }: { reload: () => void }) {
   const [f, setF] = useState({ ...EMPTY_PRESS });
@@ -1461,10 +1463,20 @@ function PressForm({ reload }: { reload: () => void }) {
         <textarea
           className={inputCls + " sm:col-span-2"}
           rows={2}
-          placeholder="概要（任意）"
+          placeholder="概要（一覧・カードに表示・任意）"
           value={f.summary}
           onChange={(e) => set("summary", e.target.value)}
         />
+        <textarea
+          className={inputCls + " sm:col-span-2"}
+          rows={5}
+          placeholder="本文（記事詳細ページに表示・任意）"
+          value={f.body}
+          onChange={(e) => set("body", e.target.value)}
+        />
+        <p className="text-xs text-mute sm:col-span-2">
+          ※ 外部記事のURLを入れると「元記事を読む」リンクが付きます。本文を入れると詳細ページが充実します。
+        </p>
         <div className="sm:col-span-2">
           <ImagePicker value={f.image} onChange={(v) => set("image", v)} />
         </div>

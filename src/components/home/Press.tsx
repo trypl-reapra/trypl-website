@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Container, Eyebrow } from "@/components/ui";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { useT } from "@/i18n/LocaleProvider";
@@ -51,11 +52,14 @@ export default function Press() {
         </Reveal>
 
         <Stagger className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {items.slice(0, 6).map((p) => {
-            const inner = (
-              <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-paper transition-all duration-500 hover:-translate-y-1 hover:border-ink hover:shadow-[0_30px_70px_-45px_rgba(0,0,0,0.45)]">
-                <div className="relative aspect-[16/9] overflow-hidden bg-mist">
-                  {p.image ? (
+          {items.slice(0, 6).map((p) => (
+            <StaggerItem key={p.id} className="h-full">
+              <Link
+                href={`/news/${p.id}`}
+                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-paper transition-all duration-500 hover:-translate-y-1 hover:border-ink hover:shadow-[0_30px_70px_-45px_rgba(0,0,0,0.45)]"
+              >
+                {p.image && (
+                  <div className="relative aspect-[16/9] overflow-hidden bg-mist">
                     <Image
                       src={p.image}
                       alt=""
@@ -63,10 +67,8 @@ export default function Press() {
                       sizes="(max-width:640px) 100vw, 33vw"
                       className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
                     />
-                  ) : (
-                    <div className="absolute inset-0 bg-grid bg-grid-fade opacity-60" />
-                  )}
-                </div>
+                  </div>
+                )}
                 <div className="flex flex-1 flex-col p-5">
                   <div className="flex items-center gap-3 text-xs text-mute">
                     <span className="font-display tabular-nums">{fmt(p.date)}</span>
@@ -82,26 +84,13 @@ export default function Press() {
                       {p.summary}
                     </p>
                   )}
-                  {p.url && (
-                    <span className="mt-auto pt-3 text-xs font-medium text-ink">
-                      記事を読む ↗
-                    </span>
-                  )}
+                  <span className="mt-auto pt-3 text-xs font-medium text-ink">
+                    詳しく見る →
+                  </span>
                 </div>
-              </div>
-            );
-            return (
-              <StaggerItem key={p.id} className="h-full">
-                {p.url ? (
-                  <a href={p.url} target="_blank" rel="noopener noreferrer" className="block h-full">
-                    {inner}
-                  </a>
-                ) : (
-                  inner
-                )}
-              </StaggerItem>
-            );
-          })}
+              </Link>
+            </StaggerItem>
+          ))}
         </Stagger>
       </Container>
     </section>

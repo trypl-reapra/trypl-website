@@ -25,6 +25,7 @@ type Dict = {
   cta: string;
   ctaMember: string;
   press: { eyebrow: string; heading: string };
+  news: { eyebrow: string; readOriginal: string; back: string };
   scroll: string;
   hero: {
     eyebrow: string;
@@ -74,6 +75,7 @@ export const dict: Record<Locale, Dict> = {
     cta: "参加する",
     ctaMember: "会員ページへ",
     press: { eyebrow: "Press", heading: "プレス" },
+    news: { eyebrow: "News · プレス", readOriginal: "元記事を読む", back: "ホームへ戻る" },
     scroll: "Scroll",
     hero: {
       eyebrow: "REAPRA発・実践型コミュニティ。",
@@ -168,6 +170,7 @@ export const dict: Record<Locale, Dict> = {
     cta: "Join",
     ctaMember: "Member area",
     press: { eyebrow: "Press", heading: "Press" },
+    news: { eyebrow: "News · Press", readOriginal: "Read the original", back: "Back to home" },
     scroll: "Scroll",
     hero: {
       eyebrow: "A practice-first community, born from REAPRA",
@@ -264,6 +267,7 @@ export const dict: Record<Locale, Dict> = {
     cta: "참여하기",
     ctaMember: "멤버 페이지로",
     press: { eyebrow: "Press", heading: "프레스" },
+    news: { eyebrow: "News · 프레스", readOriginal: "원문 보기", back: "홈으로" },
     scroll: "Scroll",
     hero: {
       eyebrow: "REAPRA에서 시작된 실천형 커뮤니티",
