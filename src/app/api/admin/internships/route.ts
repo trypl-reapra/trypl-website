@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { sessionRole } from "@/auth";
 import {
   addInternship,
+  clearInternships,
   deleteInternship,
   getOverrides,
   listAdminInternships,
@@ -122,6 +123,10 @@ export async function DELETE(req: Request) {
   if (!(await guard()))
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const b = (await req.json().catch(() => ({}))) as Record<string, unknown>;
+  if (b.all) {
+    await clearInternships();
+    return NextResponse.json({ ok: true });
+  }
   const source = b.source;
   const key = String(b.key ?? "");
   if (!key) return NextResponse.json({ error: "key が必要です" }, { status: 400 });

@@ -921,9 +921,20 @@ function InternshipsTab({
 
       <div className="space-y-8">
         <div>
-          <h3 className="text-sm font-semibold text-mute">
-            管理画面で追加した募集（{admin.length}）
-          </h3>
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-sm font-semibold text-mute">
+              管理画面で追加した募集（{admin.length}）
+            </h3>
+            {admin.length > 0 && (
+              <ClearAll
+                label="追加分を全削除"
+                onClear={async () => {
+                  await adminDelete("/api/admin/internships", { all: true });
+                  reload();
+                }}
+              />
+            )}
+          </div>
           {admin.length ? (
             <div className="mt-4 space-y-3">
               {admin.map((r) => (
@@ -953,6 +964,65 @@ function InternshipsTab({
 }
 
 /* ----------------------------------------------------- overview */
+
+function Donut({
+  title,
+  segments,
+}: {
+  title: string;
+  segments: { label: string; value: number; color: string }[];
+}) {
+  const total = segments.reduce((s, x) => s + x.value, 0);
+  const r = 42;
+  const circ = 2 * Math.PI * r;
+  let acc = 0;
+  return (
+    <div className="rounded-2xl border border-line bg-paper p-6">
+      <h3 className="font-jp font-bold">{title}</h3>
+      {total === 0 ? (
+        <p className="mt-6 text-sm text-mute">まだデータがありません。</p>
+      ) : (
+        <div className="mt-5 flex items-center gap-6">
+          <svg viewBox="0 0 100 100" className="h-32 w-32 shrink-0 -rotate-90">
+            <circle cx="50" cy="50" r={r} fill="none" stroke="#f1f1f3" strokeWidth="14" />
+            {segments
+              .filter((s) => s.value > 0)
+              .map((s, i) => {
+                const len = (s.value / total) * circ;
+                const node = (
+                  <circle
+                    key={i}
+                    cx="50"
+                    cy="50"
+                    r={r}
+                    fill="none"
+                    stroke={s.color}
+                    strokeWidth="14"
+                    strokeDasharray={`${len} ${circ - len}`}
+                    strokeDashoffset={-acc}
+                  />
+                );
+                acc += len;
+                return node;
+              })}
+          </svg>
+          <ul className="min-w-0 flex-1 space-y-1.5 text-sm">
+            {segments.map((s) => (
+              <li key={s.label} className="flex items-center gap-2">
+                <span className="h-3 w-3 shrink-0 rounded-sm" style={{ background: s.color }} />
+                <span className="truncate text-mute">{s.label}</span>
+                <span className="ml-auto font-medium tabular-nums">{s.value}</span>
+                <span className="w-10 shrink-0 text-right text-xs text-mute">
+                  {Math.round((s.value / total) * 100)}%
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function lastDays(n: number): string[] {
   const out: string[] = [];
@@ -991,6 +1061,26 @@ function OverviewTab({
   const days = lastDays(14);
   const series = days.map((d) => stats[`day:${d}`] || 0);
   const max = Math.max(1, ...series);
+
+  // 区分別の内訳
+  const sc = { highschool: 0, university: 0, working: 0, other: 0, none: 0 };
+  members.forEach((m) => {
+    const s = m.profile?.status;
+    if (s === "highschool" || s === "university" || s === "working" || s === "other") sc[s]++;
+    else sc.none++;
+  });
+  const statusSegs = [
+    { label: "高校生", value: sc.highschool, color: "#60a5fa" },
+    { label: "大学生", value: sc.university, color: "#34d399" },
+    { label: "社会人", value: sc.working, color: "#f59e0b" },
+    { label: "その他", value: sc.other, color: "#a78bfa" },
+    { label: "未登録", value: sc.none, color: "#d4d4d8" },
+  ];
+  const typeSegs = [
+    { label: "創設メンバー", value: founders, color: "#d4af37" },
+    { label: "通常メンバー", value: Math.max(0, members.length - founders), color: "#3f3f46" },
+  ];
+
   const cards: [string, number][] = [
     ["累計アクセス", stats.total || 0],
     ["メンバー", members.length],
@@ -1014,6 +1104,11 @@ function OverviewTab({
             </p>
           </div>
         ))}
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Donut title="区分別の割合" segments={statusSegs} />
+        <Donut title="メンバー種別" segments={typeSegs} />
       </div>
 
       <div className="rounded-2xl border border-line bg-paper p-6">

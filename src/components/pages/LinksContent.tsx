@@ -4,7 +4,7 @@ import Link from "next/link";
 import { LogoMark } from "@/components/logo";
 import { Reveal } from "@/components/motion";
 import { cn } from "@/lib/cn";
-import { site, events } from "@/data/site";
+import { site } from "@/data/site";
 import { socials } from "@/data/socials";
 import { usePages } from "@/i18n/pages";
 
@@ -104,7 +104,7 @@ export default function LinksContent() {
               prep={t.prep}
             />
             <LinkRow label={t.primary[0].label} sub={t.primary[0].sub} href="/internships" available prep={t.prep} />
-            <LinkRow label={t.primary[1].label} sub={t.primary[1].sub} href={events.lumaUrl} available prep={t.prep} />
+            <LinkRow label={t.primary[1].label} sub={t.primary[1].sub} href="/events" available prep={t.prep} />
             <LinkRow label={t.primary[2].label} sub={t.primary[2].sub} href="/about" available prep={t.prep} />
           </div>
         </Reveal>

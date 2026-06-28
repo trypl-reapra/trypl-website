@@ -462,6 +462,10 @@ export async function deleteInternship(id: string): Promise<void> {
   await saveAllInternships(items);
 }
 
+export async function clearInternships(): Promise<void> {
+  await saveAllInternships([]);
+}
+
 export async function setInternshipHidden(
   id: string,
   hidden: boolean,

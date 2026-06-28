@@ -7,7 +7,6 @@ import MemberLogout from "@/components/members/MemberLogout";
 import MembershipCard from "@/components/members/MembershipCard";
 import MemberProfileForm from "@/components/members/MemberProfileForm";
 import DeleteAccountButton from "@/components/members/DeleteAccountButton";
-import { events } from "@/data/site";
 import { usePages } from "@/i18n/pages";
 import type { MemberProfile } from "@/lib/profile";
 
@@ -74,17 +73,15 @@ export default function MembersContent({
                 {m.internshipsSub}
               </p>
             </Link>
-            <a
-              href={events.lumaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/events"
               className="rounded-2xl border border-line p-7 transition-colors hover:border-ink"
             >
               <h3 className="font-jp text-xl font-bold">{m.events}</h3>
               <p className="mt-3 text-sm leading-relaxed text-mute">
                 {m.eventsSub}
               </p>
-            </a>
+            </Link>
           </div>
 
           <div className="mt-12 flex flex-wrap items-center gap-4">
