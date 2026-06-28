@@ -20,7 +20,7 @@ export const representative: Member = {
   role: "TrypL 代表",
   org: "TrypL",
   bio: "TrypL の全体をリードし、ビジョンの設定・方針決定・チームづくりを担う代表者。REAPRA の理念を現場の実践へとつなぐ役割を果たす。",
-  photo: "/team/yamada-akiyoshi.webp",
+  photo: "/media/image/team/yamada-akiyoshi.webp",
 };
 
 /** 代表メッセージ（見出し＋本文）。 */

@@ -23,10 +23,10 @@ export default function Hero() {
         muted
         playsInline
         preload="auto"
-        poster="/hero-poster.jpg"
+        poster="/media/video/hero-poster.jpg"
         aria-hidden="true"
       >
-        <source src="/hero.mp4" type="video/mp4" />
+        <source src="/media/video/hero.mp4" type="video/mp4" />
       </video>
 
       {/* 可読性のためのスクリム（左を濃く＋全体を少し暗く＋下端を締める） */}

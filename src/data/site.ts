@@ -36,13 +36,13 @@ export const events = {
   lumaUrl: "https://luma.com/55yk6nif",
   /** 過去開催の様子（public/events 配下）。 */
   photos: [
-    { src: "/events/event-5.jpg", alt: "TrypL イベントでの登壇・発表の様子" },
-    { src: "/events/event-1.jpg", alt: "TrypL イベントでの発表の様子" },
-    { src: "/events/event-6.jpg", alt: "TrypL イベントでの講演の様子" },
-    { src: "/events/event-3.jpg", alt: "TrypL イベントでのグループ対話の様子" },
-    { src: "/events/event-7.jpg", alt: "TrypL イベント会場の様子" },
-    { src: "/events/event-2.jpg", alt: "TrypL イベントでの発表・質疑の様子" },
-    { src: "/events/event-4.jpg", alt: "TrypL イベントでの交流の様子" },
+    { src: "/media/image/events/event-5.jpg", alt: "TrypL イベントでの登壇・発表の様子" },
+    { src: "/media/image/events/event-1.jpg", alt: "TrypL イベントでの発表の様子" },
+    { src: "/media/image/events/event-6.jpg", alt: "TrypL イベントでの講演の様子" },
+    { src: "/media/image/events/event-3.jpg", alt: "TrypL イベントでのグループ対話の様子" },
+    { src: "/media/image/events/event-7.jpg", alt: "TrypL イベント会場の様子" },
+    { src: "/media/image/events/event-2.jpg", alt: "TrypL イベントでの発表・質疑の様子" },
+    { src: "/media/image/events/event-4.jpg", alt: "TrypL イベントでの交流の様子" },
   ],
 } as const;
 

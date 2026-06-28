@@ -410,27 +410,27 @@ export function getUsedCategories(): { key: CategoryKey; label: string }[] {
 /* ------------------------------------------------- header images */
 /** 募集ポップアップのヘッダーに使う横長画像。募集ごとに別の自然写真を割り当て。 */
 const HEADER_POOL = [
-  "/intern/1.jpg",
-  "/intern/2.jpg",
-  "/intern/3.jpg",
-  "/intern/4.jpg",
-  "/intern/5.jpg",
-  "/intern/6.jpg",
-  "/intern/7.jpg",
-  "/intern/8.jpg",
-  "/intern/9.jpg",
+  "/media/image/internship/1.jpg",
+  "/media/image/internship/2.jpg",
+  "/media/image/internship/3.jpg",
+  "/media/image/internship/4.jpg",
+  "/media/image/internship/5.jpg",
+  "/media/image/internship/6.jpg",
+  "/media/image/internship/7.jpg",
+  "/media/image/internship/8.jpg",
+  "/media/image/internship/9.jpg",
 ];
 
 const HEADER_BY_SLUG: Record<string, string> = {
-  "jicou-ai-business": "/intern/1.jpg",
-  "trypl-community-growth": "/intern/2.jpg",
-  "reapra-industry-research": "/intern/3.jpg",
-  "yolot-business-dev": "/intern/4.jpg",
-  "coten-history-research": "/intern/5.jpg",
-  "agrimedia-field-marketing": "/intern/6.jpg",
-  "foodison-ops-data": "/intern/7.jpg",
-  "medup-healthcare-business": "/intern/8.jpg",
-  "rechroma-climate-research": "/intern/9.jpg",
+  "jicou-ai-business": "/media/image/internship/1.jpg",
+  "trypl-community-growth": "/media/image/internship/2.jpg",
+  "reapra-industry-research": "/media/image/internship/3.jpg",
+  "yolot-business-dev": "/media/image/internship/4.jpg",
+  "coten-history-research": "/media/image/internship/5.jpg",
+  "agrimedia-field-marketing": "/media/image/internship/6.jpg",
+  "foodison-ops-data": "/media/image/internship/7.jpg",
+  "medup-healthcare-business": "/media/image/internship/8.jpg",
+  "rechroma-climate-research": "/media/image/internship/9.jpg",
 };
 
 /** スラッグから安定的にヘッダー画像を決める（未登録は文字列ハッシュでプールから）。 */

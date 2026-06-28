@@ -19,10 +19,10 @@ export default function Who() {
         muted
         playsInline
         preload="auto"
-        poster="/who-poster.jpg"
+        poster="/media/video/who-poster.jpg"
         aria-hidden="true"
       >
-        <source src="/who.mp4" type="video/mp4" />
+        <source src="/media/video/who.mp4" type="video/mp4" />
       </video>
       {/* 文字が確実に読めるよう、左〜下を濃いめに締めるスクリム */}
       <div className="pointer-events-none absolute inset-0 bg-ink/25" />

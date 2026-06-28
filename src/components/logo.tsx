@@ -17,7 +17,7 @@ export function LogoMark({
 }) {
   return (
     <Image
-      src={tone === "paper" ? "/trypl-mark-light.png" : "/trypl-mark-dark.png"}
+      src={tone === "paper" ? "/media/image/brand/trypl-mark-light.png" : "/media/image/brand/trypl-mark-dark.png"}
       alt="TrypL"
       width={330}
       height={329}
