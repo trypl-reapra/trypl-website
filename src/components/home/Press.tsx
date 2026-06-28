@@ -43,7 +43,7 @@ export default function Press() {
 
   return (
     <section data-nav-theme="light" className="bg-paper text-ink">
-      <Container className="py-24 sm:py-32">
+      <Container className="py-24 sm:py-32 lg:py-40">
         <Eyebrow>{t.press.eyebrow}</Eyebrow>
         <Reveal>
           <h2 className="mt-7 font-jp text-[clamp(1.8rem,4.5vw,3rem)] font-bold tracking-[-0.02em]">
@@ -85,7 +85,7 @@ export default function Press() {
                     </p>
                   )}
                   <span className="mt-auto pt-3 text-xs font-medium text-ink">
-                    詳しく見る →
+                    {t.press.more} →
                   </span>
                 </div>
               </Link>

@@ -10,6 +10,7 @@ import {
   headerImageFor,
   type Internship,
 } from "@/data/internships";
+import { useT } from "@/i18n/LocaleProvider";
 
 function DetailList({ title, items }: { title: string; items: string[] }) {
   if (!items.length) return null;
@@ -35,6 +36,7 @@ export default function InternshipDetailPanel({
   internship: Internship;
   onClose: () => void;
 }) {
+  const t = useT();
   const facts: [string, string][] = [
     ["勤務地", i.location],
     ["勤務形態", WORK_STYLE_LABEL[i.workStyle]],
@@ -61,7 +63,7 @@ export default function InternshipDetailPanel({
         <button
           type="button"
           onClick={onClose}
-          aria-label="閉じる"
+          aria-label={t.a11y.close}
           className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-ink/40 text-paper backdrop-blur-md transition-colors hover:bg-ink/70"
         >
           <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">

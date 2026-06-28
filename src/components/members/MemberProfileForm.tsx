@@ -206,7 +206,7 @@ export default function MemberProfileForm({
         </div>
 
         <label className="block">
-          <Label text="メール" />
+          <Label text={mp.email} />
           <input className={inputCls + " bg-fog text-mute"} value={email} readOnly />
         </label>
       </div>

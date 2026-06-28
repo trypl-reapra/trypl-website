@@ -323,6 +323,7 @@ const ja = {
     genderOther: "その他",
     genderNA: "回答しない",
     phone: "電話番号",
+    email: "メール",
     optional: "任意",
     select: "選択してください",
     save: "保存する",
@@ -423,7 +424,7 @@ const en: Pages = {
   headers: {
     about: {
       eyebrow: "About · What is TrypL",
-      title: ["The next generation", "of co-creators", "with society."],
+      title: ["The next generation", "of co-creators with society."],
       lead: "Starting from intrinsic motivation, students co-create with society — learning, challenging, and growing into mastery. TrypL is the community that provides those real opportunities.",
     },
     internships: {
@@ -487,7 +488,7 @@ const en: Pages = {
     nameTagline:
       "“Take on practice as if at play.” Read it as “Triple.” That very attitude is woven into the name itself.",
     reapraEyebrow: "Why it matters to REAPRA",
-    reapraHeading: ["A lasting,", "deeply-rooted intrinsic drive."],
+    reapraHeading: ["A lasting, deeply-rooted", "intrinsic drive."],
     reapraP1:
       "With “research and practice for creating industries” as its mission, REAPRA builds industries — and nurtures the leaders — that solve societal problems across generations. At its core is an approach of continually questioning a sense of mission that rises from within, rather than external, short-term success.",
     reapraP2:
@@ -706,6 +707,7 @@ const en: Pages = {
     genderOther: "Other",
     genderNA: "Prefer not to say",
     phone: "Phone",
+    email: "Email",
     optional: "optional",
     select: "Select…",
     save: "Save",
@@ -1087,6 +1089,7 @@ const ko: Pages = {
     genderOther: "기타",
     genderNA: "응답하지 않음",
     phone: "전화번호",
+    email: "이메일",
     optional: "선택",
     select: "선택하세요",
     save: "저장",

@@ -23,8 +23,17 @@ function memberCode(email: string): string {
   return "TRYPL-" + h.toString(36).toUpperCase().padStart(6, "0").slice(-6);
 }
 
-export default async function MembersPage() {
+export default async function MembersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
   const session = await auth();
+
+  // 応募フロー等から渡される遷移先（同一オリジンのパスのみ許可）。
+  const { next } = await searchParams;
+  const safeNext =
+    next && next.startsWith("/") && !next.startsWith("//") ? next : null;
 
   // 未ログイン → 会員登録 / ログイン画面（Google）。
   if (!session?.user) {
@@ -63,6 +72,9 @@ export default async function MembersPage() {
       />
     );
   }
+
+  // 登録情報が揃っていれば、応募フロー等の遷移先へ戻す。
+  if (safeNext) redirect(safeNext);
 
   return (
     <MembersContent

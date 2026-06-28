@@ -1129,7 +1129,7 @@ function OverviewTab({
         ))}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2">
         <Donut title="区分別の割合" segments={statusSegs} />
         <Donut title="メンバー種別" segments={typeSegs} />
       </div>
@@ -1158,7 +1158,12 @@ function OverviewTab({
                   title={`${days[i]}: ${v} PV`}
                 />
               </div>
-              <span className="text-[9px] tabular-nums text-mute">
+              <span
+                className={cn(
+                  "text-[9px] tabular-nums text-mute",
+                  i % 2 === 1 && "hidden sm:inline",
+                )}
+              >
                 {days[i].slice(5)}
               </span>
             </div>

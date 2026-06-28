@@ -4,16 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container, Section, Button, Eyebrow } from "@/components/ui";
 import { Reveal } from "@/components/motion";
-import { useT } from "@/i18n/LocaleProvider";
-
-const WD = ["日", "月", "火", "水", "木", "金", "土"];
-function fmtDate(d: string) {
-  const dt = new Date(d + "T00:00:00");
-  if (Number.isNaN(dt.getTime())) return d;
-  return `${dt.getFullYear()}.${String(dt.getMonth() + 1).padStart(2, "0")}.${String(
-    dt.getDate(),
-  ).padStart(2, "0")}（${WD[dt.getDay()]}）`;
-}
+import { useT, useLocale } from "@/i18n/LocaleProvider";
+import { fmtDateLocale } from "@/lib/fmtDate";
 
 export default function NewsArticle({
   title,
@@ -33,16 +25,17 @@ export default function NewsArticle({
   image: string;
 }) {
   const t = useT();
+  const { locale } = useLocale();
   const n = t.news;
   const external = /^https?:\/\//.test(url);
 
   return (
-    <Section tone="light" className="pt-28">
+    <Section tone="light" topPad={false} className="pt-28 sm:pt-32">
       <Container>
         <article className="mx-auto max-w-2xl">
           <Eyebrow>{n.eyebrow}</Eyebrow>
           <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-mute">
-            <span className="font-display tabular-nums">{fmtDate(date)}</span>
+            <span className="font-display tabular-nums">{fmtDateLocale(date, locale)}</span>
             {outlet && (
               <span className="rounded-full border border-line px-2.5 py-0.5 text-xs">
                 {outlet}

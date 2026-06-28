@@ -7,6 +7,8 @@ import { Container, Section, Button, Eyebrow } from "@/components/ui";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { events } from "@/data/site";
 import { usePages } from "@/i18n/pages";
+import { useLocale } from "@/i18n/LocaleProvider";
+import { fmtDateLocale } from "@/lib/fmtDate";
 
 type EventItem = {
   id: string;
@@ -21,21 +23,13 @@ type EventItem = {
   image?: string;
 };
 
-const WD = ["日", "月", "火", "水", "木", "金", "土"];
-function fmtDate(d: string) {
-  const dt = new Date(d + "T00:00:00");
-  if (Number.isNaN(dt.getTime())) return d;
-  return `${dt.getFullYear()}.${String(dt.getMonth() + 1).padStart(2, "0")}.${String(
-    dt.getDate(),
-  ).padStart(2, "0")}（${WD[dt.getDay()]}）`;
-}
-
 export default function EventsContent({
   upcoming = [],
 }: {
   upcoming?: EventItem[];
 }) {
   const t = usePages();
+  const { locale } = useLocale();
   const e = t.events;
   const today = new Date().toISOString().slice(0, 10);
   return (
@@ -81,7 +75,7 @@ export default function EventsContent({
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-medium text-mute">
                           <span className="rounded-full bg-ink px-2.5 py-0.5 text-xs font-semibold tabular-nums text-paper">
-                            {fmtDate(ev.date)}
+                            {fmtDateLocale(ev.date, locale)}
                           </span>
                           {(ev.startTime || ev.endTime) && (
                             <span className="tabular-nums">
@@ -145,7 +139,7 @@ export default function EventsContent({
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-fog to-transparent sm:w-24" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-fog to-transparent sm:w-24" />
           <div className="marquee-track">
-            {[...events.photos, ...events.photos, ...events.photos].map((p, i) => (
+            {[...events.photos, ...events.photos].map((p, i) => (
               <figure
                 key={i}
                 className="group relative mx-2 aspect-[4/3] h-36 shrink-0 overflow-hidden rounded-xl bg-mist sm:h-44"

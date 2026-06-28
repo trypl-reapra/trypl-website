@@ -24,7 +24,7 @@ type Dict = {
   nav: { about: string; internships: string; events: string; links: string };
   cta: string;
   ctaMember: string;
-  press: { eyebrow: string; heading: string };
+  press: { eyebrow: string; heading: string; more: string };
   news: { eyebrow: string; readOriginal: string; back: string };
   scroll: string;
   hero: {
@@ -62,6 +62,7 @@ type Dict = {
     privacy: string;
     terms: string;
   };
+  a11y: { close: string };
 };
 
 export const dict: Record<Locale, Dict> = {
@@ -74,7 +75,7 @@ export const dict: Record<Locale, Dict> = {
     },
     cta: "参加する",
     ctaMember: "会員ページへ",
-    press: { eyebrow: "Press", heading: "プレス" },
+    press: { eyebrow: "Press", heading: "プレス", more: "詳しく見る" },
     news: { eyebrow: "News · プレス", readOriginal: "元記事を読む", back: "ホームへ戻る" },
     scroll: "Scroll",
     hero: {
@@ -158,6 +159,7 @@ export const dict: Record<Locale, Dict> = {
       privacy: "プライバシーポリシー",
       terms: "レギュレーション",
     },
+    a11y: { close: "閉じる" },
   },
 
   en: {
@@ -169,7 +171,7 @@ export const dict: Record<Locale, Dict> = {
     },
     cta: "Join",
     ctaMember: "Member area",
-    press: { eyebrow: "Press", heading: "Press" },
+    press: { eyebrow: "Press", heading: "Press", more: "Read more" },
     news: { eyebrow: "News · Press", readOriginal: "Read the original", back: "Back to home" },
     scroll: "Scroll",
     hero: {
@@ -224,10 +226,8 @@ export const dict: Record<Locale, Dict> = {
       titleLines: [
         "People who want to move first.",
         "Not for job hunting,",
-        "but starting from their",
-        "own motivation.",
-        "People who can put what",
-        "they learn into words.",
+        "but starting from their own motivation.",
+        "People who can put what they learn into words.",
       ],
       lead: "The door is wide open. You don’t need to be perfect from the start. Take a step even amid uncertainty, and discover your direction and strengths through the work — that’s the attitude we value.",
     },
@@ -255,6 +255,7 @@ export const dict: Record<Locale, Dict> = {
       privacy: "Privacy Policy",
       terms: "Regulations",
     },
+    a11y: { close: "Close" },
   },
 
   ko: {
@@ -266,7 +267,7 @@ export const dict: Record<Locale, Dict> = {
     },
     cta: "참여하기",
     ctaMember: "멤버 페이지로",
-    press: { eyebrow: "Press", heading: "프레스" },
+    press: { eyebrow: "Press", heading: "프레스", more: "자세히 보기" },
     news: { eyebrow: "News · 프레스", readOriginal: "원문 보기", back: "홈으로" },
     scroll: "Scroll",
     hero: {
@@ -350,5 +351,6 @@ export const dict: Record<Locale, Dict> = {
       privacy: "개인정보 처리방침",
       terms: "커뮤니티 규정",
     },
+    a11y: { close: "닫기" },
   },
 };
