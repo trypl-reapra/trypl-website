@@ -1,17 +1,21 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import PageHeader from "@/components/PageHeader";
 import { Container, Section, Button, Eyebrow } from "@/components/ui";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { site } from "@/data/site";
 import { socials } from "@/data/socials";
 import { usePages } from "@/i18n/pages";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function JoinContent() {
   const t = usePages();
+  const tt = useT();
   const j = t.join;
   const line = socials.find((s) => s.key === "line");
-  const slack = socials.find((s) => s.key === "slack");
+  const { status } = useSession();
+  const authed = status === "authenticated";
 
   return (
     <>
@@ -67,7 +71,7 @@ export default function JoinContent() {
 
             <div className="mt-9 flex flex-wrap gap-4">
               <Button href="/members" variant="inverse" size="lg">
-                {t.memberAuth.title}
+                {authed ? tt.ctaMember : t.memberAuth.title}
               </Button>
               <Button href="/internships" variant="outline-invert" size="lg">
                 {j.seeInternships}
@@ -85,21 +89,6 @@ export default function JoinContent() {
                     className="link-underline text-paper-dim"
                   >
                     {j.lineAction}
-                  </a>
-                ) : (
-                  <span className="text-paper-dim/50">{j.prep}</span>
-                )}
-              </span>
-              <span>
-                {j.slackLabel}
-                {slack?.available ? (
-                  <a
-                    href={slack.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="link-underline text-paper-dim"
-                  >
-                    {j.slackAction}
                   </a>
                 ) : (
                   <span className="text-paper-dim/50">{j.prep}</span>

@@ -52,7 +52,6 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ja_JP",
-    url: site.url,
     siteName: site.name,
     title: "TrypL（トリプル）— 社会とつながり、やりながら学ぶ。",
     description: site.description,

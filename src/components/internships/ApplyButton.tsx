@@ -40,7 +40,11 @@ export default function ApplyButton({
       <div className="mt-7">
         <Magnetic className="w-full">
           <Button
-            href={authed ? `/internships/${slug}/apply` : "/members"}
+            href={
+              authed
+                ? `/internships/${slug}/apply`
+                : `/members?next=${encodeURIComponent(`/internships/${slug}/apply`)}`
+            }
             size="lg"
             className="w-full"
           >

@@ -5,7 +5,10 @@ import { listMembers } from "@/lib/store";
 import MembersContent from "@/components/pages/MembersContent";
 import MemberRegister from "@/components/members/MemberRegister";
 
-export const metadata: Metadata = { title: "メンバー" };
+export const metadata: Metadata = {
+  title: "メンバー",
+  robots: { index: false, follow: false },
+};
 export const dynamic = "force-dynamic";
 
 /** メールから安定した会員番号（表示用）を作る。 */

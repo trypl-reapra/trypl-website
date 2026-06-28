@@ -1,6 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { LogoMark } from "@/components/logo";
 import { site } from "@/data/site";
@@ -31,6 +32,13 @@ function AppleIcon() {
 export default function MemberRegister({ providers }: { providers: Providers }) {
   const t = usePages().memberAuth;
   const line = socials.find((s) => s.key === "line");
+  // 応募ページ等から来た場合、ログイン後にその場所へ戻す（内部パスのみ許可）。
+  const params = useSearchParams();
+  const rawNext = params.get("next");
+  const callbackUrl =
+    rawNext && rawNext.startsWith("/") && !rawNext.startsWith("//")
+      ? rawNext
+      : "/members";
 
   return (
     <section
@@ -58,7 +66,7 @@ export default function MemberRegister({ providers }: { providers: Providers }) 
             {providers.google && (
               <button
                 type="button"
-                onClick={() => signIn("google", { callbackUrl: "/members" })}
+                onClick={() => signIn("google", { callbackUrl })}
                 className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-full border border-line bg-paper text-sm font-medium text-ink transition-colors hover:bg-fog"
               >
                 <GoogleIcon />
@@ -68,7 +76,7 @@ export default function MemberRegister({ providers }: { providers: Providers }) 
             {providers.apple && (
               <button
                 type="button"
-                onClick={() => signIn("apple", { callbackUrl: "/members" })}
+                onClick={() => signIn("apple", { callbackUrl })}
                 className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-full bg-ink text-sm font-medium text-paper transition-colors hover:bg-ink-soft"
               >
                 <AppleIcon />

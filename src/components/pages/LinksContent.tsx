@@ -5,7 +5,7 @@ import { LogoMark } from "@/components/logo";
 import { Reveal } from "@/components/motion";
 import { cn } from "@/lib/cn";
 import { site, events } from "@/data/site";
-import { socials, entryForm } from "@/data/socials";
+import { socials } from "@/data/socials";
 import { usePages } from "@/i18n/pages";
 
 function ArrowUpRight() {
@@ -99,8 +99,8 @@ export default function LinksContent() {
             <LinkRow
               label={t.entryLabel}
               sub={t.entryDesc}
-              href={entryForm.href}
-              available={entryForm.available}
+              href="/members"
+              available
               prep={t.prep}
             />
             <LinkRow label={t.primary[0].label} sub={t.primary[0].sub} href="/internships" available prep={t.prep} />

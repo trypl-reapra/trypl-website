@@ -235,8 +235,8 @@ const ja = {
   },
   links: {
     subtitle: "REAPRA発・実践型インターンコミュニティ",
-    entryLabel: "参加フォーム",
-    entryDesc: "まずは興味の登録から。30秒で完了します。",
+    entryLabel: "メンバーになる",
+    entryDesc: "Googleアカウントで会員登録。無料・30秒で完了します。",
     primary: [
       { label: "募集一覧を見る", sub: "REAPRA・投資先でのインターン" },
       { label: "イベントに参加する", sub: "説明会・座談会・ワークショップ" },
@@ -287,6 +287,18 @@ const ja = {
     prepDesc: "現在、会員登録機能を準備中です。公開までは下記からお気軽にご連絡ください。",
     prepLine: "公式アカウントを友だち追加",
     adminLink: "運営の方はこちら",
+  },
+  internshipsCta: {
+    forStudents: "For students",
+    studentsHeading: ["気になる募集が、", "見つからなくても。"],
+    studentsBody:
+      "まずはコミュニティに参加して、説明会や対話を通じて自分に合う実践機会を一緒に探せます。",
+    studentsCta: "TrypL に参加する",
+    forCompanies: "For companies",
+    companiesHeading: ["募集を、", "掲載しませんか。"],
+    companiesBody:
+      "REAPRA 投資先をはじめ、内発的動機を大切にする学生と出会いたい企業の方は、お気軽にご連絡ください。",
+    companiesCta: "掲載について問い合わせる",
   },
   apply: {
     cta: "会員登録して応募",
@@ -347,7 +359,7 @@ const en: Pages = {
   headers: {
     about: {
       eyebrow: "About · What is TrypL",
-      title: ["The next generation", "of co-creators with society."],
+      title: ["The next generation", "of co-creators", "with society."],
       lead: "Starting from intrinsic motivation, students co-create with society — learning, challenging, and growing into mastery. TrypL is the community that provides those real opportunities.",
     },
     internships: {
@@ -417,7 +429,7 @@ const en: Pages = {
     reapraP2:
       "Students who have faced their intrinsic motivation through TrypL come back, five or ten years later, with their own careers and the society they want to create, and reconnect to REAPRA’s ecosystem. That, too, is TrypL’s long-term significance.",
     visionEyebrow: "Vision · 2035",
-    visionHeading: ["“Once you become a student,", "just start with TrypL.”"],
+    visionHeading: ["“Once you become a college student,", "just start with TrypL.”"],
     visionP:
       "Like a campus co-op, something that is simply there as a given. By 2035, we aim to be Japan’s strongest student community of practice — surpassing today’s leading student organizations in scale and quality — and to keep offering a place where students explore and deepen “what they want to do” and “their form of contribution” at their own pace.",
     msgEyebrow: "Message",
@@ -542,8 +554,8 @@ const en: Pages = {
   },
   links: {
     subtitle: "A practice-first internship community, born from REAPRA",
-    entryLabel: "Registration form",
-    entryDesc: "Start by registering your interest. 30 seconds.",
+    entryLabel: "Become a member",
+    entryDesc: "Sign up with your Google account. Free, ~30 seconds.",
     primary: [
       { label: "See internships", sub: "Internships at REAPRA & portfolio companies" },
       { label: "Join an event", sub: "Info sessions, dialogues, workshops" },
@@ -595,6 +607,18 @@ const en: Pages = {
     prepLine: " Official — add as a friend",
     adminLink: "Operators, log in here",
   },
+  internshipsCta: {
+    forStudents: "For students",
+    studentsHeading: ["Can’t find a role", "that fits you yet?"],
+    studentsBody:
+      "Join the community first — through info sessions and dialogue, we’ll help you find the right hands-on opportunity together.",
+    studentsCta: "Join TrypL",
+    forCompanies: "For companies",
+    companiesHeading: ["Want to list", "a position?"],
+    companiesBody:
+      "If you’re a company — a REAPRA portfolio company or otherwise — hoping to meet students who value intrinsic motivation, reach out anytime.",
+    companiesCta: "Ask about listing",
+  },
   apply: {
     cta: "Sign up to apply",
     note: "Applying requires a free member account.",
@@ -645,7 +669,7 @@ const ko: Pages = {
         key: "LifeMission",
         jp: "라이프 미션",
         line: "내발적 동기에서, 인생의 사명으로.",
-        body: "‘어떻게 사회와 관계 맺고 싶은가’라는 내면에서 솟는 동기를 기점으로, 자신만의 기여의 형태를 깊여 갑니다.",
+        body: "‘어떻게 사회와 관계 맺고 싶은가’라는 내면에서 솟는 동기를 기점으로, 자신만의 기여의 형태를 깊이 다져 갑니다.",
       },
     ],
   },
@@ -705,7 +729,7 @@ const ko: Pages = {
       {
         key: "LifeMission",
         jp: "라이프 미션",
-        body: "‘어떻게 사회와 관계 맺고 싶은가’라는 내면에서 솟는 동기를 기점으로, 자신만의 기여의 형태를 깊여 갑니다.",
+        body: "‘어떻게 사회와 관계 맺고 싶은가’라는 내면에서 솟는 동기를 기점으로, 자신만의 기여의 형태를 깊이 다져 갑니다.",
       },
     ],
     words: [
@@ -724,7 +748,7 @@ const ko: Pages = {
     visionEyebrow: "Vision · 2035",
     visionHeading: ["“대학생이 되면,", "일단 TrypL.”"],
     visionP:
-      "대학의 생활협동조합처럼, 당연히 거기에 있는 존재로. 2035년까지 기존의 유력 학생 단체를 뛰어넘는 규모와 질을 갖춘, 일본에서 가장 강한 학생 실천 커뮤니티를 목표로 합니다. 학생이 자신의 페이스로 ‘하고 싶은 일’이나 ‘사회 기여의 형태’를 찾고 깊일 수 있는 장을 계속 제공합니다.",
+      "대학의 생활협동조합처럼, 당연히 거기에 있는 존재로. 2035년까지 기존의 유력 학생 단체를 뛰어넘는 규모와 질을 갖춘, 일본에서 가장 강한 학생 실천 커뮤니티를 목표로 합니다. 학생이 자신의 페이스로 ‘하고 싶은 일’이나 ‘사회 기여의 형태’를 찾고 깊이 다져 갈 수 있는 장을 계속 제공합니다.",
     msgEyebrow: "Message · 대표 메시지",
     msgTitle: "‘하고 싶다’는 충동을, 사회의 현장에서 형태로.",
     msgBody: [
@@ -847,8 +871,8 @@ const ko: Pages = {
   },
   links: {
     subtitle: "REAPRA에서 시작된 실천형 인턴십 커뮤니티",
-    entryLabel: "참가 폼",
-    entryDesc: "우선 관심 등록부터. 30초면 끝납니다.",
+    entryLabel: "멤버 되기",
+    entryDesc: "Google 계정으로 회원 가입. 무료·30초면 완료됩니다.",
     primary: [
       { label: "모집 보기", sub: "REAPRA·투자처에서의 인턴십" },
       { label: "이벤트 참여하기", sub: "설명회·좌담회·워크숍" },
@@ -899,6 +923,18 @@ const ko: Pages = {
     prepDesc: "현재 회원 가입 기능을 준비 중입니다. 공개 전까지는 아래로 편하게 연락 주세요.",
     prepLine: " 공식 계정 친구 추가",
     adminLink: "운영자는 여기로",
+  },
+  internshipsCta: {
+    forStudents: "For students",
+    studentsHeading: ["마음에 드는 모집이", "없더라도."],
+    studentsBody:
+      "먼저 커뮤니티에 참여해, 설명회와 대화를 통해 자신에게 맞는 실천 기회를 함께 찾을 수 있습니다.",
+    studentsCta: "TrypL에 참여하기",
+    forCompanies: "For companies",
+    companiesHeading: ["모집을", "게재해 보시겠어요?"],
+    companiesBody:
+      "REAPRA 투자처를 비롯해, 내발적 동기를 중시하는 학생과 만나고 싶은 기업이라면 편하게 연락 주세요.",
+    companiesCta: "게재 문의하기",
   },
   apply: {
     cta: "회원가입 후 지원",

@@ -4,7 +4,10 @@ import { auth } from "@/auth";
 import { getInternship } from "@/data/internships";
 import ApplyForm from "@/components/internships/ApplyForm";
 
-export const metadata: Metadata = { title: "応募" };
+export const metadata: Metadata = {
+  title: "応募",
+  robots: { index: false, follow: false },
+};
 export const dynamic = "force-dynamic";
 
 export default async function ApplyPage({
@@ -16,9 +19,10 @@ export default async function ApplyPage({
   const internship = getInternship(slug);
   if (!internship) notFound();
 
-  // 応募は会員限定。未ログインは会員登録/ログインへ。
+  // 応募は会員限定。未ログインは会員登録/ログインへ（ログイン後この応募ページへ戻す）。
   const session = await auth();
-  if (!session?.user) redirect("/members");
+  if (!session?.user)
+    redirect(`/members?next=${encodeURIComponent(`/internships/${slug}/apply`)}`);
 
   return (
     <ApplyForm

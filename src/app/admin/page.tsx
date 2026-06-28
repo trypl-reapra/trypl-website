@@ -4,7 +4,10 @@ import { sessionRole } from "@/auth";
 import { storeMode } from "@/lib/store";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 
-export const metadata: Metadata = { title: "管理画面" };
+export const metadata: Metadata = {
+  title: "管理画面",
+  robots: { index: false, follow: false },
+};
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {

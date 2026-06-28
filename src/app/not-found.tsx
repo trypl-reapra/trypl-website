@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { LogoMark } from "@/components/logo";
 import { Button } from "@/components/ui";
+
+export const metadata: Metadata = {
+  title: "ページが見つかりません",
+  robots: { index: false, follow: false },
+};
 
 export default function NotFound() {
   return (

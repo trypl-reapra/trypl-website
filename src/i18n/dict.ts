@@ -214,8 +214,10 @@ export const dict: Record<Locale, Dict> = {
       titleLines: [
         "People who want to move first.",
         "Not for job hunting,",
-        "but starting from their own motivation.",
-        "People who can put what they learn into words.",
+        "but starting from their",
+        "own motivation.",
+        "People who can put what",
+        "they learn into words.",
       ],
       lead: "The door is wide open. You don’t need to be perfect from the start. Take a step even amid uncertainty, and discover your direction and strengths through the work — that’s the attitude we value.",
     },
