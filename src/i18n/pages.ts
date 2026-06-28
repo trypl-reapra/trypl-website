@@ -256,6 +256,7 @@ const ja = {
   members: {
     welcome: "ようこそ、",
     welcomeSuffix: " さん。TrypL のメンバーエリアです。",
+    cardHeading: "あなたの会員証",
     internships: "募集一覧",
     internshipsSub: "REAPRA・投資先の実践機会を見る。",
     events: "イベント（Luma）",
@@ -529,6 +530,7 @@ const en: Pages = {
   members: {
     welcome: "Welcome, ",
     welcomeSuffix: ". This is the TrypL members area.",
+    cardHeading: "Your membership card",
     internships: "Internships",
     internshipsSub: "See practice opportunities at REAPRA & portfolio companies.",
     events: "Events (Luma)",
@@ -800,6 +802,7 @@ const ko: Pages = {
   members: {
     welcome: "환영합니다, ",
     welcomeSuffix: "님. TrypL 멤버 전용 공간입니다.",
+    cardHeading: "나의 멤버십 카드",
     internships: "모집 공고",
     internshipsSub: "REAPRA·투자처의 실천 기회를 봅니다.",
     events: "이벤트(Luma)",

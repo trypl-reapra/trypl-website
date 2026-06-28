@@ -4,6 +4,7 @@ import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { Container, Section } from "@/components/ui";
 import MemberLogout from "@/components/members/MemberLogout";
+import MembershipCard from "@/components/members/MembershipCard";
 import { events } from "@/data/site";
 import { usePages } from "@/i18n/pages";
 
@@ -12,15 +13,20 @@ export default function MembersContent({
   viaOAuth,
   name,
   email,
+  image,
+  memberId,
+  memberSince,
 }: {
   isAdmin: boolean;
   viaOAuth: boolean;
   name: string | null;
   email: string | null;
+  image: string | null;
+  memberId: string | null;
+  memberSince: string | null;
 }) {
   const t = usePages();
   const m = t.members;
-  const who = name || email;
 
   return (
     <>
@@ -31,12 +37,18 @@ export default function MembersContent({
       />
       <Section tone="light" topPad={false}>
         <Container>
-          {who && (
-            <p className="mb-10 text-sm text-mute">
-              {m.welcome}
-              <span className="font-medium text-ink">{who}</span>
-              {m.welcomeSuffix}
-            </p>
+          {/* 会員証 */}
+          {viaOAuth && (
+            <div className="mb-14">
+              <p className="eyebrow mb-5 text-mute">{m.cardHeading}</p>
+              <MembershipCard
+                name={name}
+                email={email}
+                image={image}
+                memberId={memberId}
+                memberSince={memberSince}
+              />
+            </div>
           )}
 
           <div className="grid gap-5 sm:grid-cols-2">
