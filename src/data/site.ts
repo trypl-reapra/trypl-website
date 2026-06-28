@@ -8,7 +8,7 @@ export const site = {
   reading: "トリプル",
   // SNS のプロフィールに貼る「母艦」。デプロイ後の本番 URL に合わせて
   // NEXT_PUBLIC_SITE_URL を設定すると OG 画像などが正しく解決されます。
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://trypl-website.vercel.app",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://trypl.vercel.app",
   tagline: "楽しく、遊ぶように。実践に挑戦する。",
   taglineEn: "Try × Practice × pLay",
   description:
