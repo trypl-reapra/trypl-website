@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { addApplication, setMemberProfile, type MemberProfile } from "@/lib/store";
+import {
+  addApplication,
+  isMemberFrozen,
+  setMemberProfile,
+  type MemberProfile,
+} from "@/lib/store";
 import { getInternship } from "@/data/internships";
 
 export const runtime = "nodejs";
@@ -16,6 +21,8 @@ export async function POST(req: Request) {
   const email = session?.user?.email;
   if (!email)
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (await isMemberFrozen(email))
+    return NextResponse.json({ error: "frozen" }, { status: 403 });
 
   let body: Record<string, unknown>;
   try {

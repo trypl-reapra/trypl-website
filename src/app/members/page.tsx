@@ -4,6 +4,7 @@ import { auth, memberProviders } from "@/auth";
 import { listMembers } from "@/lib/store";
 import MembersContent from "@/components/pages/MembersContent";
 import MemberRegister from "@/components/members/MemberRegister";
+import FrozenNotice from "@/components/members/FrozenNotice";
 
 export const metadata: Metadata = {
   title: "メンバー",
@@ -37,6 +38,10 @@ export default async function MembersPage() {
   const me = email
     ? (await listMembers()).find((m) => m.email === email)
     : null;
+
+  // 凍結中のメンバーには案内のみ表示。
+  if (me?.frozen) return <FrozenNotice />;
+
   return (
     <MembersContent
       name={session.user.name ?? null}

@@ -16,7 +16,7 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Apple from "next-auth/providers/apple";
 import type { Provider } from "next-auth/providers";
-import { addMember } from "@/lib/store";
+import { addMember, isMemberFrozen } from "@/lib/store";
 
 const hasGoogle = !!(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET);
 const hasApple = !!(process.env.AUTH_APPLE_ID && process.env.AUTH_APPLE_SECRET);
@@ -50,6 +50,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: { signIn: "/members", error: "/members" },
   session: { strategy: "jwt" },
   callbacks: {
+    // 凍結アカウントはログインを拒否（管理者は対象外）。
+    async signIn({ user }) {
+      if (!user?.email) return true;
+      if (roleForEmail(user.email) === "admin") return true;
+      try {
+        if (await isMemberFrozen(user.email)) return false;
+      } catch {}
+      return true;
+    },
     async jwt({ token, user }) {
       const email = (user?.email ?? token.email) as string | undefined;
       (token as { role?: Role }).role = roleForEmail(email);

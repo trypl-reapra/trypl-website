@@ -263,6 +263,9 @@ const ja = {
     welcomeSuffix: " さん。TrypL のメンバーエリアです。",
     cardHeading: "あなたの会員証",
     cardHeadingFounder: "あなたの創設メンバー会員証",
+    frozenTitle: "アカウントは凍結されています",
+    frozenBody:
+      "現在このアカウントはご利用いただけません。お心当たりがない場合は、運営までお問い合わせください。",
     internships: "募集一覧",
     internshipsSub: "REAPRA・投資先の実践機会を見る。",
     events: "イベント",
@@ -591,6 +594,9 @@ const en: Pages = {
     welcomeSuffix: ". This is the TrypL members area.",
     cardHeading: "Your membership card",
     cardHeadingFounder: "Your founding member card",
+    frozenTitle: "Your account is suspended",
+    frozenBody:
+      "This account is currently unavailable. If you believe this is a mistake, please contact us.",
     internships: "Internships",
     internshipsSub: "See practice opportunities at REAPRA & portfolio companies.",
     events: "Events",
@@ -917,6 +923,9 @@ const ko: Pages = {
     welcomeSuffix: "님. TrypL 멤버 전용 공간입니다.",
     cardHeading: "나의 멤버십 카드",
     cardHeadingFounder: "나의 창립 멤버 카드",
+    frozenTitle: "계정이 정지되었습니다",
+    frozenBody:
+      "현재 이 계정은 이용할 수 없습니다. 문제가 있다고 생각되시면 운영진에게 문의해 주세요.",
     internships: "모집 공고",
     internshipsSub: "REAPRA·투자처의 실천 기회를 봅니다.",
     events: "이벤트",

@@ -51,8 +51,22 @@ export type Member = {
   createdAt: string;
   /** 創設メンバー（管理画面で指定）。会員証がゴールドになる。 */
   founder?: boolean;
+  /** 凍結（管理画面で指定）。ログイン・応募が不可になる。 */
+  frozen?: boolean;
   /** 応募用プロフィール（一度入力すると次回以降は自動入力される）。 */
   profile?: MemberProfile;
+};
+
+/** 退会したメンバーの記録（退会者リスト）。 */
+export type Withdrawal = {
+  id: string;
+  email: string;
+  name: string;
+  profile?: MemberProfile;
+  /** 入会日（元の createdAt） */
+  memberSince: string;
+  /** 退会日時 */
+  withdrawnAt: string;
 };
 
 /** 募集への応募（会員が応募ボタンから送信）。 */
@@ -93,6 +107,7 @@ const K_INTERNSHIPS = "trypl:internships";
 const K_OVERRIDES = "trypl:overrides";
 const K_MEMBERS = "trypl:members";
 const K_APPLICATIONS = "trypl:applications";
+const K_WITHDRAWALS = "trypl:withdrawals";
 
 // ---- in-memory fallback ----
 // globalThis に載せて、同一プロセス内の別バンドル（API ルートとページ等）でも
@@ -103,6 +118,7 @@ type Mem = {
   overrides: Record<string, Override>;
   members: Member[];
   applications: Application[];
+  withdrawals: Withdrawal[];
 };
 const g = globalThis as unknown as { __tryplMem?: Mem };
 const mem: Mem =
@@ -113,6 +129,7 @@ const mem: Mem =
     overrides: {},
     members: [],
     applications: [],
+    withdrawals: [],
   });
 
 async function kv(command: (string | number)[]): Promise<unknown> {
@@ -195,10 +212,42 @@ export async function listMembers(): Promise<Member[]> {
   return mem.members;
 }
 
-/** 退会：指定メールの会員レコードを削除する。 */
-export async function removeMemberByEmail(email: string): Promise<void> {
-  const items = (await listMembers()).filter((m) => m.email !== email);
-  await saveAllMembers(items);
+/** 退会：会員レコードを退会ログに記録し、メンバー一覧から外す。 */
+export async function withdrawMember(
+  email: string,
+  now: string,
+): Promise<void> {
+  const members = await listMembers();
+  const m = members.find((x) => x.email === email);
+  if (!m) return;
+  const record: Withdrawal = {
+    id: rid(),
+    email: m.email,
+    name: m.name,
+    profile: m.profile,
+    memberSince: m.createdAt,
+    withdrawnAt: now,
+  };
+  if (useKV) {
+    await kv(["LPUSH", K_WITHDRAWALS, JSON.stringify(record)]);
+  } else {
+    mem.withdrawals.unshift(record);
+  }
+  await saveAllMembers(members.filter((x) => x.email !== email));
+}
+
+export async function listWithdrawals(): Promise<Withdrawal[]> {
+  if (useKV) {
+    const raw = (await kv(["LRANGE", K_WITHDRAWALS, 0, -1])) as string[];
+    return (raw || []).map((s) => JSON.parse(s) as Withdrawal);
+  }
+  return mem.withdrawals;
+}
+
+/** 凍結中か（ログイン・応募の可否判定に使用）。 */
+export async function isMemberFrozen(email: string): Promise<boolean> {
+  const m = (await listMembers()).find((x) => x.email === email);
+  return !!m?.frozen;
 }
 
 /** 創設メンバー指定の切り替え（管理画面から）。 */
@@ -208,6 +257,17 @@ export async function setMemberFounder(
 ): Promise<void> {
   const items = (await listMembers()).map((m) =>
     m.email === email ? { ...m, founder } : m,
+  );
+  await saveAllMembers(items);
+}
+
+/** 凍結の切り替え（管理画面から）。 */
+export async function setMemberFrozen(
+  email: string,
+  frozen: boolean,
+): Promise<void> {
+  const items = (await listMembers()).map((m) =>
+    m.email === email ? { ...m, frozen } : m,
   );
   await saveAllMembers(items);
 }

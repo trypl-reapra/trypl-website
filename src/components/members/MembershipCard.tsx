@@ -138,9 +138,10 @@ export default function MembershipCard({
           background: c.bg,
         }}
       >
-        {/* フッターと同じ手法：マークを右に大きく見切れさせ、低不透明度で敷く */}
-        <div className={`pointer-events-none absolute right-[-3.5rem] top-1/2 h-[150%] w-[150%] max-w-none -translate-y-1/2 ${c.markOpacity}`}>
-          <LogoMark tone={c.logoTone} className="h-full w-full" />
+        {/* フッターと同じ手法：マークを右に大きく見切れさせ、低不透明度で敷く。
+            上下に余白が出ないよう object-cover で塗り、カード高さを越えて見切れさせる。 */}
+        <div className={`pointer-events-none absolute right-[-4.5rem] top-1/2 h-[210%] w-[150%] max-w-none -translate-y-1/2 ${c.markOpacity}`}>
+          <LogoMark tone={c.logoTone} className="h-full w-full object-cover" />
         </div>
         {/* ごく薄い質感のグリッド */}
         <div className="pointer-events-none absolute inset-0 bg-grid opacity-[0.06]" />

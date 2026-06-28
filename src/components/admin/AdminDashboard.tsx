@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import LogoutButton from "./LogoutButton";
 import { cn } from "@/lib/cn";
@@ -24,6 +24,14 @@ type Row = {
   applyUrl: string;
   hidden: boolean;
 };
+type Profile = {
+  fullName: string;
+  furigana?: string;
+  school: string;
+  department?: string;
+  year: string;
+  phone: string;
+};
 type Member = {
   id: string;
   email: string;
@@ -32,6 +40,16 @@ type Member = {
   provider: string;
   createdAt: string;
   founder?: boolean;
+  frozen?: boolean;
+  profile?: Profile;
+};
+type Withdrawal = {
+  id: string;
+  email: string;
+  name: string;
+  profile?: Profile;
+  memberSince: string;
+  withdrawnAt: string;
 };
 type Application = {
   id: string;
@@ -39,14 +57,7 @@ type Application = {
   company: string;
   title: string;
   email: string;
-  profile: {
-    fullName: string;
-    furigana?: string;
-    school: string;
-    department?: string;
-    year: string;
-    phone: string;
-  };
+  profile: Profile;
   message: string;
   createdAt: string;
 };
@@ -74,6 +85,7 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
   const [code, setCode] = useState<Row[] | null>(null);
   const [admin, setAdmin] = useState<Row[] | null>(null);
   const [members, setMembers] = useState<Member[] | null>(null);
+  const [withdrawals, setWithdrawals] = useState<Withdrawal[] | null>(null);
   const [apps, setApps] = useState<Application[] | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -89,6 +101,7 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
     setCode(i.code ?? []);
     setAdmin(i.admin ?? []);
     setMembers(mb.members ?? []);
+    setWithdrawals(mb.withdrawals ?? []);
     setApps(ap.applications ?? []);
     setLoading(false);
   }, []);
@@ -161,7 +174,11 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
           ) : tab === "applications" ? (
             <ApplicationsTab apps={apps ?? []} />
           ) : tab === "members" ? (
-            <MembersTab members={members ?? []} reload={load} />
+            <MembersTab
+              members={members ?? []}
+              withdrawals={withdrawals ?? []}
+              reload={load}
+            />
           ) : (
             <InternshipsTab
               code={code ?? []}
@@ -274,24 +291,104 @@ function ApplicationsTab({ apps }: { apps: Application[] }) {
   );
 }
 
+type MemberFilter = "all" | "founder" | "frozen" | "withdrawn";
+
 function MembersTab({
   members,
+  withdrawals,
   reload,
 }: {
   members: Member[];
+  withdrawals: Withdrawal[];
   reload: () => void;
 }) {
-  if (!members.length)
-    return (
-      <p className="rounded-2xl border border-line bg-paper p-8 text-sm text-mute">
-        まだ会員登録はありません。Google での会員登録が有効になると、ここに一覧が表示されます。
-      </p>
-    );
+  const [filter, setFilter] = useState<MemberFilter>("all");
+
+  const counts = {
+    all: members.length,
+    founder: members.filter((m) => m.founder).length,
+    frozen: members.filter((m) => m.frozen).length,
+    withdrawn: withdrawals.length,
+  };
+  const shown =
+    filter === "founder"
+      ? members.filter((m) => m.founder)
+      : filter === "frozen"
+        ? members.filter((m) => m.frozen)
+        : members;
+
   return (
-    <div className="space-y-3">
-      {members.map((mb) => (
-        <MemberRow key={mb.id} mb={mb} reload={reload} />
-      ))}
+    <div>
+      <div className="mb-5 flex flex-wrap gap-2">
+        {(
+          [
+            ["all", `メンバー (${counts.all})`],
+            ["founder", `創設メンバー (${counts.founder})`],
+            ["frozen", `凍結 (${counts.frozen})`],
+            ["withdrawn", `退会した人 (${counts.withdrawn})`],
+          ] as const
+        ).map(([k, label]) => (
+          <button
+            key={k}
+            type="button"
+            onClick={() => setFilter(k)}
+            className={cn(
+              "rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
+              filter === k
+                ? "border-ink bg-ink text-paper"
+                : "border-line text-mute hover:border-ink hover:text-ink",
+            )}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {filter === "withdrawn" ? (
+        withdrawals.length ? (
+          <div className="space-y-3">
+            {withdrawals.map((w) => (
+              <WithdrawalRow key={w.id} w={w} />
+            ))}
+          </div>
+        ) : (
+          <Empty>退会した人はまだいません。</Empty>
+        )
+      ) : shown.length ? (
+        <div className="space-y-3">
+          {shown.map((mb) => (
+            <MemberRow key={mb.id} mb={mb} reload={reload} />
+          ))}
+        </div>
+      ) : (
+        <Empty>
+          {filter === "all"
+            ? "まだ会員登録はありません。"
+            : "該当するメンバーはいません。"}
+        </Empty>
+      )}
+    </div>
+  );
+}
+
+function Empty({ children }: { children: ReactNode }) {
+  return (
+    <p className="rounded-2xl border border-line bg-paper p-8 text-sm text-mute">
+      {children}
+    </p>
+  );
+}
+
+function ProfileGrid({ p, email }: { p?: Profile; email: string }) {
+  return (
+    <div className="mt-4 grid gap-x-6 gap-y-1.5 border-t border-line pt-4 text-sm text-mute sm:grid-cols-2">
+      <span>氏名：{p?.fullName || "（未入力）"}</span>
+      <span>ふりがな：{p?.furigana || "—"}</span>
+      <span>学校：{p?.school || "（未入力）"}</span>
+      <span>学年：{p?.year || "（未入力）"}</span>
+      <span>学部・学科：{p?.department || "—"}</span>
+      <span>電話：{p?.phone || "（未入力）"}</span>
+      <span className="sm:col-span-2">メール：{email}</span>
     </div>
   );
 }
@@ -299,45 +396,66 @@ function MembersTab({
 function MemberRow({ mb, reload }: { mb: Member; reload: () => void }) {
   const [busy, setBusy] = useState(false);
 
-  async function toggleFounder() {
+  async function patch(body: Record<string, unknown>) {
     setBusy(true);
     await fetch("/api/admin/members", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: mb.email, founder: !mb.founder }),
+      body: JSON.stringify({ email: mb.email, ...body }),
     });
     reload();
     setBusy(false);
   }
 
   return (
-    <motion.div
+    <motion.details
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-paper p-5 sm:p-6"
+      className={cn(
+        "group rounded-2xl border bg-paper p-5 sm:p-6",
+        mb.frozen ? "border-red-200" : "border-line",
+      )}
     >
-      <div className="min-w-0">
-        <span className="font-medium">{mb.name || "（名前未設定）"}</span>
-        {mb.founder && (
-          <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-700">
-            創設メンバー
+      <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
+        <div className="min-w-0">
+          <span className="font-medium">
+            {mb.profile?.fullName || mb.name || "（名前未設定）"}
           </span>
-        )}
-        <span className="ml-3 text-sm text-mute">{mb.email}</span>
-      </div>
-      <div className="flex items-center gap-3 text-xs text-mute">
-        {mb.provider && (
-          <span className="rounded-full border border-line px-2.5 py-1 capitalize">
-            {mb.provider}
+          {mb.founder && (
+            <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-700">
+              創設メンバー
+            </span>
+          )}
+          {mb.frozen && (
+            <span className="ml-2 rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-700">
+              凍結中
+            </span>
+          )}
+          <span className="ml-3 text-sm text-mute">{mb.email}</span>
+        </div>
+        <div className="flex items-center gap-3 text-xs text-mute">
+          <span className="capitalize">{mb.provider || "—"}</span>
+          <span className="tabular-nums">{fmt(mb.createdAt)}</span>
+          <span className="text-ink/40 transition-transform duration-300 group-open:rotate-180">
+            ▾
           </span>
-        )}
-        <span className="tabular-nums">{fmt(mb.createdAt)}</span>
+        </div>
+      </summary>
+
+      <ProfileGrid p={mb.profile} email={mb.email} />
+      {!mb.profile && (
+        <p className="mt-2 text-xs text-mute">
+          ※ まだ応募していないため、詳細プロフィールは未入力です（応募時に登録されます）。
+        </p>
+      )}
+
+      <div className="mt-5 flex flex-wrap items-center gap-2">
         <button
           type="button"
           disabled={busy}
-          onClick={toggleFounder}
+          onClick={() => patch({ founder: !mb.founder })}
           className={cn(
-            "rounded-full border px-3 py-1 font-medium transition-colors disabled:opacity-50",
+            "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50",
             mb.founder
               ? "border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100"
               : "border-line text-ink hover:border-ink",
@@ -345,14 +463,58 @@ function MemberRow({ mb, reload }: { mb: Member; reload: () => void }) {
         >
           {mb.founder ? "創設メンバー解除" : "創設メンバーに指定"}
         </button>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => patch({ frozen: !mb.frozen })}
+          className={cn(
+            "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50",
+            mb.frozen
+              ? "border-red-300 bg-red-50 text-red-700 hover:bg-red-100"
+              : "border-line text-ink hover:border-ink",
+          )}
+        >
+          {mb.frozen ? "凍結を解除" : "アカウントを凍結"}
+        </button>
         <a
           href={`mailto:${mb.email}`}
-          className="link-underline font-medium text-ink"
+          className="link-underline ml-auto text-xs font-medium text-ink"
         >
-          連絡
+          メールで連絡
         </a>
       </div>
-    </motion.div>
+    </motion.details>
+  );
+}
+
+function WithdrawalRow({ w }: { w: Withdrawal }) {
+  return (
+    <motion.details
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="group rounded-2xl border border-line bg-paper p-5 sm:p-6"
+    >
+      <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
+        <div className="min-w-0">
+          <span className="font-medium">
+            {w.profile?.fullName || w.name || "（名前未設定）"}
+          </span>
+          <span className="ml-3 text-sm text-mute">{w.email}</span>
+        </div>
+        <div className="flex items-center gap-3 text-xs text-mute">
+          <span>
+            退会：<span className="tabular-nums">{fmt(w.withdrawnAt)}</span>
+          </span>
+          <span className="text-ink/40 transition-transform duration-300 group-open:rotate-180">
+            ▾
+          </span>
+        </div>
+      </summary>
+      <ProfileGrid p={w.profile} email={w.email} />
+      <p className="mt-3 text-xs text-mute">
+        入会日：{fmt(w.memberSince)} ／ 退会日：{fmt(w.withdrawnAt)}
+      </p>
+    </motion.details>
   );
 }
 
