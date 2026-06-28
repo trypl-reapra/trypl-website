@@ -8,6 +8,7 @@ import ScrollProgress from "@/components/layout/ScrollProgress";
 import ScrollReset from "@/components/layout/ScrollReset";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
 import { site } from "@/data/site";
+import { Analytics } from '@vercel/analytics/next';
 
 const inter = Inter({
   subsets: ["latin"],
@@ -90,6 +91,7 @@ export default function RootLayout({
             <Footer />
           </SmoothScroll>
         </LocaleProvider>
+        <Analytics />
       </body>
     </html>
   );
