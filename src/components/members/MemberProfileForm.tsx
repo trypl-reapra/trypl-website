@@ -52,8 +52,7 @@ export default function MemberProfileForm({
     setF((s) => ({ ...s, [k]: v }));
   }
 
-  const canSave =
-    !!f.fullName && !!f.status && (f.status === "other" || !!f.affiliation);
+  const canSave = profileComplete(f);
 
   const affLabel =
     f.status === "highschool"
@@ -134,7 +133,7 @@ export default function MemberProfileForm({
           <input className={inputCls} value={f.fullName} onChange={(e) => set("fullName", e.target.value)} autoComplete="name" />
         </label>
         <label className="block">
-          <Label text={mp.furigana} optional={mp.optional} />
+          <Label text={mp.furigana} required />
           <input className={inputCls} value={f.furigana} onChange={(e) => set("furigana", e.target.value)} />
         </label>
 
@@ -162,32 +161,32 @@ export default function MemberProfileForm({
         )}
         {f.status === "university" && (
           <label className="block">
-            <Label text={mp.department} optional={mp.optional} />
+            <Label text={mp.department} required />
             <input className={inputCls} value={f.department} onChange={(e) => set("department", e.target.value)} />
           </label>
         )}
         {(f.status === "highschool" || f.status === "university") && (
           <label className="block">
-            <Label text={mp.grade} optional={mp.optional} />
+            <Label text={mp.grade} required />
             <input className={inputCls} value={f.grade} placeholder={mp.gradePlaceholder} onChange={(e) => set("grade", e.target.value)} />
           </label>
         )}
         {f.status === "working" && (
           <label className="block">
-            <Label text={mp.jobTitle} optional={mp.optional} />
+            <Label text={mp.jobTitle} required />
             <input className={inputCls} value={f.jobTitle} onChange={(e) => set("jobTitle", e.target.value)} />
           </label>
         )}
         {f.status === "other" && (
           <label className="block">
-            <Label text={mp.note} optional={mp.optional} />
+            <Label text={mp.note} required />
             <textarea className={inputCls + " resize-y"} rows={2} value={f.note} onChange={(e) => set("note", e.target.value)} />
           </label>
         )}
 
         <div className="grid gap-4 sm:grid-cols-3">
           <label className="block">
-            <Label text={mp.age} optional={mp.optional} />
+            <Label text={mp.age} required />
             <input className={inputCls} value={f.age} inputMode="numeric" onChange={(e) => set("age", e.target.value)} />
           </label>
           <label className="block">

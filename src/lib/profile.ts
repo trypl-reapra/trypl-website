@@ -37,15 +37,22 @@ export const STATUS_KEYS: Exclude<ProfileStatus, "">[] = [
   "other",
 ];
 
-/** 登録情報が「入力済み」とみなせるか。 */
+/** 登録情報が「入力済み」とみなせるか（性別・電話以外は必須）。 */
 export function profileComplete(
-  p:
-    | Pick<MemberProfile, "fullName" | "status" | "affiliation">
-    | null
-    | undefined,
+  p: Partial<Record<keyof MemberProfile, string>> | null | undefined,
 ): boolean {
   if (!p) return false;
-  if (!p.fullName || !p.status) return false;
-  if (p.status !== "other" && !p.affiliation) return false;
-  return true;
+  if (!p.fullName || !p.furigana || !p.status || !p.age) return false;
+  switch (p.status) {
+    case "highschool":
+      return !!p.affiliation && !!p.grade;
+    case "university":
+      return !!p.affiliation && !!p.department && !!p.grade;
+    case "working":
+      return !!p.affiliation && !!p.jobTitle;
+    case "other":
+      return !!p.note;
+    default:
+      return false;
+  }
 }
