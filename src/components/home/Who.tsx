@@ -13,10 +13,11 @@ export default function Who() {
       className="relative overflow-hidden bg-ink text-paper-dim"
     >
       {/* 右→左へ流れるランドスケープのループ背景 */}
-      <BackgroundVideo src="/media/video/who-v3.mp4" />
-      {/* 可読性スクリム：テキストのある左・上を程よく締めつつ、ランドスケープ映像を見せる */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/40 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/10 to-ink/35" />
+      <BackgroundVideo src="/media/video/who.mp4" />
+      {/* 文字が確実に読めるよう、左〜下を濃いめに締めるスクリム */}
+      <div className="pointer-events-none absolute inset-0 bg-ink/25" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/45" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/55 to-transparent" />
 
       <Container className="relative z-10 py-24 sm:py-32 lg:py-40">
         <Eyebrow className="text-paper/70">{t.who.eyebrow}</Eyebrow>
