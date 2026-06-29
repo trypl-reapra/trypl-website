@@ -51,7 +51,7 @@ const ja = {
     events: {
       eyebrow: "Events · イベント",
       title: ["社会と出会う、", "最初の一歩を。"],
-      lead: "説明会・座談会・ワークショップなど、TrypL ではさまざまなイベントを開催しています。最新の開催予定と参加のお申し込みはこちらから。",
+      lead: "学生が社会と出会い、実践へと一歩を踏み出すためのイベントを開催しています。最新の開催予定と参加のお申し込みはこちらから。",
     },
     contact: {
       eyebrow: "Contact · お問い合わせ",
@@ -440,7 +440,7 @@ const en: Pages = {
     events: {
       eyebrow: "Events",
       title: ["Meet society,", "take the first step."],
-      lead: "Info sessions, dialogues, workshops — TrypL hosts a range of events. Find the latest schedule and sign up here.",
+      lead: "Events where students meet society and take their first step into practice. Find the latest schedule and sign up here.",
     },
     contact: {
       eyebrow: "Contact",
@@ -827,7 +827,7 @@ const ko: Pages = {
     events: {
       eyebrow: "Events · 이벤트",
       title: ["사회와 만나는,", "첫걸음을."],
-      lead: "설명회·좌담회·워크숍 등 TrypL은 다양한 이벤트를 엽니다. 최신 일정과 참가 신청은 여기에서.",
+      lead: "학생이 사회와 만나 실천으로 한 걸음 내딛는 이벤트를 엽니다. 최신 일정과 참가 신청은 여기에서.",
     },
     contact: {
       eyebrow: "Contact · 문의",

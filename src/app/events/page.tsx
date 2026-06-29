@@ -5,7 +5,7 @@ import { listPublicEvents } from "@/lib/store";
 export const metadata: Metadata = {
   title: "イベント",
   description:
-    "TrypL のイベント情報。説明会・座談会・ワークショップなど、社会と接続する最初の一歩を。開催予定の日時・場所・申込はこちら。",
+    "TrypL のイベント情報。学生が社会と出会い、実践へと踏み出すためのイベントの開催予定・日時・場所・お申し込みはこちら。",
   alternates: { canonical: "/events" },
 };
 
