@@ -73,7 +73,7 @@ function themeFor(v: CardVariant) {
     };
   if (v === "member")
     return {
-      bg: "linear-gradient(135deg, #0c0c10 0%, #24242c 50%, #0a0a0d 100%)",
+      bg: "linear-gradient(150deg, #0a0a0c 0%, #121214 55%, #18181d 100%)",
       logoTone: "paper" as const,
       markOpacity: "opacity-[0.07]",
       ring: "ring-white/10",

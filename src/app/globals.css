@@ -55,6 +55,11 @@
   html {
     scroll-behavior: smooth;
     text-size-adjust: 100%;
+    /* スマホで横方向に僅かでもはみ出した要素があると、左右に白い余白が
+       できて横スワイプできてしまう（特に iOS Safari）。ルートで横方向を
+       clip して防ぐ。clip は hidden と違いスクロールコンテナを作らないため、
+       sticky 効果（Triple など）や Lenis の縦スクロールに影響しない。 */
+    overflow-x: clip;
   }
 
   body {
@@ -68,7 +73,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    /* hidden だと body がスクロールコンテナ化して sticky を壊し得るため clip。 */
+    overflow-x: clip;
+    max-width: 100%;
   }
 
   ::selection {
