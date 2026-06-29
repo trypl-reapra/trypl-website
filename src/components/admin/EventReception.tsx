@@ -109,6 +109,10 @@ export default function EventReception({
 
   async function startScan() {
     setCamError("");
+    // 先にカメラ表示領域を見せる（html5-qrcode が要素サイズを取得できるよう、
+    // start 時に要素が display:none だと映像が 0 サイズで見えなくなるため）。
+    setScanning(true);
+    await new Promise((r) => window.setTimeout(r, 80));
     try {
       const mod = await import("html5-qrcode");
       const Html5Qrcode = mod.Html5Qrcode;
@@ -116,11 +120,16 @@ export default function EventReception({
       scannerRef.current = scanner;
       await scanner.start(
         { facingMode: "environment" },
-        { fps: 10, qrbox: { width: 230, height: 230 } },
+        {
+          fps: 10,
+          qrbox: (w: number, h: number) => {
+            const m = Math.floor(Math.min(w, h) * 0.8);
+            return { width: m, height: m };
+          },
+        },
         (decoded: string) => onScan(decoded),
         () => {},
       );
-      setScanning(true);
     } catch (err) {
       setScanning(false);
       scannerRef.current = null;
@@ -220,7 +229,7 @@ export default function EventReception({
       <div className={cn("mt-4", scanning ? "block" : "hidden")}>
         <div
           id={elementId}
-          className="mx-auto w-full max-w-[320px] overflow-hidden rounded-xl border border-line bg-black [&_video]:rounded-xl"
+          className="mx-auto min-h-[260px] w-full max-w-[320px] overflow-hidden rounded-xl border border-line bg-black [&_video]:block [&_video]:!h-auto [&_video]:!w-full [&_video]:rounded-xl"
         />
         <p className="mt-2 text-center text-xs text-mute">
           会員証の裏面QRをカメラにかざしてください。
