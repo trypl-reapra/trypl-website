@@ -3,9 +3,9 @@ import { listPublicPress } from "@/lib/store";
 import NewsListContent from "@/components/pages/NewsListContent";
 
 export const metadata: Metadata = {
-  title: "プレス",
+  title: "ニュース",
   description:
-    "TrypL のプレス・ニュース。メディア掲載やプレスリリース、コミュニティからのお知らせをまとめています。",
+    "TrypL のニュース。メディア掲載やプレスリリース、コミュニティからのお知らせをまとめています。",
   alternates: { canonical: "/news" },
 };
 

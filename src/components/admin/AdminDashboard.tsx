@@ -295,7 +295,7 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
             ["members", `メンバー${members ? ` (${members.length})` : ""}`],
             ["internships", `募集管理${code ? ` (${internCount})` : ""}`],
             ["events", `イベント${events ? ` (${events.length})` : ""}`],
-            ["press", `プレス${press ? ` (${press.length})` : ""}`],
+            ["press", `ニュース${press ? ` (${press.length})` : ""}`],
           ] as const).map(([k, label]) => (
             <button
               key={k}
@@ -1115,7 +1115,7 @@ function OverviewTab({
     ["お問い合わせ", contacts.length],
     ["募集", internCount],
     ["イベント", events.length],
-    ["プレス", press.length],
+    ["ニュース", press.length],
   ];
   return (
     <div className="space-y-6">
@@ -1409,12 +1409,12 @@ function PressTab({
     <div className="space-y-8">
       <PressForm reload={reload} />
       {press.length === 0 ? (
-        <Empty>まだプレス掲載がありません。上のフォームから追加してください。</Empty>
+        <Empty>まだニュースがありません。上のフォームから追加してください。</Empty>
       ) : (
         <div className="space-y-3">
           <div className="flex justify-end">
             <ClearAll
-              label="プレスを全削除"
+              label="ニュースを全削除"
               onClear={async () => {
                 await adminDelete("/api/admin/press", { all: true });
                 reload();
@@ -1489,7 +1489,7 @@ function PressForm({
       )}
     >
       <h2 className="font-jp text-lg font-bold">
-        {editing ? "プレスを編集" : "ニュース／プレスを追加"}
+        {editing ? "ニュースを編集" : "ニュースを追加"}
       </h2>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <input

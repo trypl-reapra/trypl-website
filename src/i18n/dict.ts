@@ -75,8 +75,8 @@ export const dict: Record<Locale, Dict> = {
     },
     cta: "参加する",
     ctaMember: "会員ページへ",
-    press: { eyebrow: "Press", heading: "プレス", more: "詳しく見る", all: "すべて見る", empty: "現在、掲載はありません。" },
-    news: { eyebrow: "News · プレス", readOriginal: "元記事を読む", back: "ホームへ戻る" },
+    press: { eyebrow: "News", heading: "ニュース", more: "詳しく見る", all: "すべて見る", empty: "現在、掲載はありません。" },
+    news: { eyebrow: "News · ニュース", readOriginal: "元記事を読む", back: "ホームへ戻る" },
     scroll: "Scroll",
     hero: {
       eyebrow: "REAPRA発・実践型コミュニティ。",
@@ -171,8 +171,8 @@ export const dict: Record<Locale, Dict> = {
     },
     cta: "Join",
     ctaMember: "Member area",
-    press: { eyebrow: "Press", heading: "Press", more: "Read more", all: "View all", empty: "No press items yet." },
-    news: { eyebrow: "News · Press", readOriginal: "Read the original", back: "Back to home" },
+    press: { eyebrow: "News", heading: "News", more: "Read more", all: "View all", empty: "No news yet." },
+    news: { eyebrow: "News", readOriginal: "Read the original", back: "Back to home" },
     scroll: "Scroll",
     hero: {
       eyebrow: "A practice-first community, born from REAPRA",
@@ -267,8 +267,8 @@ export const dict: Record<Locale, Dict> = {
     },
     cta: "참여하기",
     ctaMember: "멤버 페이지로",
-    press: { eyebrow: "Press", heading: "프레스", more: "자세히 보기", all: "전체 보기", empty: "아직 게재된 소식이 없습니다." },
-    news: { eyebrow: "News · 프레스", readOriginal: "원문 보기", back: "홈으로" },
+    press: { eyebrow: "News", heading: "뉴스", more: "자세히 보기", all: "전체 보기", empty: "아직 게재된 소식이 없습니다." },
+    news: { eyebrow: "News · 뉴스", readOriginal: "원문 보기", back: "홈으로" },
     scroll: "Scroll",
     hero: {
       eyebrow: "REAPRA에서 시작된 실천형 커뮤니티",
