@@ -99,3 +99,24 @@ export const defaultPress = [
     createdAt: "2026-06-29T00:00:00.000Z",
   },
 ];
+
+/**
+ * 既定のイベント（管理画面で編集・削除できる正規データとして KV へ一度だけ投入）。
+ * 株式会社ジコウ（REAPRA 投資先）主催の実開催イベント。申込は Luma。
+ */
+export const defaultEvents = [
+  {
+    id: "jicou-growth-2026-06-30",
+    title: "大成長‼︎劇的ビフォーアフター",
+    date: "2026-06-30",
+    startTime: "19:30",
+    endTime: "21:30",
+    place: "株式会社ジコウ 唐人町オフィス（福岡市中央区地行1-15-6）",
+    online: false,
+    description:
+      "インターン参加者によるプレゼン、企業紹介、トークセッション＆Q&A、社会人との交流座談会。学生が「自分の成長」と社会との接点を見つけるためのキャリアイベントです。軽食付き・定員20名。",
+    registerUrl: "https://luma.com/55yk6nif",
+    hidden: false,
+    createdAt: "2026-06-25T00:00:00.000Z",
+  },
+];

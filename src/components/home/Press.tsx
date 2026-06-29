@@ -92,6 +92,12 @@ export default function Press() {
             </StaggerItem>
           ))}
         </Stagger>
+
+        <div className="mt-10">
+          <Link href="/news" className="link-underline text-sm font-medium text-ink">
+            {t.press.all} →
+          </Link>
+        </div>
       </Container>
     </section>
   );

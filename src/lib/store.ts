@@ -10,7 +10,7 @@
 
 import "server-only";
 import type { MemberProfile } from "@/lib/profile";
-import { defaultPress } from "@/data/site";
+import { defaultPress, defaultEvents } from "@/data/site";
 
 export type Contact = {
   id: string;
@@ -526,7 +526,31 @@ export async function addEvent(
   return item;
 }
 
+// 既定イベント（実開催分）を一度だけ KV へ投入。削除後は再投入しない。
+let eventSeedChecked = false;
+async function ensureEventSeed(): Promise<void> {
+  if (eventSeedChecked) return;
+  eventSeedChecked = true;
+  try {
+    if (useKV) {
+      const flag = (await kv(["GET", "trypl:seeded:events"])) as string | null;
+      if (flag === "v1") return;
+      const raw = (await kv(["LRANGE", K_EVENTS, 0, -1])) as string[];
+      const has = new Set(
+        (raw || []).map((s) => (JSON.parse(s) as EventItem).id),
+      );
+      const add = (defaultEvents as EventItem[]).filter((e) => !has.has(e.id));
+      if (add.length)
+        await kv(["RPUSH", K_EVENTS, ...add.map((e) => JSON.stringify(e))]);
+      await kv(["SET", "trypl:seeded:events", "v1"]);
+    } else if (mem.events.length === 0) {
+      mem.events.unshift(...(defaultEvents as EventItem[]));
+    }
+  } catch {}
+}
+
 export async function listEvents(): Promise<EventItem[]> {
+  await ensureEventSeed();
   if (useKV) {
     const raw = (await kv(["LRANGE", K_EVENTS, 0, -1])) as string[];
     return (raw || []).map((s) => JSON.parse(s) as EventItem);
@@ -627,6 +651,16 @@ export async function deletePress(id: string): Promise<void> {
 export async function setPressHidden(id: string, hidden: boolean): Promise<void> {
   await saveAllPress(
     (await listPress()).map((p) => (p.id === id ? { ...p, hidden } : p)),
+  );
+}
+
+/** 既存プレスの内容を更新（管理画面の編集）。 */
+export async function updatePress(
+  id: string,
+  patch: Partial<Omit<PressItem, "id" | "createdAt">>,
+): Promise<void> {
+  await saveAllPress(
+    (await listPress()).map((p) => (p.id === id ? { ...p, ...patch } : p)),
   );
 }
 

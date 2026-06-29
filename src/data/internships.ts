@@ -179,7 +179,7 @@ export const internships: Internship[] = [
     ],
     tags: ["生成AI", "マーケティング", "事業開発", "営業", "経営企画", "福岡"],
     applyUrl: "mailto:trypl@reapra.sg",
-    applyLabel: "メールで応募・相談する",
+    applyLabel: "応募する",
     featured: true,
     postedAt: "2026-06-25",
   },

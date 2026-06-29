@@ -17,6 +17,7 @@ export default function Footer() {
     { label: t.nav.about, href: "/about" },
     { label: t.nav.internships, href: "/internships" },
     { label: t.nav.events, href: "/events" },
+    { label: t.press.heading, href: "/news" },
     { label: t.nav.links, href: "/links" },
     { label: t.footer.contact, href: "/contact" },
     { label: t.cta, href: cta.href },

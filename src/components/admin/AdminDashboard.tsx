@@ -1411,8 +1411,29 @@ function PressTab({
 
 const EMPTY_PRESS = { title: "", outlet: "", url: "", date: "", summary: "", body: "", image: "" };
 
-function PressForm({ reload }: { reload: () => void }) {
-  const [f, setF] = useState({ ...EMPTY_PRESS });
+function PressForm({
+  reload,
+  initial,
+  onCancel,
+}: {
+  reload: () => void;
+  initial?: PressItem;
+  onCancel?: () => void;
+}) {
+  const editing = !!initial;
+  const [f, setF] = useState(
+    initial
+      ? {
+          title: initial.title,
+          outlet: initial.outlet,
+          url: initial.url,
+          date: initial.date,
+          summary: initial.summary,
+          body: initial.body ?? "",
+          image: initial.image ?? "",
+        }
+      : { ...EMPTY_PRESS },
+  );
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   function set<K extends keyof typeof f>(k: K, v: (typeof f)[K]) {
@@ -1427,19 +1448,28 @@ function PressForm({ reload }: { reload: () => void }) {
     }
     setBusy(true);
     const res = await fetch("/api/admin/press", {
-      method: "POST",
+      method: editing ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(f),
+      body: JSON.stringify(editing ? { ...f, id: initial.id } : f),
     });
     setBusy(false);
     if (res.ok) {
-      setF({ ...EMPTY_PRESS });
+      if (editing) onCancel?.();
+      else setF({ ...EMPTY_PRESS });
       reload();
-    } else setErr("追加に失敗しました");
+    } else setErr(editing ? "更新に失敗しました" : "追加に失敗しました");
   }
   return (
-    <form onSubmit={submit} className="rounded-2xl border border-line bg-paper p-6">
-      <h2 className="font-jp text-lg font-bold">ニュース／プレスを追加</h2>
+    <form
+      onSubmit={submit}
+      className={cn(
+        "rounded-2xl border bg-paper p-6",
+        editing ? "border-ink" : "border-line",
+      )}
+    >
+      <h2 className="font-jp text-lg font-bold">
+        {editing ? "プレスを編集" : "ニュース／プレスを追加"}
+      </h2>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <input
           className={inputCls + " sm:col-span-2"}
@@ -1487,19 +1517,37 @@ function PressForm({ reload }: { reload: () => void }) {
         </div>
       </div>
       {err && <p className="mt-2 text-sm text-red-600">{err}</p>}
-      <button
-        type="submit"
-        disabled={busy}
-        className="mt-4 inline-flex h-10 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper disabled:opacity-60"
-      >
-        {busy ? "追加中…" : "追加する"}
-      </button>
+      <div className="mt-4 flex items-center gap-3">
+        <button
+          type="submit"
+          disabled={busy}
+          className="inline-flex h-10 items-center rounded-full bg-ink px-6 text-sm font-medium text-paper disabled:opacity-60"
+        >
+          {busy
+            ? editing
+              ? "更新中…"
+              : "追加中…"
+            : editing
+              ? "更新する"
+              : "追加する"}
+        </button>
+        {editing && onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="text-sm text-mute link-underline"
+          >
+            キャンセル
+          </button>
+        )}
+      </div>
     </form>
   );
 }
 
 function PressRow({ p, reload }: { p: PressItem; reload: () => void }) {
   const [busy, setBusy] = useState(false);
+  const [editing, setEditing] = useState(false);
   async function act(method: string, body: unknown) {
     setBusy(true);
     await fetch("/api/admin/press", {
@@ -1510,6 +1558,10 @@ function PressRow({ p, reload }: { p: PressItem; reload: () => void }) {
     reload();
     setBusy(false);
   }
+  if (editing)
+    return (
+      <PressForm reload={reload} initial={p} onCancel={() => setEditing(false)} />
+    );
   return (
     <div
       className={cn(
@@ -1533,6 +1585,13 @@ function PressRow({ p, reload }: { p: PressItem; reload: () => void }) {
             記事
           </a>
         )}
+        <button
+          type="button"
+          onClick={() => setEditing(true)}
+          className="rounded-full border border-line px-3 py-1 hover:border-ink"
+        >
+          編集
+        </button>
         <button
           type="button"
           disabled={busy}

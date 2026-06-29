@@ -68,6 +68,11 @@ const ja = {
       title: ["ようこそ、TrypL へ。"],
       lead: "メンバー限定のリンクと最新情報です。実践の現場へ、ここから。",
     },
+    news: {
+      eyebrow: "Press · プレス",
+      title: ["TrypL の、", "最新のお知らせ。"],
+      lead: "メディア掲載やプレスリリース、コミュニティからのお知らせをまとめています。",
+    },
   },
   about: {
     whatEyebrow: "What",
@@ -452,6 +457,11 @@ const en: Pages = {
       title: ["Welcome to TrypL."],
       lead: "Members-only links and the latest updates. To the field of practice, from here.",
     },
+    news: {
+      eyebrow: "Press · News",
+      title: ["The latest", "from TrypL."],
+      lead: "Media coverage, press releases, and announcements from the community.",
+    },
   },
   about: {
     whatEyebrow: "What",
@@ -833,6 +843,11 @@ const ko: Pages = {
       eyebrow: "Members · 멤버 전용",
       title: ["TrypL에 오신 걸 환영해요."],
       lead: "멤버 전용 링크와 최신 정보입니다. 실천의 현장으로, 여기에서.",
+    },
+    news: {
+      eyebrow: "Press · 프레스",
+      title: ["TrypL의", "최신 소식."],
+      lead: "미디어 게재와 보도자료, 커뮤니티 소식을 한곳에 모았습니다.",
     },
   },
   about: {

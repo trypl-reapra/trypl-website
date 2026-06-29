@@ -24,7 +24,7 @@ type Dict = {
   nav: { about: string; internships: string; events: string; links: string };
   cta: string;
   ctaMember: string;
-  press: { eyebrow: string; heading: string; more: string };
+  press: { eyebrow: string; heading: string; more: string; all: string; empty: string };
   news: { eyebrow: string; readOriginal: string; back: string };
   scroll: string;
   hero: {
@@ -75,7 +75,7 @@ export const dict: Record<Locale, Dict> = {
     },
     cta: "参加する",
     ctaMember: "会員ページへ",
-    press: { eyebrow: "Press", heading: "プレス", more: "詳しく見る" },
+    press: { eyebrow: "Press", heading: "プレス", more: "詳しく見る", all: "すべて見る", empty: "現在、掲載はありません。" },
     news: { eyebrow: "News · プレス", readOriginal: "元記事を読む", back: "ホームへ戻る" },
     scroll: "Scroll",
     hero: {
@@ -171,7 +171,7 @@ export const dict: Record<Locale, Dict> = {
     },
     cta: "Join",
     ctaMember: "Member area",
-    press: { eyebrow: "Press", heading: "Press", more: "Read more" },
+    press: { eyebrow: "Press", heading: "Press", more: "Read more", all: "View all", empty: "No press items yet." },
     news: { eyebrow: "News · Press", readOriginal: "Read the original", back: "Back to home" },
     scroll: "Scroll",
     hero: {
@@ -267,7 +267,7 @@ export const dict: Record<Locale, Dict> = {
     },
     cta: "참여하기",
     ctaMember: "멤버 페이지로",
-    press: { eyebrow: "Press", heading: "프레스", more: "자세히 보기" },
+    press: { eyebrow: "Press", heading: "프레스", more: "자세히 보기", all: "전체 보기", empty: "아직 게재된 소식이 없습니다." },
     news: { eyebrow: "News · 프레스", readOriginal: "원문 보기", back: "홈으로" },
     scroll: "Scroll",
     hero: {

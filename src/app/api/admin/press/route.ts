@@ -6,6 +6,7 @@ import {
   deletePress,
   listPress,
   setPressHidden,
+  updatePress,
 } from "@/lib/store";
 
 export const runtime = "nodejs";
@@ -42,6 +43,28 @@ export async function POST(req: Request) {
     new Date().toISOString(),
   );
   return NextResponse.json({ ok: true, id: p.id });
+}
+
+export async function PUT(req: Request) {
+  if ((await sessionRole()) !== "admin")
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const b = (await req.json().catch(() => ({}))) as Record<string, unknown>;
+  const id = s(b.id, 60);
+  const title = s(b.title, 200);
+  const date = s(b.date, 10);
+  if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+  if (!title || !date)
+    return NextResponse.json({ error: "title and date required" }, { status: 422 });
+  await updatePress(id, {
+    title,
+    outlet: s(b.outlet, 120),
+    url: s(b.url, 500),
+    date,
+    summary: s(b.summary, 800),
+    body: s(b.body, 6000) || undefined,
+    image: s(b.image, 500) || undefined,
+  });
+  return NextResponse.json({ ok: true });
 }
 
 export async function PATCH(req: Request) {
