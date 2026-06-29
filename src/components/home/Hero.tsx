@@ -3,10 +3,10 @@
 import { RevealLines, Reveal, ScrollFadeOut } from "@/components/motion";
 import { Fragment } from "react";
 import { Button, Eyebrow } from "@/components/ui";
-import BackgroundVideo from "@/components/BackgroundVideo";
+import HeroVideoSequence from "@/components/HeroVideoSequence";
 import JoinCtaButton from "@/components/JoinCtaButton";
 import { useT } from "@/i18n/LocaleProvider";
-import { site } from "@/data/site";
+import { site, heroClips } from "@/data/site";
 
 export default function Hero() {
   const t = useT();
@@ -17,8 +17,8 @@ export default function Hero() {
       data-nav-theme="dark"
       className="relative flex min-h-[100svh] items-center overflow-hidden bg-ink px-page pb-20 pt-28 text-paper sm:pt-24"
     >
-      {/* ループ背景動画（イベントの様子から生成・無音） */}
-      <BackgroundVideo src="/media/video/hero-v3.mp4" />
+      {/* 背景動画：複数クリップを順に再生し、クロスフェードでつなぐ（各クリップは差し替え可） */}
+      <HeroVideoSequence clips={heroClips} />
 
       {/* 可読性のためのスクリム（左を濃く＋全体を少し暗く＋下端を締める） */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/55 to-ink/25" />

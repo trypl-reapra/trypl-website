@@ -31,6 +31,24 @@ export const nav: { label: string; href: string }[] = [
 
 export const cta = { label: "参加する", href: "/join" } as const;
 
+/**
+ * トップ（ヒーロー）の背景動画クリップ。
+ * 上から順に再生し、クリップ間はフロント側でクロスフェードする。
+ * それぞれ独立したファイルなので、差し替えたいクリップのファイルを置き換えるだけでよい。
+ *   1: ノートPCに向かう2人
+ *   2: 4人のミーティング
+ *   3: ノートPCのグラフを指す
+ *   4: 屋外で語り合う若者たち
+ *   5: ガラス板に書き出す
+ */
+export const heroClips = [
+  "/media/video/hero/hero-1.mp4",
+  "/media/video/hero/hero-2.mp4",
+  "/media/video/hero/hero-3.mp4",
+  "/media/video/hero/hero-4.mp4",
+  "/media/video/hero/hero-5.mp4",
+];
+
 /** イベント情報。Luma で参加受付・カレンダーを公開している。 */
 export const events = {
   lumaUrl: "https://luma.com/55yk6nif",
