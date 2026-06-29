@@ -307,7 +307,12 @@ export default function MembershipCard({
               transition: "opacity 0s linear 0.3s",
             }}
           >
-            <div className={`pointer-events-none absolute right-[-3.5rem] top-1/2 h-[172%] w-[150%] max-w-none -translate-y-1/2 ${c.markOpacity}`}>
+            {/* 背景マーク：裏面では「表面のマークが透けて見えている」ように
+                左右反転＋左寄せにする（表面は右寄せ・正像）。 */}
+            <div
+              className={`pointer-events-none absolute left-[-3.5rem] top-1/2 h-[172%] w-[150%] max-w-none ${c.markOpacity}`}
+              style={{ transform: "translateY(-50%) scaleX(-1)" }}
+            >
               <LogoMark tone={c.logoTone} className="h-full w-full object-contain" />
             </div>
             <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.10), transparent)" }} />
