@@ -13,7 +13,7 @@ export default function Who() {
       className="relative overflow-hidden bg-ink text-paper-dim"
     >
       {/* 右→左へ流れるランドスケープのループ背景 */}
-      <BackgroundVideo src="/media/video/who.mp4" />
+      <BackgroundVideo src="/media/video/who-v2.mp4" />
       {/* 可読性スクリム：テキストのある左・上を程よく締めつつ、ランドスケープ映像を見せる */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/40 to-transparent" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/10 to-ink/35" />
