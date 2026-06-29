@@ -43,8 +43,10 @@ export const cta = { label: "参加する", href: "/join" } as const;
  */
 export const heroClips = [
   "/media/video/hero/hero-1.mp4",
-  // hero-2〜5 は、AI生成（Veo等）の動画が用意でき次第ここに追加して順次再生する。
-  // 例: "/media/video/hero/hero-2.mp4", ...
+  "/media/video/hero/hero-2.mp4",
+  "/media/video/hero/hero-3.mp4",
+  "/media/video/hero/hero-4.mp4",
+  "/media/video/hero/hero-5.mp4",
 ];
 
 /** イベント情報。Luma で参加受付・カレンダーを公開している。 */
