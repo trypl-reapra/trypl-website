@@ -18,7 +18,7 @@ export default function Hero() {
       className="relative flex min-h-[100svh] items-center overflow-hidden bg-ink px-page pb-20 pt-28 text-paper sm:pt-24"
     >
       {/* ループ背景動画（イベントの様子から生成・無音） */}
-      <BackgroundVideo src="/media/video/hero-v2.mp4" />
+      <BackgroundVideo src="/media/video/hero.mp4" />
 
       {/* 可読性のためのスクリム（左を濃く＋全体を少し暗く＋下端を締める） */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/55 to-ink/25" />
