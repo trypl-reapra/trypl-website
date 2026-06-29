@@ -1,32 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import { RevealLines, Reveal } from "@/components/motion";
 import { Container, Eyebrow } from "@/components/ui";
+import BackgroundVideo from "@/components/BackgroundVideo";
 import { useT } from "@/i18n/LocaleProvider";
 
 export default function Who() {
   const t = useT();
-  const [videoOn, setVideoOn] = useState(false);
   return (
     <section
       data-nav-theme="dark"
       className="relative overflow-hidden bg-ink text-paper-dim"
     >
       {/* 右→左へ流れるランドスケープのループ背景 */}
-      <video
-        className={`pointer-events-none absolute inset-0 h-full w-full bg-ink object-cover transition-opacity duration-[1400ms] ease-out ${videoOn ? "opacity-100" : "opacity-0"}`}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="auto"
-        aria-hidden="true"
-        onPlaying={() => setVideoOn(true)}
-        onLoadedData={() => setVideoOn(true)}
-      >
-        <source src="/media/video/who.mp4" type="video/mp4" />
-      </video>
+      <BackgroundVideo src="/media/video/who.mp4" />
       {/* 可読性スクリム：テキストのある左・上を程よく締めつつ、ランドスケープ映像を見せる */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/40 to-transparent" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/10 to-ink/35" />
