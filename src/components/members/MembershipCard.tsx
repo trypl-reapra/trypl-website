@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Logo, LogoMark } from "@/components/logo";
 
 export type CardVariant = "unregistered" | "member" | "founder";
@@ -129,6 +129,7 @@ export default function MembershipCard({
   labels = DEFAULT_LABELS,
 }: Props) {
   const c = themeFor(variant);
+  const prefersReduced = useReducedMotion();
   const [t, setT] = useState({ rx: 0, ry: 0, gx: 50, gy: 0, active: false });
   const [copied, setCopied] = useState(false);
   const [flipped, setFlipped] = useState(false);
@@ -172,26 +173,35 @@ export default function MembershipCard({
   const faceShadow = "shadow-[0_30px_70px_-30px_rgba(0,0,0,0.8)]";
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+    <div
       className="w-full max-w-[440px] touch-none"
       style={{ perspective: 1200 }}
     >
-      <div
-        onPointerMove={move}
-        onPointerLeave={leave}
-        onClick={canFlip ? flip : undefined}
-        className={`group relative aspect-[1.585/1] w-full select-none will-change-transform ${canFlip ? "cursor-pointer" : ""}`}
-        style={{
-          transformStyle: "preserve-3d",
-          transform: `rotateX(${t.rx}deg) rotateY(${t.ry + (flipped ? 180 : 0)}deg) scale(${t.active ? 1.015 : 1})`,
-          transition: t.active
-            ? "transform 0.12s ease-out"
-            : "transform 0.6s ease-in-out",
-        }}
+      {/* 入場アニメーション：奥に倒れた状態から起き上がりつつフェードイン
+          （「ようこそ」画面で会員証が立ち上がるような演出）。 */}
+      <motion.div
+        initial={
+          prefersReduced
+            ? { opacity: 0 }
+            : { opacity: 0, y: 48, rotateX: 16, scale: 0.92 }
+        }
+        animate={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
+        transition={{ duration: 0.95, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        style={{ transformStyle: "preserve-3d", transformOrigin: "50% 85%" }}
       >
+        <div
+          onPointerMove={move}
+          onPointerLeave={leave}
+          onClick={canFlip ? flip : undefined}
+          className={`group relative aspect-[1.585/1] w-full select-none will-change-transform ${canFlip ? "cursor-pointer" : ""}`}
+          style={{
+            transformStyle: "preserve-3d",
+            transform: `rotateX(${t.rx}deg) rotateY(${t.ry + (flipped ? 180 : 0)}deg) scale(${t.active ? 1.015 : 1})`,
+            transition: t.active
+              ? "transform 0.12s ease-out"
+              : "transform 0.6s ease-in-out",
+          }}
+        >
         {/* ============ 表面 ============ */}
         <div
           className={`absolute inset-0 overflow-hidden rounded-[26px] ${faceShadow}`}
@@ -229,6 +239,20 @@ export default function MembershipCard({
           />
           <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.10), transparent)" }} />
           <div className={`pointer-events-none absolute inset-0 rounded-[26px] ring-1 ring-inset ${c.ring}`} />
+
+          {/* 入場時に一度だけ光沢が斜めに走るシャイン演出 */}
+          {!prefersReduced && (
+            <motion.div
+              className="pointer-events-none absolute inset-0 z-20"
+              initial={{ x: "-130%", opacity: 0 }}
+              animate={{ x: "130%", opacity: [0, 0.5, 0] }}
+              transition={{ duration: 1.1, delay: 0.7, ease: "easeInOut" }}
+              style={{
+                background:
+                  "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.55) 50%, transparent 60%)",
+              }}
+            />
+          )}
 
           <div className={`relative z-10 flex h-full flex-col justify-between p-6 sm:p-7 ${c.main}`}>
             <div className="flex items-start justify-between">
@@ -342,7 +366,8 @@ export default function MembershipCard({
             </div>
           </div>
         )}
-      </div>
-    </motion.div>
+        </div>
+      </motion.div>
+    </div>
   );
 }
