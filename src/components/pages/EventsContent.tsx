@@ -153,7 +153,12 @@ export default function EventsContent({
                       </div>
                       {ev.date >= today && (
                         <div className="flex shrink-0 flex-col items-stretch gap-2 sm:items-end sm:pl-4">
-                          {authed ? (
+                          {ev.registerUrl ? (
+                            // 外部申込ページ（Luma 等）が指定されていればそこへ
+                            <Button href={ev.registerUrl} size="md">
+                              {e.register}
+                            </Button>
+                          ) : authed ? (
                             registered.has(ev.id) ? (
                               <>
                                 <span className="inline-flex h-12 items-center justify-center gap-1.5 rounded-full bg-ink/[0.06] px-5 text-sm font-semibold text-ink">
@@ -188,16 +193,6 @@ export default function EventsContent({
                             >
                               {e.register}
                             </Button>
-                          )}
-                          {ev.registerUrl && (
-                            <a
-                              href={ev.registerUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs text-mute link-underline"
-                            >
-                              {e.externalPage}
-                            </a>
                           )}
                         </div>
                       )}

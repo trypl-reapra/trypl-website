@@ -189,13 +189,20 @@ export default function MembershipCard({
           transform: `rotateX(${t.rx}deg) rotateY(${t.ry + (flipped ? 180 : 0)}deg) scale(${t.active ? 1.015 : 1})`,
           transition: t.active
             ? "transform 0.12s ease-out"
-            : "transform 0.6s cubic-bezier(0.22,1,0.3,1)",
+            : "transform 0.6s ease-in-out",
         }}
       >
         {/* ============ 表面 ============ */}
         <div
           className={`absolute inset-0 overflow-hidden rounded-[26px] ${faceShadow}`}
-          style={{ background: c.bg, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+          style={{
+            background: c.bg,
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            // backface-visibility が効かない環境でも裏面が透けないよう、反転の中間で確実に切替
+            opacity: flipped ? 0 : 1,
+            transition: "opacity 0s linear 0.3s",
+          }}
         >
           {/* 見切れマーク */}
           <div className={`pointer-events-none absolute right-[-3.5rem] top-1/2 h-[172%] w-[150%] max-w-none -translate-y-1/2 ${c.markOpacity}`}>
@@ -291,7 +298,14 @@ export default function MembershipCard({
         {canFlip && (
           <div
             className={`absolute inset-0 overflow-hidden rounded-[26px] ${faceShadow}`}
-            style={{ background: c.bg, transform: "rotateY(180deg)", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+            style={{
+              background: c.bg,
+              transform: "rotateY(180deg)",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+              opacity: flipped ? 1 : 0,
+              transition: "opacity 0s linear 0.3s",
+            }}
           >
             <div className={`pointer-events-none absolute right-[-3.5rem] top-1/2 h-[172%] w-[150%] max-w-none -translate-y-1/2 ${c.markOpacity}`}>
               <LogoMark tone={c.logoTone} className="h-full w-full object-contain" />
