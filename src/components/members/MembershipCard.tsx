@@ -253,10 +253,21 @@ export default function MembershipCard({
               ) : (
                 <div className="h-9 w-12 shrink-0 rounded-md" style={{ background: c.chip, boxShadow: "inset 0 1px 2px rgba(255,255,255,0.4)" }} />
               )}
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="truncate font-display text-2xl font-semibold tracking-tight sm:text-[1.7rem]">{displayName}</p>
                 {email && <p className={`truncate text-xs ${c.sub}`}>{email}</p>}
               </div>
+              {/* QR表示（裏返し）ボタン：氏名行の右端へ。上部バッジ・下部 Member Since と重ならない。 */}
+              {canFlip && (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); flip(); }}
+                  className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm transition-colors ${c.backBtn}`}
+                >
+                  <FlipIcon />
+                  {labels.qrShow}
+                </button>
+              )}
             </div>
 
             <div className="flex items-end justify-between">
@@ -281,17 +292,6 @@ export default function MembershipCard({
             </div>
           </div>
 
-          {/* 裏返しボタン（QRがある時だけ） */}
-          {canFlip && (
-            <button
-              type="button"
-              onClick={(e) => { e.stopPropagation(); flip(); }}
-              className={`absolute bottom-4 right-4 z-20 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-medium backdrop-blur-sm transition-colors ${c.backBtn}`}
-            >
-              <FlipIcon />
-              {labels.qrShow}
-            </button>
-          )}
         </div>
 
         {/* ============ 裏面（QR） ============ */}
