@@ -580,7 +580,7 @@ async function ensurePressSeed(): Promise<void> {
   try {
     if (useKV) {
       const flag = (await kv(["GET", "trypl:seeded:press"])) as string | null;
-      if (flag === "v2") return;
+      if (flag === "v3") return;
       // 旧シードの launch-2026 を除いて、最新版を投入（重複防止・既存の追加分は保持）。
       const raw = (await kv(["LRANGE", K_PRESS, 0, -1])) as string[];
       const kept = (raw || [])
@@ -590,7 +590,7 @@ async function ensurePressSeed(): Promise<void> {
       await kv(["DEL", K_PRESS]);
       if (next.length)
         await kv(["RPUSH", K_PRESS, ...next.map((p) => JSON.stringify(p))]);
-      await kv(["SET", "trypl:seeded:press", "v2"]);
+      await kv(["SET", "trypl:seeded:press", "v3"]);
     } else if (mem.press.length === 0) {
       mem.press.unshift(...(defaultPress as PressItem[]));
     }

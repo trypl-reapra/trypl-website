@@ -242,7 +242,7 @@ const ja = {
     ],
   },
   links: {
-    subtitle: "REAPRA発・実践型インターンコミュニティ",
+    subtitle: "REAPRA発・若年層向けインターンシップコミュニティ",
     entryLabel: "メンバーになる",
     entryDesc: "Googleアカウントで会員登録。無料・30秒で完了します。",
     primary: [
@@ -626,7 +626,7 @@ const en: Pages = {
     ],
   },
   links: {
-    subtitle: "A practice-first internship community, born from REAPRA",
+    subtitle: "An internship community for youth, born from REAPRA",
     entryLabel: "Become a member",
     entryDesc: "Sign up with your Google account. Free, ~30 seconds.",
     primary: [
@@ -1008,7 +1008,7 @@ const ko: Pages = {
     ],
   },
   links: {
-    subtitle: "REAPRA에서 시작된 실천형 인턴십 커뮤니티",
+    subtitle: "REAPRA에서 시작된, 청년을 위한 인턴십 커뮤니티",
     entryLabel: "멤버 되기",
     entryDesc: "Google 계정으로 회원 가입. 무료·30초면 완료됩니다.",
     primary: [

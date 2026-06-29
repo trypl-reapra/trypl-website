@@ -149,7 +149,7 @@ export const dict: Record<Locale, Dict> = {
       secondary: "募集を見る",
     },
     footer: {
-      desc: "REAPRA発・若年層向け実践型インターンコミュニティ。",
+      desc: "REAPRA発・若年層向けインターンシップコミュニティ。",
       explore: "Explore",
       follow: "Follow",
       poweredBy: "Powered by",
@@ -245,7 +245,7 @@ export const dict: Record<Locale, Dict> = {
       secondary: "See internships",
     },
     footer: {
-      desc: "A practice-first internship community for youth, born from REAPRA.",
+      desc: "An internship community for youth, born from REAPRA.",
       explore: "Explore",
       follow: "Follow",
       poweredBy: "Powered by",
@@ -341,7 +341,7 @@ export const dict: Record<Locale, Dict> = {
       secondary: "모집 보기",
     },
     footer: {
-      desc: "REAPRA에서 시작된, 청년을 위한 실천형 인턴십 커뮤니티.",
+      desc: "REAPRA에서 시작된, 청년을 위한 인턴십 커뮤니티.",
       explore: "Explore",
       follow: "Follow",
       poweredBy: "Powered by",
