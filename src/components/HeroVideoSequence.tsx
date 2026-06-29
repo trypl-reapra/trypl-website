@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
  *   （ハイドレーション前にロード完了しても黒く固まらない）。
  */
 const CROSSFADE_MS = 1000;
+const PLAYBACK_RATE = 0.75; // 0.75倍速でゆっくり再生
 
 export default function HeroVideoSequence({
   clips,
@@ -30,6 +31,7 @@ export default function HeroVideoSequence({
   useEffect(() => {
     const v = refs.current[0];
     if (!v) return;
+    v.playbackRate = PLAYBACK_RATE;
     const show = () => setReady(true);
     if (v.readyState >= 2) show();
     v.addEventListener("loadeddata", show);
@@ -57,6 +59,7 @@ export default function HeroVideoSequence({
     const nv = refs.current[next];
     if (nv) {
       try {
+        nv.playbackRate = PLAYBACK_RATE;
         nv.currentTime = 0;
         void nv.play().catch(() => {});
       } catch {}
@@ -93,6 +96,9 @@ export default function HeroVideoSequence({
           muted
           playsInline
           preload="auto"
+          onLoadedMetadata={(e) => {
+            e.currentTarget.playbackRate = PLAYBACK_RATE;
+          }}
           autoPlay={i === 0}
           onTimeUpdate={() => onTimeUpdate(i)}
         >
