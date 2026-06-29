@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from "react";
  *   （ハイドレーション前にロード完了しても黒く固まらない）。
  */
 const CROSSFADE_MS = 1000;
-const PLAYBACK_RATE = 0.75; // 0.75倍速でゆっくり再生
+const PLAYBACK_RATE = 1; // 等倍（1倍速）で再生
 
 export default function HeroVideoSequence({
   clips,
