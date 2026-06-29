@@ -15,21 +15,158 @@ type Registration = {
 
 type CheckinResult = {
   ok: boolean;
+  email?: string;
   name?: string;
   memberId?: string;
+  image?: string;
+  founder?: boolean;
   attended?: boolean;
   alreadyAttended?: boolean;
   hadRsvp?: boolean;
   walkIn?: boolean;
+  registeredAt?: string;
+  attendedAt?: string;
   reason?: string;
 };
 
 const REASON_MSG: Record<string, string> = {
   invalid_qr: "TrypL の会員証QRではありません。",
-  unknown: "該当する会員が見つかりません。",
+  unknown: "該当する会員が見つかりません（未登録）。",
   event_not_found: "イベントが見つかりません。",
   no_target: "読み取れませんでした。もう一度お試しください。",
 };
+
+/* ------------------------------------------------------------ 受付音 */
+// 受付完了 / 受付済み / 未登録 をそれぞれ別の音で知らせる（Web Audio で生成）。
+type SoundKind = "success" | "warn" | "error";
+
+function useBeeper() {
+  const ctxRef = useRef<AudioContext | null>(null);
+
+  const ensure = useCallback(() => {
+    if (typeof window === "undefined") return null;
+    if (!ctxRef.current) {
+      const AC: typeof AudioContext | undefined =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext?: typeof AudioContext })
+          .webkitAudioContext;
+      if (AC) ctxRef.current = new AC();
+    }
+    const ctx = ctxRef.current;
+    if (ctx && ctx.state === "suspended") ctx.resume().catch(() => {});
+    return ctx;
+  }, []);
+
+  const tone = useCallback(
+    (
+      ctx: AudioContext,
+      freq: number,
+      start: number,
+      dur: number,
+      type: OscillatorType,
+      gain: number,
+    ) => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      const t0 = ctx.currentTime + start;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.linearRampToValueAtTime(gain, t0 + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      osc.connect(g).connect(ctx.destination);
+      osc.start(t0);
+      osc.stop(t0 + dur + 0.03);
+    },
+    [],
+  );
+
+  const play = useCallback(
+    (kind: SoundKind) => {
+      const ctx = ensure();
+      if (!ctx) return;
+      if (kind === "success") {
+        // 受付完了：明るい上昇2音（ピンポン↑）
+        tone(ctx, 880, 0, 0.13, "sine", 0.18);
+        tone(ctx, 1318, 0.12, 0.2, "sine", 0.18);
+      } else if (kind === "warn") {
+        // 受付済み：同音2連（注意）
+        tone(ctx, 660, 0, 0.1, "triangle", 0.16);
+        tone(ctx, 660, 0.17, 0.1, "triangle", 0.16);
+      } else {
+        // 未登録／エラー：低い下降ブザー
+        tone(ctx, 320, 0, 0.18, "sawtooth", 0.13);
+        tone(ctx, 196, 0.18, 0.3, "sawtooth", 0.13);
+      }
+    },
+    [ensure, tone],
+  );
+
+  // クリック等のユーザー操作時に AudioContext を起こしておく（自動再生制限対策）。
+  const warmUp = useCallback(() => {
+    ensure();
+  }, [ensure]);
+
+  return { play, warmUp };
+}
+
+/* ------------------------------------------------------------ 表示用ヘルパ */
+function fmtTime(iso?: string): string {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "—";
+  return d.toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" });
+}
+function fmtDateTime(iso?: string): string {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "—";
+  return d.toLocaleString("ja-JP", {
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+type View = {
+  kind: SoundKind;
+  label: string;
+  cls: string;
+  badgeCls: string;
+};
+
+function viewFor(r: CheckinResult): View {
+  if (r.ok && r.attended && !r.alreadyAttended)
+    return {
+      kind: "success",
+      label: "受付完了",
+      cls: "bg-emerald-50 border-emerald-200 text-emerald-900",
+      badgeCls: "bg-emerald-600 text-white",
+    };
+  if (r.ok && r.alreadyAttended)
+    return {
+      kind: "warn",
+      label: "既に受付済み",
+      cls: "bg-amber-50 border-amber-200 text-amber-900",
+      badgeCls: "bg-amber-500 text-white",
+    };
+  if (r.ok && r.attended === false)
+    return {
+      kind: "warn",
+      label: "受付を取り消しました",
+      cls: "bg-stone-100 border-stone-200 text-stone-700",
+      badgeCls: "bg-stone-500 text-white",
+    };
+  return {
+    kind: "error",
+    label: "未登録・エラー",
+    cls: "bg-red-50 border-red-200 text-red-800",
+    badgeCls: "bg-red-600 text-white",
+  };
+}
+
+type ZoomCaps = { min: number; max: number; step: number };
 
 export default function EventReception({
   eventId,
@@ -44,6 +181,10 @@ export default function EventReception({
   const [result, setResult] = useState<CheckinResult | null>(null);
   const [camError, setCamError] = useState("");
   const [manualId, setManualId] = useState("");
+  const [zoom, setZoom] = useState(1);
+  const [zoomCaps, setZoomCaps] = useState<ZoomCaps | null>(null);
+
+  const { play, warmUp } = useBeeper();
 
   // html5-qrcode インスタンスと重複スキャン抑止
   const scannerRef = useRef<unknown>(null);
@@ -65,22 +206,21 @@ export default function EventReception({
 
   function flashResult(res: CheckinResult) {
     setResult(res);
+    play(viewFor(res).kind); // 結果に応じて音を鳴らす
     if (resultTimer.current) window.clearTimeout(resultTimer.current);
-    resultTimer.current = window.setTimeout(() => setResult(null), 4000);
+    // 受付係が情報を読めるよう少し長めに表示
+    resultTimer.current = window.setTimeout(() => setResult(null), 6000);
   }
 
   const submitCheckin = useCallback(
     async (body: Record<string, unknown>) => {
       setBusy(true);
       try {
-        const res: CheckinResult = await fetch(
-          "/api/admin/events/checkin",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ eventId, ...body }),
-          },
-        ).then((x) => x.json());
+        const res: CheckinResult = await fetch("/api/admin/events/checkin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ eventId, ...body }),
+        }).then((x) => x.json());
         flashResult(res);
         if (res.ok) await loadRegs();
         return res;
@@ -88,6 +228,7 @@ export default function EventReception({
         setBusy(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [eventId, loadRegs],
   );
 
@@ -107,10 +248,32 @@ export default function EventReception({
     [submitCheckin],
   );
 
+  // 端末がズームに対応していればハードウェアズームを適用。
+  const applyZoom = useCallback(
+    async (next: number, caps: ZoomCaps | null) => {
+      const c = caps ?? zoomCaps;
+      const s = scannerRef.current as
+        | { applyVideoConstraints: (v: MediaTrackConstraints) => Promise<void> }
+        | null;
+      if (!c || !s?.applyVideoConstraints) return;
+      const clamped = Math.min(c.max, Math.max(c.min, next));
+      setZoom(clamped);
+      try {
+        await s.applyVideoConstraints({
+          advanced: [{ zoom: clamped } as MediaTrackConstraintSet],
+        } as MediaTrackConstraints);
+      } catch {
+        /* 未対応端末は無視 */
+      }
+    },
+    [zoomCaps],
+  );
+
   async function startScan() {
     setCamError("");
-    // 先にカメラ表示領域を見せる（html5-qrcode が要素サイズを取得できるよう、
-    // start 時に要素が display:none だと映像が 0 サイズで見えなくなるため）。
+    warmUp(); // ユーザー操作のうちに音声を有効化
+    // 先にカメラ表示領域を見せる（start 時に要素が display:none だと
+    // 映像が 0 サイズになり見えないため）。
     setScanning(true);
     await new Promise((r) => window.setTimeout(r, 80));
     try {
@@ -121,15 +284,42 @@ export default function EventReception({
       await scanner.start(
         { facingMode: "environment" },
         {
-          fps: 10,
+          fps: 12,
+          // スキャン枠を大きめ（QRが画面いっぱいに近いほど読みやすい）。
           qrbox: (w: number, h: number) => {
-            const m = Math.floor(Math.min(w, h) * 0.8);
+            const m = Math.floor(Math.min(w, h) * 0.85);
             return { width: m, height: m };
           },
         },
         (decoded: string) => onScan(decoded),
         () => {},
       );
+
+      // 端末がズーム対応なら、初期値として 2倍（不可なら上限）にズームイン。
+      try {
+        const caps = (
+          scanner as unknown as {
+            getRunningTrackCapabilities?: () => {
+              zoom?: { min?: number; max?: number; step?: number };
+            };
+          }
+        ).getRunningTrackCapabilities?.();
+        const z = caps?.zoom;
+        if (z && typeof z.max === "number" && z.max > (z.min ?? 1)) {
+          const caps2: ZoomCaps = {
+            min: z.min ?? 1,
+            max: z.max,
+            step: z.step && z.step > 0 ? z.step : 0.1,
+          };
+          setZoomCaps(caps2);
+          const initial = Math.min(caps2.max, Math.max(caps2.min, 2));
+          await applyZoom(initial, caps2);
+        } else {
+          setZoomCaps(null);
+        }
+      } catch {
+        setZoomCaps(null);
+      }
     } catch (err) {
       setScanning(false);
       scannerRef.current = null;
@@ -152,6 +342,7 @@ export default function EventReception({
     }
     scannerRef.current = null;
     setScanning(false);
+    setZoomCaps(null);
   }, []);
 
   // アンマウント時にカメラを停止
@@ -164,32 +355,7 @@ export default function EventReception({
   }, []);
 
   const attendedCount = (regs ?? []).filter((r) => r.attended).length;
-
-  const banner = (() => {
-    if (!result) return null;
-    if (result.ok && result.attended && !result.alreadyAttended) {
-      return {
-        cls: "bg-emerald-50 text-emerald-800 border-emerald-200",
-        text: `受付完了：${result.name}（${result.memberId}）${result.walkIn ? "・当日受付" : ""}`,
-      };
-    }
-    if (result.ok && result.alreadyAttended) {
-      return {
-        cls: "bg-amber-50 text-amber-800 border-amber-200",
-        text: `既に受付済み：${result.name}（${result.memberId}）`,
-      };
-    }
-    if (result.ok && result.attended === false) {
-      return {
-        cls: "bg-stone-100 text-stone-700 border-stone-200",
-        text: `受付を取り消しました：${result.name}`,
-      };
-    }
-    return {
-      cls: "bg-red-50 text-red-700 border-red-200",
-      text: REASON_MSG[result.reason ?? ""] ?? "受付できませんでした。",
-    };
-  })();
+  const view = result ? viewFor(result) : null;
 
   return (
     <div className="mt-3 rounded-2xl border border-line bg-fog/60 p-5">
@@ -219,9 +385,95 @@ export default function EventReception({
         )}
       </div>
 
-      {banner && (
-        <div className={cn("mt-4 rounded-xl border px-4 py-3 text-sm font-medium", banner.cls)}>
-          {banner.text}
+      {/* 読み取り結果：その人の情報カード */}
+      {result && view && (
+        <div
+          className={cn(
+            "mt-4 flex items-start gap-4 rounded-2xl border p-4",
+            view.cls,
+          )}
+        >
+          {result.ok ? (
+            <>
+              {/* アバター */}
+              {result.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={result.image}
+                  alt=""
+                  referrerPolicy="no-referrer"
+                  className="h-14 w-14 shrink-0 rounded-full object-cover ring-2 ring-white/70"
+                />
+              ) : (
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/70 text-xl font-bold">
+                  {(result.name || "?").trim().charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <span
+                  className={cn(
+                    "inline-block rounded-full px-2.5 py-0.5 text-[11px] font-bold",
+                    view.badgeCls,
+                  )}
+                >
+                  {view.label}
+                </span>
+                <p className="mt-1.5 truncate text-lg font-bold leading-tight">
+                  {result.name || result.email?.split("@")[0] || "—"}
+                </p>
+                <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+                  <span className="font-mono">{result.memberId}</span>
+                  {result.email && (
+                    <span className="truncate opacity-70">{result.email}</span>
+                  )}
+                </div>
+                {/* 属性バッジ */}
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {result.founder && (
+                    <span className="rounded-full bg-amber-200/80 px-2 py-0.5 text-[10px] font-semibold text-amber-900">
+                      ★ 創設メンバー
+                    </span>
+                  )}
+                  {result.walkIn ? (
+                    <span className="rounded-full bg-white/70 px-2 py-0.5 text-[10px] font-medium">
+                      当日受付
+                    </span>
+                  ) : result.hadRsvp ? (
+                    <span className="rounded-full bg-white/70 px-2 py-0.5 text-[10px] font-medium">
+                      事前申込あり
+                    </span>
+                  ) : null}
+                </div>
+                {/* 日時 */}
+                <p className="mt-2 text-[11px] opacity-80">
+                  {result.attended
+                    ? `受付 ${fmtTime(result.attendedAt)}`
+                    : "未受付"}
+                  {" ・ "}
+                  申込 {fmtDateTime(result.registeredAt)}
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/70 text-2xl font-bold">
+                ✕
+              </div>
+              <div className="min-w-0 flex-1">
+                <span
+                  className={cn(
+                    "inline-block rounded-full px-2.5 py-0.5 text-[11px] font-bold",
+                    view.badgeCls,
+                  )}
+                >
+                  {view.label}
+                </span>
+                <p className="mt-1.5 text-sm font-semibold">
+                  {REASON_MSG[result.reason ?? ""] ?? "受付できませんでした。"}
+                </p>
+              </div>
+            </>
+          )}
         </div>
       )}
 
@@ -229,8 +481,42 @@ export default function EventReception({
       <div className={cn("mt-4", scanning ? "block" : "hidden")}>
         <div
           id={elementId}
-          className="mx-auto min-h-[260px] w-full max-w-[320px] overflow-hidden rounded-xl border border-line bg-black [&_video]:block [&_video]:!h-auto [&_video]:!w-full [&_video]:rounded-xl"
+          className="mx-auto min-h-[260px] w-full max-w-[340px] overflow-hidden rounded-xl border border-line bg-black [&_video]:block [&_video]:!h-auto [&_video]:!w-full [&_video]:rounded-xl"
         />
+        {/* ズーム調整（対応端末のみ表示） */}
+        {zoomCaps && (
+          <div className="mx-auto mt-3 flex max-w-[340px] items-center gap-3">
+            <button
+              type="button"
+              onClick={() => applyZoom(zoom - (zoomCaps.step || 0.1) * 4, null)}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-line bg-paper text-lg leading-none hover:border-ink"
+              aria-label="ズームアウト"
+            >
+              −
+            </button>
+            <input
+              type="range"
+              min={zoomCaps.min}
+              max={zoomCaps.max}
+              step={zoomCaps.step}
+              value={zoom}
+              onChange={(e) => applyZoom(Number(e.target.value), null)}
+              className="h-1.5 flex-1 cursor-pointer accent-ink"
+              aria-label="カメラのズーム"
+            />
+            <button
+              type="button"
+              onClick={() => applyZoom(zoom + (zoomCaps.step || 0.1) * 4, null)}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-line bg-paper text-lg leading-none hover:border-ink"
+              aria-label="ズームイン"
+            >
+              ＋
+            </button>
+            <span className="w-12 text-right font-mono text-xs text-mute">
+              {zoom.toFixed(1)}×
+            </span>
+          </div>
+        )}
         <p className="mt-2 text-center text-xs text-mute">
           会員証の裏面QRをカメラにかざしてください。
         </p>
@@ -246,6 +532,7 @@ export default function EventReception({
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          warmUp();
           const id = manualId.trim();
           if (!id) return;
           submitCheckin({ memberId: id });
@@ -284,8 +571,12 @@ export default function EventReception({
                 className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm"
               >
                 <div className="min-w-0">
-                  <span className="font-medium">{r.name || r.email.split("@")[0]}</span>
-                  <span className="ml-2 font-mono text-xs text-mute">{r.memberId}</span>
+                  <span className="font-medium">
+                    {r.name || r.email.split("@")[0]}
+                  </span>
+                  <span className="ml-2 font-mono text-xs text-mute">
+                    {r.memberId}
+                  </span>
                   {r.walkIn && (
                     <span className="ml-2 rounded-full bg-stone-100 px-2 py-0.5 text-[10px] text-stone-600">
                       当日

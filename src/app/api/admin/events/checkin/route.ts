@@ -73,9 +73,13 @@ export async function POST(req: Request) {
     email,
     name,
     memberId: reg.memberId,
+    image: member?.image || "",
+    founder: !!member?.founder,
     attended: reg.attended,
     alreadyAttended: attended && wasAttended,
     hadRsvp,
     walkIn: !!reg.walkIn,
+    registeredAt: reg.registeredAt,
+    attendedAt: reg.attendedAt || "",
   });
 }
