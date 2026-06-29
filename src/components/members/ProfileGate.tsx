@@ -14,6 +14,7 @@ export default function ProfileGate({
   memberId,
   memberSince,
   profile,
+  qrSvg,
 }: {
   name: string | null;
   email: string | null;
@@ -21,9 +22,11 @@ export default function ProfileGate({
   memberId: string | null;
   memberSince: string | null;
   profile: MemberProfile | null;
+  qrSvg?: string;
 }) {
   const t = usePages();
   const mp = t.memberProfile;
+  const m = t.members;
   return (
     <Section tone="light">
       <Container>
@@ -44,6 +47,8 @@ export default function ProfileGate({
             memberId={memberId}
             memberSince={memberSince}
             unregisteredLabel={mp.unregistered}
+            qrSvg={qrSvg}
+            labels={{ qrShow: m.cardQrShow, qrBack: m.cardQrBack, qrCaption: m.cardQrCaption }}
           />
         </div>
 

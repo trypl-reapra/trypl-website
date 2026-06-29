@@ -52,6 +52,20 @@ export type EventItem = {
   createdAt: string;
 };
 
+/** イベントへの申込・出席（会員ごと1件）。 */
+export type EventRegistration = {
+  email: string;
+  name: string;
+  memberId: string;
+  /** 申込日時 */
+  registeredAt: string;
+  /** 受付（出席）済みか */
+  attended: boolean;
+  attendedAt?: string;
+  /** 事前申込なしの当日受付で作られたレコード */
+  walkIn?: boolean;
+};
+
 /** ニュース / プレス掲載（管理画面から登録）。 */
 export type PressItem = {
   id: string;
@@ -156,6 +170,8 @@ type Mem = {
   events: EventItem[];
   press: PressItem[];
   stats: Record<string, number>;
+  /** eventId -> (email -> registration) */
+  eventRegs: Record<string, Record<string, EventRegistration>>;
 };
 const g = globalThis as unknown as { __tryplMem?: Mem };
 const mem: Mem =
@@ -170,6 +186,7 @@ const mem: Mem =
     events: [],
     press: [],
     stats: {},
+    eventRegs: {},
   });
 
 async function kv(command: (string | number)[]): Promise<unknown> {
@@ -575,12 +592,132 @@ async function saveAllEvents(items: EventItem[]): Promise<void> {
 
 export async function deleteEvent(id: string): Promise<void> {
   await saveAllEvents((await listEvents()).filter((e) => e.id !== id));
+  await clearEventRegistrations(id);
 }
 
 export async function setEventHidden(id: string, hidden: boolean): Promise<void> {
   await saveAllEvents(
     (await listEvents()).map((e) => (e.id === id ? { ...e, hidden } : e)),
   );
+}
+
+/* ---------------------------------------- event registrations / 出席 */
+
+const kEventReg = (eventId: string) => `trypl:event:${eventId}:reg`;
+
+async function putRegistration(
+  eventId: string,
+  reg: EventRegistration,
+): Promise<void> {
+  if (useKV) {
+    await kv(["HSET", kEventReg(eventId), reg.email, JSON.stringify(reg)]);
+  } else {
+    (mem.eventRegs[eventId] ??= {})[reg.email] = reg;
+  }
+}
+
+export async function getEventRegistration(
+  eventId: string,
+  email: string,
+): Promise<EventRegistration | null> {
+  if (useKV) {
+    const raw = (await kv(["HGET", kEventReg(eventId), email])) as
+      | string
+      | null;
+    return raw ? (JSON.parse(raw) as EventRegistration) : null;
+  }
+  return mem.eventRegs[eventId]?.[email] ?? null;
+}
+
+export async function listEventRegistrations(
+  eventId: string,
+): Promise<EventRegistration[]> {
+  let regs: EventRegistration[];
+  if (useKV) {
+    const flat = (await kv(["HGETALL", kEventReg(eventId)])) as string[];
+    regs = [];
+    for (let i = 0; i + 1 < (flat?.length ?? 0); i += 2) {
+      try {
+        regs.push(JSON.parse(flat[i + 1]) as EventRegistration);
+      } catch {}
+    }
+  } else {
+    regs = Object.values(mem.eventRegs[eventId] ?? {});
+  }
+  return regs.sort((a, b) => a.registeredAt.localeCompare(b.registeredAt));
+}
+
+/** 会員のイベント申込（既存なら名前等を更新するだけ）。 */
+export async function registerForEvent(
+  eventId: string,
+  who: { email: string; name: string; memberId: string },
+  now: string,
+): Promise<EventRegistration> {
+  const existing = await getEventRegistration(eventId, who.email);
+  const reg: EventRegistration = existing
+    ? { ...existing, name: who.name, memberId: who.memberId }
+    : {
+        email: who.email,
+        name: who.name,
+        memberId: who.memberId,
+        registeredAt: now,
+        attended: false,
+      };
+  await putRegistration(eventId, reg);
+  return reg;
+}
+
+export async function unregisterForEvent(
+  eventId: string,
+  email: string,
+): Promise<void> {
+  if (useKV) await kv(["HDEL", kEventReg(eventId), email]);
+  else if (mem.eventRegs[eventId]) delete mem.eventRegs[eventId][email];
+}
+
+/** 受付（出席）の記録。事前申込がなければ当日受付として作成する。 */
+export async function setAttendance(
+  eventId: string,
+  who: { email: string; name: string; memberId: string },
+  attended: boolean,
+  now: string,
+): Promise<{ reg: EventRegistration; hadRsvp: boolean; wasAttended: boolean }> {
+  const existing = await getEventRegistration(eventId, who.email);
+  const wasAttended = !!existing?.attended;
+  const reg: EventRegistration = existing
+    ? {
+        ...existing,
+        attended,
+        attendedAt: attended ? now : undefined,
+      }
+    : {
+        email: who.email,
+        name: who.name,
+        memberId: who.memberId,
+        registeredAt: now,
+        attended,
+        attendedAt: attended ? now : undefined,
+        walkIn: true,
+      };
+  await putRegistration(eventId, reg);
+  return { reg, hadRsvp: !!existing, wasAttended };
+}
+
+/** 会員が申し込んでいるイベントID一覧（与えたID集合の中から）。 */
+export async function listMemberEventIds(
+  email: string,
+  eventIds: string[],
+): Promise<string[]> {
+  const out: string[] = [];
+  for (const id of eventIds) {
+    if (await getEventRegistration(id, email)) out.push(id);
+  }
+  return out;
+}
+
+export async function clearEventRegistrations(eventId: string): Promise<void> {
+  if (useKV) await kv(["DEL", kEventReg(eventId)]);
+  else delete mem.eventRegs[eventId];
 }
 
 /* ---------------------------------------------------------- press */

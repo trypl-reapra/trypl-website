@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import QRCode from "qrcode";
 import { auth, memberProviders } from "@/auth";
 import { listMembers } from "@/lib/store";
 import { profileComplete } from "@/lib/profile";
+import { memberCode } from "@/lib/member";
+import { qrPayload } from "@/lib/checkin";
 import MembersContent from "@/components/pages/MembersContent";
 import MemberRegister from "@/components/members/MemberRegister";
 import FrozenNotice from "@/components/members/FrozenNotice";
@@ -14,13 +17,17 @@ export const metadata: Metadata = {
 };
 export const dynamic = "force-dynamic";
 
-/** メールから安定した会員番号（表示用）を作る。 */
-function memberCode(email: string): string {
-  let h = 0;
-  for (let i = 0; i < email.length; i++) {
-    h = (h * 31 + email.charCodeAt(i)) >>> 0;
+/** 会員証の裏に載せるイベント受付用QRを SVG 文字列で生成。 */
+async function buildQrSvg(email: string): Promise<string | undefined> {
+  try {
+    return await QRCode.toString(qrPayload(email), {
+      type: "svg",
+      margin: 1,
+      color: { dark: "#0b0b0d", light: "#ffffff" },
+    });
+  } catch {
+    return undefined;
   }
-  return "TRYPL-" + h.toString(36).toUpperCase().padStart(6, "0").slice(-6);
 }
 
 export default async function MembersPage({
@@ -58,6 +65,7 @@ export default async function MembersPage({
   const memberId = email ? memberCode(email) : null;
   const memberSince = me?.createdAt ?? null;
   const profile = me?.profile ?? null;
+  const qrSvg = email ? await buildQrSvg(email) : undefined;
 
   // 登録情報が未入力なら、登録画面のみ表示（ゲート）。
   if (!profileComplete(profile)) {
@@ -69,6 +77,7 @@ export default async function MembersPage({
         memberId={memberId}
         memberSince={memberSince}
         profile={profile}
+        qrSvg={qrSvg}
       />
     );
   }
@@ -85,6 +94,7 @@ export default async function MembersPage({
       memberSince={memberSince}
       founder={!!me?.founder}
       profile={profile}
+      qrSvg={qrSvg}
     />
   );
 }

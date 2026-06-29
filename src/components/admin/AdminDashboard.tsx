@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import LogoutButton from "./LogoutButton";
+import EventReception from "./EventReception";
 import { cn } from "@/lib/cn";
 import { DEFAULT_HEADER_IMAGES } from "@/data/internships";
 import { profileComplete } from "@/lib/profile";
@@ -1324,6 +1325,7 @@ function EventForm({ reload }: { reload: () => void }) {
 
 function EventRow({ ev, reload }: { ev: EventItem; reload: () => void }) {
   const [busy, setBusy] = useState(false);
+  const [open, setOpen] = useState(false);
   async function act(method: string, body: unknown) {
     setBusy(true);
     await fetch("/api/admin/events", {
@@ -1337,40 +1339,59 @@ function EventRow({ ev, reload }: { ev: EventItem; reload: () => void }) {
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-paper p-5",
+        "rounded-2xl border bg-paper",
         ev.hidden ? "border-line opacity-60" : "border-line",
       )}
     >
-      <div className="min-w-0">
-        <span className="text-sm tabular-nums text-mute">
-          {ev.date} {ev.startTime}
-        </span>
-        <span className="ml-3 font-medium">{ev.title}</span>
-        <span className="ml-2 text-xs text-mute">
-          {ev.online ? "オンライン" : ev.place}
-        </span>
+      <div className="flex flex-wrap items-center justify-between gap-3 p-5">
+        <div className="min-w-0">
+          <span className="text-sm tabular-nums text-mute">
+            {ev.date} {ev.startTime}
+          </span>
+          <span className="ml-3 font-medium">{ev.title}</span>
+          <span className="ml-2 text-xs text-mute">
+            {ev.online ? "オンライン" : ev.place}
+          </span>
+        </div>
+        <div className="flex items-center gap-2 text-xs">
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className={cn(
+              "rounded-full border px-3 py-1 font-medium",
+              open
+                ? "border-ink bg-ink text-paper"
+                : "border-ink/30 hover:border-ink",
+            )}
+          >
+            受付
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => act("PATCH", { id: ev.id, hidden: !ev.hidden })}
+            className="rounded-full border border-line px-3 py-1 hover:border-ink"
+          >
+            {ev.hidden ? "公開する" : "非表示にする"}
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => {
+              if (window.confirm("このイベントを削除しますか？"))
+                act("DELETE", { id: ev.id });
+            }}
+            className="rounded-full border border-red-200 px-3 py-1 text-red-600 hover:bg-red-50"
+          >
+            削除
+          </button>
+        </div>
       </div>
-      <div className="flex items-center gap-2 text-xs">
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => act("PATCH", { id: ev.id, hidden: !ev.hidden })}
-          className="rounded-full border border-line px-3 py-1 hover:border-ink"
-        >
-          {ev.hidden ? "公開する" : "非表示にする"}
-        </button>
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => {
-            if (window.confirm("このイベントを削除しますか？"))
-              act("DELETE", { id: ev.id });
-          }}
-          className="rounded-full border border-red-200 px-3 py-1 text-red-600 hover:bg-red-50"
-        >
-          削除
-        </button>
-      </div>
+      {open && (
+        <div className="px-5 pb-5">
+          <EventReception eventId={ev.id} title={ev.title} />
+        </div>
+      )}
     </div>
   );
 }

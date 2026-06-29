@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import PageHeader from "@/components/PageHeader";
 import JoinCTA from "@/components/home/JoinCTA";
 import { Container, Section, Button, Eyebrow } from "@/components/ui";
@@ -32,6 +34,51 @@ export default function EventsContent({
   const { locale } = useLocale();
   const e = t.events;
   const today = new Date().toISOString().slice(0, 10);
+
+  const { status } = useSession();
+  const authed = status === "authenticated";
+  const [registered, setRegistered] = useState<Set<string>>(new Set());
+  const [pending, setPending] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!authed) {
+      setRegistered(new Set());
+      return;
+    }
+    let on = true;
+    fetch("/api/events/registrations")
+      .then((r) => r.json())
+      .then((d) => on && setRegistered(new Set<string>(d.eventIds ?? [])))
+      .catch(() => {});
+    return () => {
+      on = false;
+    };
+  }, [authed]);
+
+  async function toggleRsvp(id: string, join: boolean) {
+    setPending(id);
+    try {
+      const res = await fetch("/api/events/register", {
+        method: join ? "POST" : "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ eventId: id }),
+      });
+      if (res.ok) {
+        setRegistered((prev) => {
+          const n = new Set(prev);
+          if (join) n.add(id);
+          else n.delete(id);
+          return n;
+        });
+      }
+    } finally {
+      setPending(null);
+    }
+  }
+
+  const rsvpBtn =
+    "inline-flex h-12 items-center justify-center gap-2 rounded-full bg-ink px-6 text-[0.95rem] font-medium text-paper transition-colors hover:bg-ink-soft disabled:opacity-60";
+
   return (
     <>
       <PageHeader
@@ -104,11 +151,54 @@ export default function EventsContent({
                           <p className="mt-2 text-sm text-mute">📍 {ev.place}</p>
                         )}
                       </div>
-                      {ev.registerUrl && (
-                        <div className="shrink-0 sm:pl-4">
-                          <Button href={ev.registerUrl} size="md">
-                            {e.register}
-                          </Button>
+                      {ev.date >= today && (
+                        <div className="flex shrink-0 flex-col items-stretch gap-2 sm:items-end sm:pl-4">
+                          {authed ? (
+                            registered.has(ev.id) ? (
+                              <>
+                                <span className="inline-flex h-12 items-center justify-center gap-1.5 rounded-full bg-ink/[0.06] px-5 text-sm font-semibold text-ink">
+                                  <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
+                                    <path d="M5 12.5l4 4 10-10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                                  </svg>
+                                  {e.registered}
+                                </span>
+                                <button
+                                  type="button"
+                                  disabled={pending === ev.id}
+                                  onClick={() => toggleRsvp(ev.id, false)}
+                                  className="text-xs text-mute link-underline disabled:opacity-50"
+                                >
+                                  {e.cancelRsvp}
+                                </button>
+                              </>
+                            ) : (
+                              <button
+                                type="button"
+                                disabled={pending === ev.id}
+                                onClick={() => toggleRsvp(ev.id, true)}
+                                className={rsvpBtn}
+                              >
+                                {pending === ev.id ? "…" : e.register}
+                              </button>
+                            )
+                          ) : (
+                            <Button
+                              href={`/members?next=${encodeURIComponent("/events")}`}
+                              size="md"
+                            >
+                              {e.register}
+                            </Button>
+                          )}
+                          {ev.registerUrl && (
+                            <a
+                              href={ev.registerUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs text-mute link-underline"
+                            >
+                              {e.externalPage}
+                            </a>
+                          )}
                         </div>
                       )}
                     </div>

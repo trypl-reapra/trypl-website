@@ -18,6 +18,7 @@ export default function MembersContent({
   memberSince,
   founder,
   profile,
+  qrSvg,
 }: {
   name: string | null;
   email: string | null;
@@ -26,6 +27,7 @@ export default function MembersContent({
   memberSince: string | null;
   founder: boolean;
   profile: MemberProfile | null;
+  qrSvg?: string;
 }) {
   const t = usePages();
   const m = t.members;
@@ -51,6 +53,8 @@ export default function MembersContent({
               memberId={memberId}
               memberSince={memberSince}
               variant={founder ? "founder" : "member"}
+              qrSvg={qrSvg}
+              labels={{ qrShow: m.cardQrShow, qrBack: m.cardQrBack, qrCaption: m.cardQrCaption }}
             />
           </div>
 
