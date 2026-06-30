@@ -133,11 +133,11 @@ export const internships: Internship[] = [
   /* ───────────── TrypL 掲載サポート（アンケート回答企業） ───────────── */
   {
     slug: "sugiyama-marketing-sales",
-    company: "杉山純一",
-    companyTag: "マーケティング・営業",
+    company: "株式会社ジャパン・エンダストリアル",
+    companyTag: "ものづくり（製造業）DX・メディア",
     title: "マーケティング・営業インターン",
     category: "marketing",
-    location: "応相談（オンライン可）",
+    location: "東京 / オンライン可",
     workStyle: "remote",
     commitment: "応相談",
     duration: "応相談",
@@ -145,7 +145,7 @@ export const internships: Internship[] = [
     summary:
       "マーケティングと営業の実践に携わるインターン（2名募集）。施策の企画から実行までを経験できます。",
     about:
-      "TrypL 経由で募集している、マーケティング・営業の実践型インターンです。2名募集。少人数の環境で、施策の企画から実行まで幅広く携われます。",
+      "株式会社ジャパン・エンダストリアルは、工場経営DXやコンサル（デジプロ）、メディア運営などを通じて「ものづくりの世界をより豊かに」を目指す企業です。2名募集。マーケティング・営業の現場で、施策の企画から実行まで幅広く携われます。",
     responsibilities: [
       "マーケティング施策の企画・実行",
       "営業活動（顧客開拓・商談）",
@@ -156,9 +156,10 @@ export const internships: Internship[] = [
       "未経験でも自分から学び、動けること",
     ],
     welcome: [],
-    tags: ["マーケティング", "営業"],
+    tags: ["マーケティング", "営業", "製造・ものづくり"],
     applyUrl: "",
     applyLabel: "応募する",
+    companyUrl: "https://emdustrial.co.jp/",
     postedAt: "2026-06-30",
   },
   {
@@ -220,8 +221,8 @@ export const internships: Internship[] = [
   },
   {
     slug: "miyairi-art-marketing",
-    company: "宮入宇秀",
-    companyTag: "アート教室・地域マーケティング",
+    company: "クリエイトパーク・ルーツ",
+    companyTag: "子ども向けアート教室・学習支援",
     title: "アート教室 地域マーケティングインターン",
     category: "marketing",
     location: "応相談",
@@ -232,7 +233,7 @@ export const internships: Internship[] = [
     summary:
       "アート教室の地域マーケティングインターン（2名募集）。地域に根ざした集客・ファンづくりを実践します。",
     about:
-      "TrypL 経由で募集している、アート教室の地域マーケティングインターンです。2名募集。地域に根ざした集客やファンづくりを、現場で実践します。",
+      "クリエイトパーク・ルーツは、子ども向けのアート・ものづくり教室や学習支援、心理的な発達を育むプログラムを提供する組織（REAPRA と連携）です。2名募集。地域に根ざした集客やファンづくりを、現場で実践します。",
     responsibilities: [
       "地域向けの集客・PR施策の企画と実行",
       "SNS・チラシ等のコンテンツ制作",
@@ -246,6 +247,7 @@ export const internships: Internship[] = [
     tags: ["マーケティング", "教育・EdTech", "公共・ソーシャル"],
     applyUrl: "",
     applyLabel: "応募する",
+    companyUrl: "https://createparkroots.com/",
     postedAt: "2026-06-30",
   },
   {
