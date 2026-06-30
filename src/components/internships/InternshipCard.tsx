@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -7,6 +9,7 @@ import {
   type Internship,
 } from "@/data/internships";
 import { cn } from "@/lib/cn";
+import { usePages } from "@/i18n/pages";
 
 export default function InternshipCard({
   internship: i,
@@ -18,6 +21,7 @@ export default function InternshipCard({
   /** 指定時は遷移せずボタンとして振る舞う（ポップアップ展開用）。 */
   onSelect?: () => void;
 }) {
+  const f = usePages().internshipsFilter;
   const classes = cn(
     "group relative flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border border-line bg-paper p-7 text-left transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-ink hover:shadow-[0_30px_70px_-40px_rgba(0,0,0,0.5)] sm:p-8",
     className,
@@ -68,7 +72,7 @@ export default function InternshipCard({
           <span>{i.commitment}</span>
         </div>
         <div className="mt-6 flex items-center justify-between border-t border-line pt-5 transition-colors duration-500 group-hover:border-paper/25">
-          <span className="text-sm font-medium">詳細を見る</span>
+          <span className="text-sm font-medium">{f.viewDetails}</span>
           <svg
             viewBox="0 0 24 24"
             fill="none"

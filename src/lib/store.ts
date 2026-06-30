@@ -258,8 +258,11 @@ export async function addContact(
   const contact: Contact = { id: rid(), createdAt: now, ...input };
   if (useKV) {
     await kv(["LPUSH", K_CONTACTS, JSON.stringify(contact)]);
+    // 未認証エンドポイント由来。無制限増加を防ぐため最新 5000 件に丸める。
+    await kv(["LTRIM", K_CONTACTS, 0, 4999]);
   } else {
     mem.contacts.unshift(contact);
+    if (mem.contacts.length > 5000) mem.contacts.length = 5000;
   }
   return contact;
 }
@@ -440,8 +443,10 @@ export async function addApplication(
   const item: Application = { id: rid(), createdAt: now, ...input };
   if (useKV) {
     await kv(["LPUSH", K_APPLICATIONS, JSON.stringify(item)]);
+    await kv(["LTRIM", K_APPLICATIONS, 0, 4999]);
   } else {
     mem.applications.unshift(item);
+    if (mem.applications.length > 5000) mem.applications.length = 5000;
   }
   return item;
 }

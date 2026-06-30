@@ -60,10 +60,13 @@ function decodeEntities(s: string): string {
     .replace(/\s+/g, "");
 }
 
-/** href/src は http(s)/mailto/相対(/,#) のみ許可。それ以外（javascript: data: 等）は # に。 */
+/**
+ * href は http(s)/mailto/同一サイト相対(/path, ./x, #anchor) のみ許可。
+ * それ以外（javascript:/data:/vbscript: や プロトコル相対 //evil.com）は # に。
+ */
 function safeUrl(url: string): string {
   const decoded = decodeEntities(url).toLowerCase();
-  return /^(https?:|mailto:|\/|#|\.)/.test(decoded) ? url : "#";
+  return /^(https?:|mailto:|#|\.|\/(?!\/))/.test(decoded) ? url : "#";
 }
 
 /** 外部リンク href の安全化（会社HP等、管理者入力URLの描画用）。空はそのまま空。 */
@@ -72,33 +75,47 @@ export function safeHref(url: string | undefined | null): string {
   return safeUrl(String(url));
 }
 
+/** タグの属性文字列から href の値を取り出す（引用あり/なし両対応）。 */
+function extractHref(attrs: string): string {
+  const m = attrs.match(/\bhref\s*=\s*("([^"]*)"|'([^']*)'|([^\s>]+))/i);
+  if (!m) return "";
+  return m[2] ?? m[3] ?? m[4] ?? "";
+}
+
 /**
- * 管理者が入力したHTMLのサニタイズ（許可リスト方式）。
- * - 危険なブロック要素（script/style/svg 等）を除去
- * - on* ハンドラ・style 属性を除去
- * - href/src のスキームを許可リスト化（javascript:/data: 等を無効化、実体参照も考慮）
- * - 許可タグ以外は中身だけ残して除去
- * ※ body は管理者のみ編集可能だが、公開ページに描画されるため多層で防御する。
- *   さらなる堅牢化が必要なら DOMPurify 等の導入を推奨。
+ * 管理者が入力したHTMLのサニタイズ（許可リスト＋タグ再構築方式）。
+ * - 危険なブロック要素・コメントを除去
+ * - 許可タグのみ残し、各タグを「属性なし」で再構築（イベントhandler・style・未引用属性等の全ベクタを封鎖）
+ * - 例外として <a> の href のみ、スキーム検証（http/https/mailto/相対のみ）して保持
+ * ※ body は管理者のみ編集可能だが公開ページに描画されるため、属性を一切残さない再構築で多層防御する。
  */
 export function sanitizeBodyHtml(html: string): string {
   if (!html) return "";
   let s = html;
   // HTMLコメント（条件付きコメント含む）を除去
   s = s.replace(/<!--[\s\S]*?-->/g, "");
-  // 危険なブロック要素（開閉ペア＋単独タグ）
-  const DANGER = "script|style|iframe|object|embed|link|meta|form|input|button|svg|math|template|noscript";
+  // 危険なブロック要素（開閉ペア＋単独タグ）を中身ごと除去
+  const DANGER =
+    "script|style|iframe|object|embed|link|meta|form|input|button|svg|math|template|noscript";
   s = s.replace(new RegExp(`<(${DANGER})[\\s\\S]*?<\\/\\1>`, "gi"), "");
   s = s.replace(new RegExp(`<\\/?(${DANGER})[^>]*>`, "gi"), "");
-  // on* イベントハンドラ・style 属性を除去
-  s = s.replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "");
-  s = s.replace(/\sstyle\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "");
-  // href/src のスキーム検証
-  s = s.replace(/\s(href|src)\s*=\s*"([^"]*)"/gi, (_m, a, v) => ` ${a}="${safeUrl(v)}"`);
-  s = s.replace(/\s(href|src)\s*=\s*'([^']*)'/gi, (_m, a, v) => ` ${a}='${safeUrl(v)}'`);
-  // 許可タグ以外は除去（中身テキストは保持）
-  s = s.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, (m, tag) =>
-    ALLOWED_TAGS.has(String(tag).toLowerCase()) ? m : "",
+  // すべてのタグを再構築：許可タグ以外は除去。許可タグは属性を捨てて再生成
+  // （<a> だけ検証済み href を残す）。これにより未引用属性・on*・style 等を一掃。
+  s = s.replace(
+    /<(\/?)([a-z][a-z0-9]*)\b([^>]*)>/gi,
+    (_m, slash: string, tagRaw: string, attrs: string) => {
+      const tag = tagRaw.toLowerCase();
+      if (!ALLOWED_TAGS.has(tag)) return "";
+      if (slash) return `</${tag}>`;
+      if (tag === "a") {
+        const raw = extractHref(attrs);
+        const href = raw ? safeUrl(raw) : "";
+        return href
+          ? `<a href="${href.replace(/"/g, "&quot;")}" rel="noopener noreferrer">`
+          : "<a>";
+      }
+      return `<${tag}>`;
+    },
   );
   return s;
 }

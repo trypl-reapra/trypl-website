@@ -12,6 +12,7 @@ import {
 } from "@/data/internships";
 import { internshipBodyHtml, sanitizeBodyHtml, safeHref } from "@/lib/internshipBody";
 import { useT } from "@/i18n/LocaleProvider";
+import { usePages } from "@/i18n/pages";
 
 export default function InternshipDetailPanel({
   internship: i,
@@ -21,14 +22,15 @@ export default function InternshipDetailPanel({
   onClose: () => void;
 }) {
   const t = useT();
+  const fl = usePages().internshipsFilter;
   const facts: [string, string][] = [
-    ["勤務地", i.location],
-    ["勤務形態", WORK_STYLE_LABEL[i.workStyle]],
-    ["コミット", i.commitment],
-    ["期間", i.duration],
-    ["報酬", i.compensation],
-    ["カテゴリ", CATEGORIES[i.category]],
-    ["掲載日", i.postedAt.replace(/-/g, ".")],
+    [fl.facts.location, i.location],
+    [fl.facts.workStyle, WORK_STYLE_LABEL[i.workStyle]],
+    [fl.facts.commitment, i.commitment],
+    [fl.facts.duration, i.duration],
+    [fl.facts.compensation, i.compensation],
+    [fl.facts.category, CATEGORIES[i.category]],
+    [fl.facts.postedAt, i.postedAt.replace(/-/g, ".")],
   ];
 
   return (
@@ -128,7 +130,7 @@ export default function InternshipDetailPanel({
                   rel="noopener noreferrer"
                   className="mt-5 flex items-center justify-between gap-2 rounded-xl border border-line px-4 py-3 text-sm font-medium transition-colors hover:border-ink"
                 >
-                  <span>会社ホームページ</span>
+                  <span>{fl.companyHomepage}</span>
                   <span aria-hidden>↗</span>
                 </a>
               )}

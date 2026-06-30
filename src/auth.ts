@@ -48,11 +48,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   providers,
   pages: { signIn: "/members", error: "/members" },
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 }, // 30日
   callbacks: {
-    // 凍結アカウントはログインを拒否（管理者は対象外）。
-    async signIn({ user }) {
-      if (!user?.email) return true;
+    // ログイン可否：メール必須・OAuthはメール確認済みのみ・凍結は拒否（管理者は凍結対象外）。
+    async signIn({ user, account, profile }) {
+      if (!user?.email) return false; // メールが取得できないアカウントは拒否
+      // OAuth でメール未確認の場合は拒否（なりすまし防止）。
+      if (
+        account?.provider === "google" &&
+        profile &&
+        (profile as { email_verified?: boolean }).email_verified === false
+      )
+        return false;
       if (roleForEmail(user.email) === "admin") return true;
       try {
         if (await isMemberFrozen(user.email)) return false;

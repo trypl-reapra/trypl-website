@@ -382,6 +382,17 @@ const ja = {
     unit: "件",
     empty:
       "条件に合う募集が見つかりませんでした。キーワードや絞り込みを変えてお試しください。",
+    viewDetails: "詳細を見る",
+    companyHomepage: "会社ホームページ",
+    facts: {
+      location: "勤務地",
+      workStyle: "勤務形態",
+      commitment: "コミット",
+      duration: "期間",
+      compensation: "報酬",
+      category: "カテゴリ",
+      postedAt: "掲載日",
+    },
   },
   apply: {
     cta: "会員登録して応募",
@@ -794,6 +805,17 @@ const en: Pages = {
     unit: "results",
     empty:
       "No internships match your filters. Try a different keyword or filter.",
+    viewDetails: "View details",
+    companyHomepage: "Company website",
+    facts: {
+      location: "Location",
+      workStyle: "Work style",
+      commitment: "Commitment",
+      duration: "Duration",
+      compensation: "Compensation",
+      category: "Category",
+      postedAt: "Posted",
+    },
   },
   apply: {
     cta: "Sign up to apply",
@@ -1203,6 +1225,17 @@ const ko: Pages = {
     clear: "필터 초기화",
     unit: "건",
     empty: "조건에 맞는 모집이 없습니다. 키워드나 필터를 변경해 보세요.",
+    viewDetails: "자세히 보기",
+    companyHomepage: "회사 홈페이지",
+    facts: {
+      location: "근무지",
+      workStyle: "근무 형태",
+      commitment: "참여",
+      duration: "기간",
+      compensation: "보수",
+      category: "카테고리",
+      postedAt: "게재일",
+    },
   },
   apply: {
     cta: "회원가입 후 지원",
