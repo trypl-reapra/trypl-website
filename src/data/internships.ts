@@ -447,6 +447,13 @@ export function asCategoryKey(v: string | undefined | null): CategoryKey {
     : "business";
 }
 
+/** 文字列を有効な WorkStyle に正規化（不正なら remote）。 */
+export function asWorkStyle(v: string | undefined | null): WorkStyle {
+  return v && Object.prototype.hasOwnProperty.call(WORK_STYLE_LABEL, v)
+    ? (v as WorkStyle)
+    : "remote";
+}
+
 export function getFeatured(): Internship[] {
   return getAllInternships().filter((i) => i.featured);
 }

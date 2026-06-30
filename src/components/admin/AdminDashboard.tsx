@@ -6,9 +6,23 @@ import { motion } from "framer-motion";
 import LogoutButton from "./LogoutButton";
 import EventReception from "./EventReception";
 import { cn } from "@/lib/cn";
-import { CATEGORIES, DEFAULT_HEADER_IMAGES } from "@/data/internships";
+import {
+  CATEGORIES,
+  DEFAULT_HEADER_IMAGES,
+  WORK_STYLE_LABEL,
+} from "@/data/internships";
 
 const CATEGORY_OPTIONS = Object.entries(CATEGORIES) as [string, string][];
+const WORK_STYLE_OPTIONS = Object.entries(WORK_STYLE_LABEL) as [string, string][];
+
+/** 配列 → 改行テキスト（textarea 初期値用）。 */
+const linesToText = (a?: string[]): string => (a ?? []).join("\n");
+/** 改行テキスト → 配列（1行1項目、空行除去）。 */
+const textToLines = (v: FormDataEntryValue | null): string[] =>
+  String(v ?? "")
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean);
 import { profileComplete } from "@/lib/profile";
 
 type Contact = {
@@ -23,13 +37,23 @@ type Row = {
   source: "code" | "admin";
   key: string;
   company: string;
+  companyTag: string;
   title: string;
   location: string;
+  workStyle: string;
+  commitment: string;
+  duration: string;
   compensation: string;
   summary: string;
+  about: string;
+  responsibilities: string[];
+  requirements: string[];
+  welcome: string[];
+  tags: string[];
   applyUrl: string;
   companyUrl: string;
   category: string;
+  headerImage: string;
   hidden: boolean;
 };
 type Profile = {
@@ -892,6 +916,7 @@ function WithdrawalRow({ w, reload }: { w: Withdrawal; reload: () => void }) {
 function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
   const [editing, setEditing] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [headerImage, setHeaderImage] = useState(row.headerImage || "");
 
   async function toggle() {
     setBusy(true);
@@ -911,13 +936,23 @@ function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
       source: row.source,
       key: row.key,
       company: fd.get("company"),
+      companyTag: fd.get("companyTag"),
       title: fd.get("title"),
       location: fd.get("location"),
+      workStyle: fd.get("workStyle"),
+      commitment: fd.get("commitment"),
+      duration: fd.get("duration"),
       compensation: fd.get("compensation"),
-      summary: fd.get("summary"),
       category: fd.get("category"),
+      summary: fd.get("summary"),
+      about: fd.get("about"),
+      responsibilities: textToLines(fd.get("responsibilities")),
+      requirements: textToLines(fd.get("requirements")),
+      welcome: textToLines(fd.get("welcome")),
+      tags: textToLines(fd.get("tags")),
       applyUrl: fd.get("applyUrl"),
       companyUrl: fd.get("companyUrl"),
+      headerImage,
     });
     setBusy(false);
     setEditing(false);
@@ -942,9 +977,23 @@ function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
         <form onSubmit={save} className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <input name="company" defaultValue={row.company} placeholder="企業名" className={inputCls} />
-            <input name="location" defaultValue={row.location} placeholder="勤務地" className={inputCls} />
+            <input name="companyTag" defaultValue={row.companyTag} placeholder="業種（一言説明）" className={inputCls} />
           </div>
           <input name="title" defaultValue={row.title} placeholder="タイトル" className={inputCls} />
+          <div className="grid grid-cols-2 gap-3">
+            <input name="location" defaultValue={row.location} placeholder="勤務地" className={inputCls} />
+            <select name="workStyle" defaultValue={row.workStyle || "remote"} className={inputCls}>
+              {WORK_STYLE_OPTIONS.map(([key, label]) => (
+                <option key={key} value={key}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <input name="commitment" defaultValue={row.commitment} placeholder="コミット（例：週2〜3日）" className={inputCls} />
+            <input name="duration" defaultValue={row.duration} placeholder="期間（例：6か月〜）" className={inputCls} />
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <input name="compensation" defaultValue={row.compensation} placeholder="報酬" className={inputCls} />
             <select name="category" defaultValue={row.category || "business"} className={inputCls}>
@@ -955,9 +1004,31 @@ function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
               ))}
             </select>
           </div>
-          <textarea name="summary" defaultValue={row.summary} rows={3} placeholder="概要" className={inputCls + " resize-y"} />
+          <textarea name="summary" defaultValue={row.summary} rows={2} placeholder="概要（カード・OG用の短い要約）" className={inputCls + " resize-y"} />
+          <label className="block text-xs font-medium text-mute">
+            この企業・チームについて
+            <textarea name="about" defaultValue={row.about} rows={4} className={inputCls + " mt-1 resize-y"} />
+          </label>
+          <label className="block text-xs font-medium text-mute">
+            主な業務（1行に1項目）
+            <textarea name="responsibilities" defaultValue={linesToText(row.responsibilities)} rows={4} className={inputCls + " mt-1 resize-y"} />
+          </label>
+          <label className="block text-xs font-medium text-mute">
+            求める人物像（1行に1項目）
+            <textarea name="requirements" defaultValue={linesToText(row.requirements)} rows={4} className={inputCls + " mt-1 resize-y"} />
+          </label>
+          <label className="block text-xs font-medium text-mute">
+            歓迎する経験・スキル（1行に1項目）
+            <textarea name="welcome" defaultValue={linesToText(row.welcome)} rows={3} className={inputCls + " mt-1 resize-y"} />
+          </label>
+          <label className="block text-xs font-medium text-mute">
+            タグ（1行に1項目）
+            <textarea name="tags" defaultValue={linesToText(row.tags)} rows={2} className={inputCls + " mt-1 resize-y"} />
+          </label>
           <input name="applyUrl" defaultValue={row.applyUrl} placeholder="応募URL（空欄なら社内応募。Wantedly等のURLで外部遷移）" className={inputCls} />
           <input name="companyUrl" defaultValue={row.companyUrl} placeholder="会社HPのURL（任意）" className={inputCls} />
+          <div className="text-xs font-medium text-mute">画像</div>
+          <ImagePicker value={headerImage} onChange={setHeaderImage} />
           <div className="flex gap-3 pt-1 text-sm">
             <button type="submit" disabled={busy} className="rounded-full bg-ink px-5 py-2 font-medium text-paper disabled:opacity-60">
               保存
@@ -1041,11 +1112,20 @@ function InternshipsTab({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         company: fd.get("company"),
+        companyTag: fd.get("companyTag"),
         title: fd.get("title"),
         location: fd.get("location"),
+        workStyle: fd.get("workStyle"),
+        commitment: fd.get("commitment"),
+        duration: fd.get("duration"),
         compensation: fd.get("compensation"),
-        summary: fd.get("summary"),
         category: fd.get("category"),
+        summary: fd.get("summary"),
+        about: fd.get("about"),
+        responsibilities: textToLines(fd.get("responsibilities")),
+        requirements: textToLines(fd.get("requirements")),
+        welcome: textToLines(fd.get("welcome")),
+        tags: textToLines(fd.get("tags")),
         applyUrl: fd.get("applyUrl"),
         companyUrl: fd.get("companyUrl"),
         headerImage,
@@ -1069,26 +1149,59 @@ function InternshipsTab({
           追加した募集は募集一覧ページに即時公開されます。
         </p>
         <div className="mt-5 space-y-3">
-          <input name="company" required placeholder="企業名（例：株式会社ジコウ）" className={inputCls} />
+          <div className="grid grid-cols-2 gap-3">
+            <input name="company" required placeholder="企業名（例：株式会社ジコウ）" className={inputCls} />
+            <input name="companyTag" placeholder="業種（一言説明）" className={inputCls} />
+          </div>
           <input name="title" required placeholder="募集タイトル" className={inputCls} />
           <div className="grid grid-cols-2 gap-3">
             <input name="location" placeholder="勤務地" className={inputCls} />
-            <input name="compensation" placeholder="報酬" className={inputCls} />
+            <select name="workStyle" defaultValue="remote" className={inputCls}>
+              {WORK_STYLE_OPTIONS.map(([key, label]) => (
+                <option key={key} value={key}>
+                  {label}
+                </option>
+              ))}
+            </select>
           </div>
-          <label className="block text-xs font-medium text-mute">
-            カテゴリ
-            <select name="category" defaultValue="business" className={inputCls + " mt-1"}>
+          <div className="grid grid-cols-2 gap-3">
+            <input name="commitment" placeholder="コミット（例：週2〜3日）" className={inputCls} />
+            <input name="duration" placeholder="期間（例：6か月〜）" className={inputCls} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <input name="compensation" placeholder="報酬" className={inputCls} />
+            <select name="category" defaultValue="business" className={inputCls}>
               {CATEGORY_OPTIONS.map(([key, label]) => (
                 <option key={key} value={key}>
                   {label}
                 </option>
               ))}
             </select>
+          </div>
+          <textarea name="summary" rows={2} placeholder="概要（カード・OG用の短い要約）" className={inputCls + " resize-y"} />
+          <label className="block text-xs font-medium text-mute">
+            この企業・チームについて
+            <textarea name="about" rows={4} className={inputCls + " mt-1 resize-y"} />
           </label>
-          <textarea name="summary" rows={3} placeholder="概要" className={inputCls + " resize-y"} />
+          <label className="block text-xs font-medium text-mute">
+            主な業務（1行に1項目）
+            <textarea name="responsibilities" rows={4} className={inputCls + " mt-1 resize-y"} />
+          </label>
+          <label className="block text-xs font-medium text-mute">
+            求める人物像（1行に1項目）
+            <textarea name="requirements" rows={4} className={inputCls + " mt-1 resize-y"} />
+          </label>
+          <label className="block text-xs font-medium text-mute">
+            歓迎する経験・スキル（1行に1項目）
+            <textarea name="welcome" rows={3} className={inputCls + " mt-1 resize-y"} />
+          </label>
+          <label className="block text-xs font-medium text-mute">
+            タグ（1行に1項目）
+            <textarea name="tags" rows={2} className={inputCls + " mt-1 resize-y"} />
+          </label>
           <input name="applyUrl" placeholder="応募URL（空欄なら社内応募。Wantedly等で外部遷移）" className={inputCls} />
           <input name="companyUrl" placeholder="会社HPのURL（任意）" className={inputCls} />
-
+          <div className="text-xs font-medium text-mute">画像</div>
           <ImagePicker value={headerImage} onChange={setHeaderImage} />
         </div>
         {err && <p className="mt-3 text-sm text-red-600">{err}</p>}

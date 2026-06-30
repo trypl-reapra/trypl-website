@@ -24,10 +24,28 @@ export type Contact = {
 export type AdminInternship = {
   id: string;
   company: string;
+  /** 企業の一言説明（業種） */
+  companyTag?: string;
   title: string;
   location: string;
+  /** 勤務形態（remote / hybrid / onsite） */
+  workStyle?: string;
+  /** コミット目安 */
+  commitment?: string;
+  /** 期間目安 */
+  duration?: string;
   compensation: string;
   summary: string;
+  /** この企業・チームについて */
+  about?: string;
+  /** 主な業務（1行1項目） */
+  responsibilities?: string[];
+  /** 求める人物像 */
+  requirements?: string[];
+  /** 歓迎する経験・スキル */
+  welcome?: string[];
+  /** タグ */
+  tags?: string[];
   /** カテゴリ（CATEGORIES のキー。未設定なら business 扱い）。 */
   category?: string;
   /** 応募URL。空なら社内（ダッシュボード内）応募フローを使う。 */
@@ -136,13 +154,23 @@ export type Application = {
 export type Override = Partial<{
   hidden: boolean;
   company: string;
+  companyTag: string;
   title: string;
   location: string;
+  workStyle: string;
+  commitment: string;
+  duration: string;
   compensation: string;
   summary: string;
+  about: string;
+  responsibilities: string[];
+  requirements: string[];
+  welcome: string[];
+  tags: string[];
   applyUrl: string;
   companyUrl: string;
   category: string;
+  headerImage: string;
 }>;
 
 // Vercel Marketplace の Redis 連携（Upstash 等）で注入される環境変数。
