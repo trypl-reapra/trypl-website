@@ -184,7 +184,7 @@ export default function MembershipCard({
           prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.85 }
         }
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 2.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
         style={{ transformStyle: "preserve-3d", transformOrigin: "50% 50%" }}
       >
         <div
