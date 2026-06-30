@@ -177,17 +177,15 @@ export default function MembershipCard({
       className="w-full max-w-[440px] touch-none"
       style={{ perspective: 1200 }}
     >
-      {/* 入場アニメーション：奥に倒れた状態から起き上がりつつフェードイン
-          （「ようこそ」画面で会員証が立ち上がるような演出）。 */}
+      {/* 入場アニメーション：ゆっくりズームイン＋フェードイン
+          （「ようこそ」画面で会員証がふわっと立ち上がる演出）。 */}
       <motion.div
         initial={
-          prefersReduced
-            ? { opacity: 0 }
-            : { opacity: 0, y: 48, rotateX: 16, scale: 0.92 }
+          prefersReduced ? { opacity: 0 } : { opacity: 0, scale: 0.85 }
         }
-        animate={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
-        transition={{ duration: 0.95, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-        style={{ transformStyle: "preserve-3d", transformOrigin: "50% 85%" }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        style={{ transformStyle: "preserve-3d", transformOrigin: "50% 50%" }}
       >
         <div
           onPointerMove={move}
@@ -239,20 +237,6 @@ export default function MembershipCard({
           />
           <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.10), transparent)" }} />
           <div className={`pointer-events-none absolute inset-0 rounded-[26px] ring-1 ring-inset ${c.ring}`} />
-
-          {/* 入場時に一度だけ光沢が斜めに走るシャイン演出 */}
-          {!prefersReduced && (
-            <motion.div
-              className="pointer-events-none absolute inset-0 z-20"
-              initial={{ x: "-130%", opacity: 0 }}
-              animate={{ x: "130%", opacity: [0, 0.5, 0] }}
-              transition={{ duration: 1.1, delay: 0.7, ease: "easeInOut" }}
-              style={{
-                background:
-                  "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.55) 50%, transparent 60%)",
-              }}
-            />
-          )}
 
           <div className={`relative z-10 flex h-full flex-col justify-between p-6 sm:p-7 ${c.main}`}>
             <div className="flex items-start justify-between">

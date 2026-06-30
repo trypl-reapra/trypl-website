@@ -18,12 +18,10 @@ export type MemberProfile = {
   department?: string;
   /** 学年（高校生・大学生） */
   grade?: string;
-  /** 職種（社会人） */
-  jobTitle?: string;
   /** その他の補足（区分=その他） */
   note?: string;
-  /** 年齢（任意） */
-  age?: string;
+  /** 生年月日（YYYY-MM-DD） */
+  birthday?: string;
   /** 性別（任意） */
   gender?: string;
   /** 電話番号（任意） */
@@ -42,14 +40,14 @@ export function profileComplete(
   p: Partial<Record<keyof MemberProfile, string>> | null | undefined,
 ): boolean {
   if (!p) return false;
-  if (!p.fullName || !p.furigana || !p.status || !p.age) return false;
+  if (!p.fullName || !p.furigana || !p.status || !p.birthday) return false;
   switch (p.status) {
     case "highschool":
       return !!p.affiliation && !!p.grade;
     case "university":
       return !!p.affiliation && !!p.department && !!p.grade;
     case "working":
-      return !!p.affiliation && !!p.jobTitle;
+      return !!p.affiliation;
     case "other":
       return !!p.note;
     default:

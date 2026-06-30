@@ -35,9 +35,8 @@ type Profile = {
   affiliation?: string;
   department?: string;
   grade?: string;
-  jobTitle?: string;
   note?: string;
-  age?: string;
+  birthday?: string;
   gender?: string;
   phone?: string;
 };
@@ -607,7 +606,18 @@ function Empty({ children }: { children: ReactNode }) {
   );
 }
 
+function ageFromBirthday(iso: string): number | null {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  const now = new Date();
+  let age = now.getFullYear() - d.getFullYear();
+  const mo = now.getMonth() - d.getMonth();
+  if (mo < 0 || (mo === 0 && now.getDate() < d.getDate())) age--;
+  return age;
+}
+
 function ProfileGrid({ p, email }: { p?: Profile; email: string }) {
+  const birthdayAge = p?.birthday ? ageFromBirthday(p.birthday) : null;
   return (
     <div className="mt-4 grid gap-x-6 gap-y-1.5 border-t border-line pt-4 text-sm text-mute sm:grid-cols-2">
       <span>氏名：{p?.fullName || "（未入力）"}</span>
@@ -616,8 +626,12 @@ function ProfileGrid({ p, email }: { p?: Profile; email: string }) {
       <span>所属：{p?.affiliation || "—"}</span>
       <span>学部・学科：{p?.department || "—"}</span>
       <span>学年：{p?.grade || "—"}</span>
-      <span>職種：{p?.jobTitle || "—"}</span>
-      <span>年齢：{p?.age || "—"}</span>
+      <span>
+        誕生日：
+        {p?.birthday
+          ? `${p.birthday}${birthdayAge !== null ? `（${birthdayAge}歳）` : ""}`
+          : "—"}
+      </span>
       <span>性別：{p?.gender || "—"}</span>
       <span>電話：{p?.phone || "—"}</span>
       {p?.note && <span className="sm:col-span-2">補足：{p.note}</span>}

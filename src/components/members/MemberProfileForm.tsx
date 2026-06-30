@@ -39,9 +39,8 @@ export default function MemberProfileForm({
     affiliation: profile?.affiliation || "",
     department: profile?.department || "",
     grade: profile?.grade || "",
-    jobTitle: profile?.jobTitle || "",
     note: profile?.note || "",
-    age: profile?.age || "",
+    birthday: profile?.birthday || "",
     gender: profile?.gender || "",
     phone: profile?.phone || "",
   });
@@ -50,6 +49,34 @@ export default function MemberProfileForm({
 
   function set<K extends keyof typeof f>(k: K, v: (typeof f)[K]) {
     setF((s) => ({ ...s, [k]: v }));
+  }
+
+  // 誕生日：年・月・日をそれぞれセレクトで選ぶ。f.birthday は "YYYY-MM-DD"。
+  const thisYear = new Date().getFullYear();
+  const YEARS = Array.from({ length: 71 }, (_, i) => thisYear - 10 - i); // 10〜80歳相当
+  const [bParts, setBParts] = useState(() => {
+    const [y, m, d] = (profile?.birthday || "").split("-");
+    return {
+      y: y || "",
+      m: m ? String(Number(m)) : "",
+      d: d ? String(Number(d)) : "",
+    };
+  });
+  function daysInMonth(y: string, m: string) {
+    const mm = Number(m);
+    if (!mm) return 31;
+    return new Date(Number(y) || 2000, mm, 0).getDate();
+  }
+  function setBirthday(next: { y: string; m: string; d: string }) {
+    let { d } = next;
+    const { y, m } = next;
+    if (d && Number(d) > daysInMonth(y, m)) d = ""; // 月変更で不正な日になったら解除
+    setBParts({ y, m, d });
+    const combined =
+      y && m && d
+        ? `${y}-${String(Number(m)).padStart(2, "0")}-${String(Number(d)).padStart(2, "0")}`
+        : "";
+    set("birthday", combined);
   }
 
   const canSave = profileComplete(f);
@@ -110,9 +137,8 @@ export default function MemberProfileForm({
           {(f.status === "highschool" || f.status === "university") && (
             <span>{mp.grade}：{f.grade || "—"}</span>
           )}
-          {f.status === "working" && <span>{mp.jobTitle}：{f.jobTitle || "—"}</span>}
           {f.status === "other" && <span className="sm:col-span-2">{mp.note}：{f.note || "—"}</span>}
-          <span>{mp.age}：{f.age || "—"}</span>
+          <span>{mp.birthday}：{f.birthday || "—"}</span>
           <span>{mp.gender}：{f.gender || "—"}</span>
           <span>{mp.phone}：{f.phone || "—"}</span>
         </div>
@@ -171,12 +197,6 @@ export default function MemberProfileForm({
             <input className={inputCls} value={f.grade} placeholder={mp.gradePlaceholder} onChange={(e) => set("grade", e.target.value)} />
           </label>
         )}
-        {f.status === "working" && (
-          <label className="block">
-            <Label text={mp.jobTitle} required />
-            <input className={inputCls} value={f.jobTitle} onChange={(e) => set("jobTitle", e.target.value)} />
-          </label>
-        )}
         {f.status === "other" && (
           <label className="block">
             <Label text={mp.note} required />
@@ -184,11 +204,56 @@ export default function MemberProfileForm({
           </label>
         )}
 
-        <div className="grid gap-4 sm:grid-cols-3">
-          <label className="block">
-            <Label text={mp.age} required />
-            <input className={inputCls} value={f.age} inputMode="numeric" onChange={(e) => set("age", e.target.value)} />
-          </label>
+        {/* 誕生日：年・月・日をそれぞれ選択 */}
+        <div className="block">
+          <Label text={mp.birthday} required />
+          <div className="grid grid-cols-3 gap-2">
+            <select
+              className={inputCls}
+              value={bParts.y}
+              aria-label={mp.birthYear}
+              onChange={(e) => setBirthday({ ...bParts, y: e.target.value })}
+            >
+              <option value="">{mp.birthYear}</option>
+              {YEARS.map((y) => (
+                <option key={y} value={String(y)}>
+                  {y}
+                </option>
+              ))}
+            </select>
+            <select
+              className={inputCls}
+              value={bParts.m}
+              aria-label={mp.birthMonth}
+              onChange={(e) => setBirthday({ ...bParts, m: e.target.value })}
+            >
+              <option value="">{mp.birthMonth}</option>
+              {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                <option key={m} value={String(m)}>
+                  {m}
+                </option>
+              ))}
+            </select>
+            <select
+              className={inputCls}
+              value={bParts.d}
+              aria-label={mp.birthDay}
+              onChange={(e) => setBirthday({ ...bParts, d: e.target.value })}
+            >
+              <option value="">{mp.birthDay}</option>
+              {Array.from(
+                { length: daysInMonth(bParts.y, bParts.m) },
+                (_, i) => i + 1,
+              ).map((d) => (
+                <option key={d} value={String(d)}>
+                  {d}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
           <label className="block">
             <Label text={mp.gender} optional={mp.optional} />
             <select className={inputCls} value={f.gender} onChange={(e) => set("gender", e.target.value)}>

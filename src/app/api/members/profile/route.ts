@@ -35,9 +35,11 @@ export async function POST(req: Request) {
     affiliation: clean(b.affiliation, 120),
     department: clean(b.department, 120),
     grade: clean(b.grade, 40),
-    jobTitle: clean(b.jobTitle, 120),
     note: clean(b.note, 600),
-    age: clean(b.age, 10),
+    // 生年月日は YYYY-MM-DD のみ許可（それ以外は空に）。
+    birthday: /^\d{4}-\d{2}-\d{2}$/.test(clean(b.birthday, 10))
+      ? clean(b.birthday, 10)
+      : "",
     gender: clean(b.gender, 20),
     phone: clean(b.phone, 40),
   };
