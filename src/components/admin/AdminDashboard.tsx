@@ -493,13 +493,6 @@ function ContactsTab({
             downloadCsv(`trypl-contacts-${todayStamp()}.csv`, contactsCsv(contacts))
           }
         />
-        <ClearAll
-          label="お問い合わせを全削除"
-          onClear={async () => {
-            await adminDelete("/api/admin/contacts", { all: true });
-            reload();
-          }}
-        />
       </div>
       {contacts.map((c) => (
         <motion.details
@@ -558,15 +551,6 @@ function ApplicationsTab({
     );
   return (
     <div className="space-y-3">
-      <div className="flex justify-end">
-        <ClearAll
-          label="応募を全削除"
-          onClear={async () => {
-            await adminDelete("/api/admin/applications", { all: true });
-            reload();
-          }}
-        />
-      </div>
       {apps.map((ap) => (
         <motion.details
           key={ap.id}
@@ -678,15 +662,6 @@ function MembersTab({
                   )
                 }
               />
-              <ClearAll
-                label="退会記録を全削除"
-                onClear={async () => {
-                  await adminDelete("/api/admin/members", {
-                    clear: "withdrawals",
-                  });
-                  reload();
-                }}
-              />
             </>
           ) : (
             <>
@@ -697,13 +672,6 @@ function MembersTab({
                     membersCsv(shown),
                   )
                 }
-              />
-              <ClearAll
-                label="メンバーを全削除"
-                onClear={async () => {
-                  await adminDelete("/api/admin/members", { clear: "members" });
-                  reload();
-                }}
               />
             </>
           )}
@@ -1104,15 +1072,6 @@ function InternshipsTab({
             <h3 className="text-sm font-semibold text-mute">
               管理画面で追加した募集（{admin.length}）
             </h3>
-            {admin.length > 0 && (
-              <ClearAll
-                label="追加分を全削除"
-                onClear={async () => {
-                  await adminDelete("/api/admin/internships", { all: true });
-                  reload();
-                }}
-              />
-            )}
           </div>
           {admin.length ? (
             <div className="mt-4 space-y-3">
@@ -1356,15 +1315,6 @@ function EventsTab({
         <Empty>まだイベントがありません。上のフォームから追加してください。</Empty>
       ) : (
         <div className="space-y-3">
-          <div className="flex justify-end">
-            <ClearAll
-              label="イベントを全削除"
-              onClear={async () => {
-                await adminDelete("/api/admin/events", { all: true });
-                reload();
-              }}
-            />
-          </div>
           {events.map((ev) => (
             <EventRow key={ev.id} ev={ev} reload={reload} />
           ))}
@@ -1574,15 +1524,6 @@ function PressTab({
         <Empty>まだニュースがありません。上のフォームから追加してください。</Empty>
       ) : (
         <div className="space-y-3">
-          <div className="flex justify-end">
-            <ClearAll
-              label="ニュースを全削除"
-              onClear={async () => {
-                await adminDelete("/api/admin/press", { all: true });
-                reload();
-              }}
-            />
-          </div>
           {press.map((p) => (
             <PressRow key={p.id} p={p} reload={reload} />
           ))}
