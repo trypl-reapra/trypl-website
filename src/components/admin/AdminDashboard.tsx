@@ -26,6 +26,7 @@ type Row = {
   compensation: string;
   summary: string;
   applyUrl: string;
+  companyUrl: string;
   hidden: boolean;
 };
 type Profile = {
@@ -123,6 +124,117 @@ async function adminDelete(url: string, body: unknown) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
+}
+
+/* ----------------------------------------------------------- CSV 出力 */
+function toCsv(rows: (string | number | null | undefined)[][]): string {
+  const esc = (v: string | number | null | undefined) => {
+    const s = v == null ? "" : String(v);
+    return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  return rows.map((r) => r.map(esc).join(",")).join("\r\n");
+}
+
+function downloadCsv(filename: string, csv: string) {
+  // Excel が UTF-8 を正しく読むよう BOM を付与。
+  const blob = new Blob(["﻿" + csv], {
+    type: "text/csv;charset=utf-8;",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function todayStamp(): string {
+  // YYYYMMDD（ファイル名用）。
+  const d = new Date();
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}`;
+}
+
+function contactsCsv(contacts: Contact[]): string {
+  const header = ["日時", "名前", "メール", "カテゴリ", "内容"];
+  const rows = contacts.map((c) => [
+    fmt(c.createdAt),
+    c.name,
+    c.email,
+    c.category,
+    c.message,
+  ]);
+  return toCsv([header, ...rows]);
+}
+
+function membersCsv(members: Member[]): string {
+  const header = [
+    "登録日時",
+    "氏名",
+    "ふりがな",
+    "表示名",
+    "メール",
+    "区分",
+    "所属",
+    "学部・学科",
+    "学年",
+    "誕生日",
+    "性別",
+    "電話",
+    "創設メンバー",
+    "凍結",
+    "プロバイダ",
+  ];
+  const rows = members.map((m) => {
+    const p = m.profile;
+    return [
+      fmt(m.createdAt),
+      p?.fullName ?? "",
+      p?.furigana ?? "",
+      m.name ?? "",
+      m.email,
+      p?.status ? STATUS_JP[p.status] ?? p.status : "",
+      p?.affiliation ?? "",
+      p?.department ?? "",
+      p?.grade ?? "",
+      p?.birthday ?? "",
+      p?.gender ?? "",
+      p?.phone ?? "",
+      m.founder ? "○" : "",
+      m.frozen ? "○" : "",
+      m.provider ?? "",
+    ];
+  });
+  return toCsv([header, ...rows]);
+}
+
+function withdrawalsCsv(ws: Withdrawal[]): string {
+  const header = ["退会日時", "氏名", "メール", "入会日", "プロフィール氏名"];
+  const rows = ws.map((w) => [
+    fmt(w.withdrawnAt),
+    w.name,
+    w.email,
+    fmt(w.memberSince),
+    w.profile?.fullName ?? "",
+  ]);
+  return toCsv([header, ...rows]);
+}
+
+function CsvButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-1.5 text-xs font-medium text-mute transition-colors hover:border-ink hover:text-ink"
+    >
+      <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden="true">
+        <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      CSVで出力
+    </button>
+  );
 }
 
 /** 画像ピッカー：デフォルト画像から選択 or 任意URL入力。 */
@@ -375,7 +487,12 @@ function ContactsTab({
     );
   return (
     <div className="space-y-3">
-      <div className="flex justify-end">
+      <div className="flex flex-wrap justify-end gap-2">
+        <CsvButton
+          onClick={() =>
+            downloadCsv(`trypl-contacts-${todayStamp()}.csv`, contactsCsv(contacts))
+          }
+        />
         <ClearAll
           label="お問い合わせを全削除"
           onClear={async () => {
@@ -550,23 +667,45 @@ function MembersTab({
             {label}
           </button>
         ))}
-        <span className="ml-auto">
+        <span className="ml-auto flex flex-wrap gap-2">
           {filter === "withdrawn" ? (
-            <ClearAll
-              label="退会記録を全削除"
-              onClear={async () => {
-                await adminDelete("/api/admin/members", { clear: "withdrawals" });
-                reload();
-              }}
-            />
+            <>
+              <CsvButton
+                onClick={() =>
+                  downloadCsv(
+                    `trypl-withdrawals-${todayStamp()}.csv`,
+                    withdrawalsCsv(withdrawals),
+                  )
+                }
+              />
+              <ClearAll
+                label="退会記録を全削除"
+                onClear={async () => {
+                  await adminDelete("/api/admin/members", {
+                    clear: "withdrawals",
+                  });
+                  reload();
+                }}
+              />
+            </>
           ) : (
-            <ClearAll
-              label="メンバーを全削除"
-              onClear={async () => {
-                await adminDelete("/api/admin/members", { clear: "members" });
-                reload();
-              }}
-            />
+            <>
+              <CsvButton
+                onClick={() =>
+                  downloadCsv(
+                    `trypl-members-${todayStamp()}.csv`,
+                    membersCsv(shown),
+                  )
+                }
+              />
+              <ClearAll
+                label="メンバーを全削除"
+                onClear={async () => {
+                  await adminDelete("/api/admin/members", { clear: "members" });
+                  reload();
+                }}
+              />
+            </>
           )}
         </span>
       </div>
@@ -806,6 +945,7 @@ function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
       compensation: fd.get("compensation"),
       summary: fd.get("summary"),
       applyUrl: fd.get("applyUrl"),
+      companyUrl: fd.get("companyUrl"),
     });
     setBusy(false);
     setEditing(false);
@@ -835,7 +975,8 @@ function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
           <input name="title" defaultValue={row.title} placeholder="タイトル" className={inputCls} />
           <input name="compensation" defaultValue={row.compensation} placeholder="報酬" className={inputCls} />
           <textarea name="summary" defaultValue={row.summary} rows={3} placeholder="概要" className={inputCls + " resize-y"} />
-          <input name="applyUrl" defaultValue={row.applyUrl} placeholder="応募URL" className={inputCls} />
+          <input name="applyUrl" defaultValue={row.applyUrl} placeholder="応募URL（空欄なら社内応募。Wantedly等のURLで外部遷移）" className={inputCls} />
+          <input name="companyUrl" defaultValue={row.companyUrl} placeholder="会社HPのURL（任意）" className={inputCls} />
           <div className="flex gap-3 pt-1 text-sm">
             <button type="submit" disabled={busy} className="rounded-full bg-ink px-5 py-2 font-medium text-paper disabled:opacity-60">
               保存
@@ -864,6 +1005,11 @@ function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
           <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-mute">
             {row.location && <span>{row.location}</span>}
             {row.compensation && <span>{row.compensation}</span>}
+            <span>
+              応募:{" "}
+              {row.applyUrl && row.applyUrl !== "#" ? "外部URL" : "社内応募"}
+            </span>
+            {row.companyUrl && <span>会社HP設定済み</span>}
           </div>
           <div className="mt-4 flex flex-wrap gap-4 border-t border-line pt-4 text-sm">
             <button type="button" disabled={busy} onClick={toggle} className="font-medium text-ink hover:underline">
@@ -912,6 +1058,7 @@ function InternshipsTab({
         compensation: fd.get("compensation"),
         summary: fd.get("summary"),
         applyUrl: fd.get("applyUrl"),
+        companyUrl: fd.get("companyUrl"),
         headerImage,
       }),
     });
@@ -940,7 +1087,8 @@ function InternshipsTab({
             <input name="compensation" placeholder="報酬" className={inputCls} />
           </div>
           <textarea name="summary" rows={3} placeholder="概要" className={inputCls + " resize-y"} />
-          <input name="applyUrl" placeholder="応募URL（mailto: も可）" className={inputCls} />
+          <input name="applyUrl" placeholder="応募URL（空欄なら社内応募。Wantedly等で外部遷移）" className={inputCls} />
+          <input name="companyUrl" placeholder="会社HPのURL（任意）" className={inputCls} />
 
           <ImagePicker value={headerImage} onChange={setHeaderImage} />
         </div>

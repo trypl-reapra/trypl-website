@@ -140,7 +140,22 @@ export default function InternshipDetailPanel({
                   </div>
                 ))}
               </dl>
-              <ApplyButton slug={i.slug} applyLabel={i.applyLabel} />
+              {i.companyUrl && (
+                <a
+                  href={i.companyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 flex items-center justify-between gap-2 rounded-xl border border-line px-4 py-3 text-sm font-medium transition-colors hover:border-ink"
+                >
+                  <span>会社ホームページ</span>
+                  <span aria-hidden>↗</span>
+                </a>
+              )}
+              <ApplyButton
+                slug={i.slug}
+                applyLabel={i.applyLabel}
+                applyUrl={i.applyUrl}
+              />
             </div>
           </aside>
         </div>

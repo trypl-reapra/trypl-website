@@ -1,17 +1,19 @@
 /**
  * インターン募集要項データ。
  * ───────────────────────────────────────────────────────────
- * ⚠️ 「株式会社ジコウ」は実際の募集です（applyUrl: mailto:trypl@reapra.sg）。
- *    それ以外は「募集要項の例」です。企業名（company）と業種（companyTag）は
- *    REAPRA Japan の実在の投資先企業（https://jp.reapra.com/investment/ 掲載）を
- *    参照していますが、職務内容・条件・待遇は TrypL が作成したサンプルで、各社の
- *    公式募集ではありません。実際に募集する際は各社と調整のうえ差し替え、
- *    applyUrl に Wantedly / 応募フォーム等の実 URL を設定してください。
+ * これらは実在の募集です。応募は各社の外部募集ページ（HERP / Wantedly）で
+ * 受け付けるため、applyUrl にその URL を設定しています。
+ *   - 株式会社ジコウ（HERP）       : https://herp.careers/careers/companies/jicou/jobs
+ *   - ITecMarin株式会社（Wantedly）: https://www.wantedly.com/companies/company_5382314
+ * applyUrl が外部 URL の募集は「応募する」で直接そのページへ遷移します。
+ * applyUrl を空にすると、これまで通り社内（ダッシュボード内）応募フローになります。
  * ───────────────────────────────────────────────────────────
  * 新しい募集を追加する手順:
  *   1. 下の配列に1件オブジェクトを追加
  *   2. slug は URL になるので一意・英数字ハイフンで
  *   3. category は CATEGORIES のキーから選ぶ
+ *   4. 応募を外部で受けるなら applyUrl に URL を、社内応募なら空文字を設定
+ *   5. companyUrl に会社HPを設定（募集ページに表示される）
  */
 
 export type CategoryKey =
@@ -63,8 +65,11 @@ export type Internship = {
   requirements: string[];
   welcome: string[];
   tags: string[];
+  /** 応募URL。外部募集ページ（HERP / Wantedly 等）なら直接遷移。空なら社内応募フロー。 */
   applyUrl: string;
   applyLabel: string;
+  /** 会社ホームページ（募集ページに表示）。 */
+  companyUrl?: string;
   /** 管理画面で設定したヘッダー画像（未設定なら headerImageFor で自動割当）。 */
   headerImage?: string;
   featured?: boolean;
@@ -72,320 +77,358 @@ export type Internship = {
   postedAt: string;
 };
 
+const JICOU = {
+  company: "株式会社ジコウ",
+  companyUrl: "https://jicou.jp/",
+} as const;
+
+const ITECMARIN = {
+  company: "ITecMarin株式会社",
+  companyUrl: "https://www.itecmarin.com/",
+} as const;
+
 export const internships: Internship[] = [
+  /* ───────────── 株式会社ジコウ（応募：HERP） ───────────── */
   {
-    slug: "trypl-community-growth",
-    company: "REAPRA / TrypL",
-    companyTag: "学生コミュニティ運営",
-    title: "コミュニティ・グロース インターン",
-    category: "community",
-    location: "福岡 / リモート",
+    slug: "jicou-ai-marketing",
+    ...JICOU,
+    companyTag: "科学機器業界に特化した人材エージェント",
+    title: "AI×マーケティングインターン｜新たなキャリアの第一歩を届ける",
+    category: "marketing",
+    location: "福岡（唐人町オフィス）/ 一部リモート",
     workStyle: "hybrid",
-    commitment: "週2〜3日",
-    duration: "6か月〜",
-    compensation: "時給制（応相談）",
-    summary:
-      "TrypL そのものを一緒に育てる中核ポジション。SNS発信・イベント企画・オンボーディング設計まで、コミュニティづくりを実践から学ぶ。",
-    about:
-      "TrypL は REAPRA 発の学生向け実践型コミュニティです。立ち上げフェーズの今、発信・運営・仕組みづくりを共に担うメンバーを募集しています。",
-    responsibilities: [
-      "Instagram / X / TikTok などの企画・投稿・分析",
-      "説明会やイベントの企画・運営",
-      "参加者のオンボーディングと継続支援の設計",
-      "学びや気づきの言語化・ドキュメント化",
-    ],
-    requirements: [
-      "曖昧な状況でもまず動いてみられること",
-      "自分の感情や学びを言葉にして共有できること",
-      "学生コミュニティづくりに当事者として関わりたいこと",
-    ],
-    welcome: [
-      "SNS運用・コンテンツ制作の経験",
-      "イベント企画・運営の経験",
-      "九州大学を中心とした学生ネットワーク",
-    ],
-    tags: ["コミュニティ", "SNS", "立ち上げ", "福岡"],
-    applyUrl: "#",
-    applyLabel: "応募する",
-    featured: true,
-    postedAt: "2026-06-20",
-  },
-  {
-    slug: "reapra-industry-research",
-    company: "REAPRA",
-    companyTag: "産業創造の研究実践",
-    title: "産業創造リサーチ・インターン",
-    category: "research",
-    location: "東京 / リモート",
-    workStyle: "hybrid",
-    commitment: "週2日〜",
-    duration: "6か月〜",
-    compensation: "時給制（応相談）",
-    summary:
-      "長期時間軸で社会課題と産業を捉えるREAPRAの研究実践に伴走。一次情報にあたり、仮説を立て、検証する一連のプロセスを体験する。",
-    about:
-      "REAPRA は「産業創造の研究実践」をミッションに、世代を跨ぐ長期時間軸で社会課題を解決する産業とリーダーを育んでいます。",
-    responsibilities: [
-      "業界・市場・社会課題に関するデスクリサーチ",
-      "有識者・実務家へのインタビュー設計と同席",
-      "リサーチ結果の構造化とドキュメント化",
-      "定例ミーティングでの議論への参加",
-    ],
-    requirements: [
-      "長期の時間軸でものごとを考えることに関心があること",
-      "一次情報を地道に集め、構造化できること",
-      "知的な探究を楽しめること",
-    ],
-    welcome: [
-      "特定の社会課題・産業への強い関心",
-      "英語でのリサーチ経験",
-      "定量・定性の両面から分析した経験",
-    ],
-    tags: ["リサーチ", "産業創造", "長期時間軸"],
-    applyUrl: "#",
-    applyLabel: "応募する",
-    featured: true,
-    postedAt: "2026-06-18",
-  },
-  {
-    slug: "jicou-ai-business",
-    company: "株式会社ジコウ",
-    companyTag: "生成AI × 仕事を通じた学び",
-    title: "AI × ビジネス インターン（4職種）",
-    category: "business",
-    location: "福岡",
-    workStyle: "onsite",
-    commitment: "応相談",
+    commitment: "週15時間〜（週1〜2日出社）",
     duration: "応相談",
-    compensation: "時給 1,150円〜",
+    compensation: "時給1,150円〜（研修時1,100円）",
     summary:
-      "生成AIを活用しながら実際のビジネスに携わる、4職種同時募集。やりたいことがまだ決まっていなくても、現場に飛び込みながら自分の興味や強みを見つけられる。",
+      "科学機器業界に特化した人材エージェントの集客を、生成AIを活用したマーケティングで担う。リサーチからコンテンツ制作、分析・改善まで一連を実践する。",
     about:
-      "株式会社ジコウ（REAPRA 投資先）では現在、4つの職種でインターンを募集しています。どの職種も、生成AIを活用しながら実際のビジネスに携われるのが特徴です。マーケティング、営業、事業開発、経営企画など、実際の現場に飛び込みながら自分の興味や強みを見つけていくことができます。",
+      "株式会社ジコウ（REAPRA 投資先）は、科学機器業界に特化した人材エージェント事業などを通じて、「働く大人の創意工夫」に貢献することを目指すスタートアップです。少人数のチームで、生成AIを実務にフル活用しながら事業をつくっています。",
     responsibilities: [
-      "AI × マーケティング — 生成AIを活用した集客・コンテンツの実践",
-      "AI × 事業開発 — 新規事業の仮説検証とグロース",
-      "AI × 法人営業 — 顧客開拓から受注までの営業実践",
-      "AI × 経営企画 — 数字に基づく経営の意思決定サポート",
+      "Gemini・Claude 等を活用した SNS・ブログコンテンツの企画・制作",
+      "SEO キーワード調査と記事構成の設計",
+      "表示回数・流入・登録率などの KPI 計測",
+      "データ分析にもとづく改善提案と実行",
     ],
     requirements: [
       "「学生のうちに成長したい」という意欲があること",
-      "「ビジネスの現場を経験してみたい」と思えること",
-      "「AIを実務で使ってみたい」という関心があること",
+      "基本的な PC 操作ができ、自走して学べること",
+      "AIを実務で使ってみたいという関心があること",
     ],
     welcome: [
-      "やりたいことがまだ決まっていなくても歓迎",
-      "福岡で現場に通えること",
+      "SNS運用・コンテンツ制作の経験",
+      "マーケティング・SEO への関心",
+      "福岡で週1〜2日通えること",
     ],
-    tags: ["生成AI", "マーケティング", "事業開発", "営業", "経営企画", "福岡"],
-    applyUrl: "mailto:trypl@reapra.sg",
+    tags: ["生成AI", "マーケティング", "SEO", "福岡"],
+    applyUrl: "https://herp.careers/careers/companies/jicou/jobs/I5zx3ePdsvoZ",
+    applyLabel: "応募する",
+    featured: true,
+    postedAt: "2026-06-29",
+  },
+  {
+    slug: "jicou-ai-bizdev",
+    ...JICOU,
+    companyTag: "科学機器業界に特化した人材エージェント",
+    title: "AI×事業開発インターン｜未開拓市場を見つけ出す",
+    category: "business",
+    location: "福岡（唐人町オフィス）/ 東京 / 一部リモート",
+    workStyle: "hybrid",
+    commitment: "週15時間〜（週1〜2日出社）",
+    duration: "応相談",
+    compensation: "時給1,150円〜（研修時1,100円）",
+    summary:
+      "生成AIを使って未開拓市場を発掘する事業開発インターン。市場調査・仮説立案・検証インタビューから経営層への提案まで、新規事業の立ち上げを実地で経験する。",
+    about:
+      "株式会社ジコウ（REAPRA 投資先）は、科学機器業界に特化した人材エージェント事業などを展開するスタートアップ。生成AIを実務に取り入れながら、未開拓の市場を切り拓いています。",
+    responsibilities: [
+      "Gemini・Claude 等を活用した市場・競合のリサーチ",
+      "ターゲット業界・企業へのアプローチ設計",
+      "関係者インタビューによる仮説検証",
+      "リサーチ結果の構造化と経営層への提案",
+    ],
+    requirements: [
+      "基本的な PC 操作と論理的思考",
+      "自走して学び、チームで動けること",
+      "曖昧な状況でもまず動いてみられること",
+    ],
+    welcome: [
+      "AIツールの利用経験",
+      "事業開発・新規事業への関心",
+      "4週間のオンボーディングで基礎から学べます",
+    ],
+    tags: ["生成AI", "事業開発", "新規事業", "福岡", "東京"],
+    applyUrl: "https://herp.careers/careers/companies/jicou/jobs/wayIOxKhj8Rx",
+    applyLabel: "応募する",
+    featured: true,
+    postedAt: "2026-06-29",
+  },
+  {
+    slug: "jicou-ai-sales",
+    ...JICOU,
+    companyTag: "科学機器業界に特化した人材エージェント",
+    title: "AI×法人営業インターン｜科学機器業界の採用を変える",
+    category: "business",
+    location: "福岡（唐人町オフィス）/ 東京 / 一部リモート",
+    workStyle: "hybrid",
+    commitment: "週15時間〜（週1〜2日出社）",
+    duration: "応相談",
+    compensation: "時給1,150円〜（研修時1,100円）",
+    summary:
+      "科学機器業界の採用課題に向き合う法人営業インターン。生成AIでターゲティングや訴求を磨きながら、顧客開拓から提案までの営業を実践する。",
+    about:
+      "株式会社ジコウ（REAPRA 投資先）は、科学機器業界に特化した人材エージェント。メーカー・商社・研究機関の採用課題に、生成AIを活用しながら向き合っています。",
+    responsibilities: [
+      "AIを使ったターゲットリスト・営業文面の作成",
+      "電話・メール・フォームでの新規開拓",
+      "採用課題・人材ニーズのヒアリング",
+      "自社サービスの提案と商談サポート",
+    ],
+    requirements: [
+      "ビジネスコミュニケーションに前向きであること",
+      "断られても粘り強く取り組めること",
+      "主体的に行動できること",
+    ],
+    welcome: [
+      "営業・接客の経験",
+      "AIツールの利用経験",
+      "週15時間以上・週1〜2日出社できること",
+    ],
+    tags: ["生成AI", "法人営業", "採用", "福岡", "東京"],
+    applyUrl: "https://herp.careers/careers/companies/jicou/jobs/GfqJkhADJ3sI",
+    applyLabel: "応募する",
+    featured: true,
+    postedAt: "2026-06-28",
+  },
+  {
+    slug: "jicou-ai-strategy",
+    ...JICOU,
+    companyTag: "科学機器業界に特化した人材エージェント",
+    title: "AI×経営企画インターン｜データで経営を動かす",
+    category: "data",
+    location: "福岡（大手門オフィス）/ 東京 / 一部リモート",
+    workStyle: "hybrid",
+    commitment: "週15時間〜（週1〜2日出社）",
+    duration: "応相談",
+    compensation: "時給1,150円〜（研修時1,100円）",
+    summary:
+      "経営の「右腕」として、データ分析と生成AIで意思決定を支える経営企画インターン。数字を可視化し、課題を見つけ、改善を提案する。",
+    about:
+      "株式会社ジコウ（REAPRA 投資先）は、科学機器業界に特化した人材エージェント事業を展開する設立5年目のスタートアップ。生成AIを使って、データドリブンな経営に挑戦しています。",
+    responsibilities: [
+      "売上・コスト・KPI を可視化するダッシュボード構築",
+      "Gemini・Claude 等を活用した社内データの分析",
+      "生産性指標やレポートの作成",
+      "データにもとづく課題発見と改善提案",
+    ],
+    requirements: [
+      "基本的な PC 操作と論理的思考",
+      "自走して学べること",
+      "数字を扱うことに抵抗がないこと",
+    ],
+    welcome: [
+      "データ分析・スプレッドシートの経験（未経験も歓迎）",
+      "経営・事業づくりへの関心",
+    ],
+    tags: ["生成AI", "経営企画", "データ", "福岡", "東京"],
+    applyUrl: "https://herp.careers/careers/companies/jicou/jobs/iGU5ULFGeDyS",
+    applyLabel: "応募する",
+    featured: true,
+    postedAt: "2026-06-28",
+  },
+  {
+    slug: "jicou-open-position",
+    ...JICOU,
+    companyTag: "科学機器業界に特化した人材エージェント",
+    title: "オープンポジション｜ビジネス職・マーケティング職・企画職",
+    category: "business",
+    location: "福岡 / 一部リモート",
+    workStyle: "hybrid",
+    commitment: "正社員（フルタイム）",
+    duration: "—",
+    compensation: "要相談（スキル・経験による）",
+    summary:
+      "事業開発・経営企画・営業・マーケティングなど、経歴や興味に応じて柔軟にポジションを決める正社員のオープンポジション。少人数チームで事業づくりに携わる。",
+    about:
+      "株式会社ジコウ（REAPRA 投資先）は、科学に強みを持つ人のキャリアを支援するスタートアップ。「働く大人の創意工夫に貢献する」というビジョンに共感し、試行錯誤を楽しめる仲間を募集しています。",
+    responsibilities: [
+      "科学機器業界の採用・組織課題の解決",
+      "少人数チームでの事業改善・新規事業開発",
+      "マーケティング・採用・事業拡大の各施策への参画",
+      "コアタイム（11:00-17:00）でリモートと出社を併用",
+    ],
+    requirements: [
+      "会社のビジョンへの共感",
+      "反復的な課題解決を楽しめること",
+      "学び続ける好奇心",
+    ],
+    welcome: ["スキルのギャップは選考のなかで相談可能です"],
+    tags: ["正社員", "事業開発", "マーケティング", "企画", "福岡"],
+    applyUrl: "https://herp.careers/careers/companies/jicou/jobs/tuSjaXVGGFTz",
+    applyLabel: "応募する",
+    postedAt: "2026-06-27",
+  },
+  {
+    slug: "jicou-career-supporter",
+    ...JICOU,
+    companyTag: "科学機器業界に特化した人材エージェント",
+    title: "キャリアサポーター（キャリアアドバイザー / リクルーティングアドバイザー）",
+    category: "business",
+    location: "福岡県 / 一部リモート",
+    workStyle: "hybrid",
+    commitment: "正社員（フルタイム）",
+    duration: "—",
+    compensation: "年収360〜600万円（賞与年1回・昇給年2回）",
+    summary:
+      "科学機器業界に特化した人材紹介で、求職者と企業の双方を支えるキャリアサポーター。業界の「人事部」として、採用とキャリアの伴走を担う。",
+    about:
+      "株式会社ジコウ（REAPRA 投資先）は、科学機器業界に特化した人材エージェント。クライアントの「人事部」となり、業界の成長と働く人の充実を支えることを目指しています。",
+    responsibilities: [
+      "求職者面談・キャリア相談・求人マッチング",
+      "求人作成・スカウトなどの採用戦略の立案",
+      "応募書類・面接準備のサポート",
+      "採用プロセスの最適化と入社後の定着支援",
+    ],
+    requirements: [
+      "人と向き合い、課題を丁寧に聞けること",
+      "業界・キャリア支援に関心があること",
+    ],
+    welcome: ["人材・採用領域の経験", "法人・個人の双方に関わった経験"],
+    tags: ["正社員", "人材", "キャリア", "採用", "福岡"],
+    applyUrl: "https://herp.careers/careers/companies/jicou/jobs/qojC9LgUL83O",
+    applyLabel: "応募する",
+    postedAt: "2026-06-27",
+  },
+  {
+    slug: "jicou-casual-meeting",
+    ...JICOU,
+    companyTag: "科学機器業界に特化した人材エージェント",
+    title: "カジュアル面談申し込みフォーム",
+    category: "business",
+    location: "オンライン",
+    workStyle: "remote",
+    commitment: "—",
+    duration: "—",
+    compensation: "—",
+    summary:
+      "選考の前に、まずは気軽に話してみたい方へ。会社の雰囲気や事業、働き方について、カジュアルにお話しできる面談の申し込み窓口です。",
+    about:
+      "株式会社ジコウ（REAPRA 投資先）は、科学機器業界の人材エージェント事業などを展開するスタートアップ。応募の前に、会社のことを知ってから判断したい方のためのカジュアル面談を用意しています。",
+    responsibilities: [
+      "会社・事業・カルチャーについての対話",
+      "ビジネス・営業・マーケティング・企画などの仕事の紹介",
+      "選考前のすり合わせ・疑問の解消",
+    ],
+    requirements: [
+      "キャリアに迷っている / 興味がある方",
+      "スタートアップ環境に関心がある方",
+    ],
+    welcome: [],
+    tags: ["カジュアル面談", "オンライン", "福岡"],
+    applyUrl: "https://herp.careers/careers/companies/jicou/jobs/9s-fsYidoKd3",
+    applyLabel: "カジュアル面談を申し込む",
+    postedAt: "2026-06-26",
+  },
+  {
+    slug: "jicou-career-meeting",
+    ...JICOU,
+    companyTag: "科学機器業界に特化した人材エージェント",
+    title: "キャリア面談（代表との壁打ち）",
+    category: "business",
+    location: "オンライン",
+    workStyle: "remote",
+    commitment: "—",
+    duration: "—",
+    compensation: "—",
+    summary:
+      "代表と、キャリアや働き方について「壁打ち」できる面談。採用を前提としない、これからのキャリアを一緒に考える対話の場です。",
+    about:
+      "株式会社ジコウ（REAPRA 投資先）は2021年設立の少人数スタートアップ。働く大人がキャリアを通じて充実できることを目指しています。採用を保証するものではなく、キャリアについて率直に話す機会です。",
+    responsibilities: [
+      "代表とのキャリアについての対話・壁打ち",
+      "働くこと・キャリアの築き方を考える",
+    ],
+    requirements: [
+      "自分のキャリアを真剣に考えている方",
+      "人のキャリア支援や「働く」ことに関心がある方",
+    ],
+    welcome: [],
+    tags: ["キャリア面談", "オンライン", "福岡"],
+    applyUrl: "https://herp.careers/careers/companies/jicou/jobs/nuke5aaJu4XS",
+    applyLabel: "キャリア面談を申し込む",
+    postedAt: "2026-06-26",
+  },
+
+  /* ───────────── ITecMarin株式会社（応募：Wantedly） ───────────── */
+  {
+    slug: "itecmarin-sales-intern-intro",
+    ...ITECMARIN,
+    companyTag: "船 × IT（海運業界の変革）",
+    title: "学生セールスインターン（フルリモート）｜1から学ぶ！船・海運メディア事業",
+    category: "business",
+    location: "フルリモート（福岡拠点）",
+    workStyle: "remote",
+    commitment: "応相談",
+    duration: "応相談",
+    compensation: "応相談",
+    summary:
+      "船・海運業界をITで変革するメディア事業で、営業を1から学べる学生インターン。問い合わせ対応から新規開拓、SNS運用、動画制作までフルリモートで挑戦する。",
+    about:
+      "ITecMarin株式会社は「海運 × IT」で、高齢化の進む海運業界の変革に取り組む REAPRA 関連のスタートアップ。船員採用支援やノウハウのデジタル化に取り組み、4年連続で前年比200%以上の成長を続けています。フルリモート体制です。",
+    responsibilities: [
+      "顧客の問い合わせ対応と新規開拓・営業戦略の立案",
+      "SNS（X・Facebook・YouTube・TikTok）運用とチャンネル拡大",
+      "YouTube・TikTok 向けの動画・コンテンツ制作",
+      "データ分析にもとづく施策立案",
+      "海事関係者へのインタビュー・連携",
+    ],
+    requirements: [
+      "成長意欲・学習意欲が高いこと",
+      "計画より実行を重視できる行動力",
+      "誠実に取り組めること",
+    ],
+    welcome: ["海運・業界変革への関心", "週次フィードバックと動画研修でサポートします"],
+    tags: ["フルリモート", "営業", "SNS", "海運", "メディア"],
+    applyUrl: "https://www.wantedly.com/projects/2362119",
     applyLabel: "応募する",
     featured: true,
     postedAt: "2026-06-25",
   },
   {
-    slug: "yolot-business-dev",
-    company: "YOLOT",
-    companyTag: "高級宿・ヴィラ予約プラットフォーム",
-    title: "事業開発・サプライ開拓インターン",
+    slug: "itecmarin-sales-intern-growth",
+    ...ITECMARIN,
+    companyTag: "船 × IT（海運業界の変革）",
+    title: "学生セールスインターン（フルリモート）｜業界変革！船・海運メディア事業で営業を学ぶ",
     category: "business",
-    location: "東京 / リモート",
-    workStyle: "hybrid",
-    commitment: "週3日〜",
-    duration: "6か月〜",
-    compensation: "時給1,400円〜（応相談）",
-    summary:
-      "一棟貸しの宿・ヴィラを掲載へつなぐサプライ開拓と、宿泊体験のUX改善。受注までの距離をファネルで捉える事業開発を、当事者として経験する。",
-    about:
-      "YOLOT（ヨロット）は、特別な一日のための高級宿・ヴィラを集めた予約プラットフォームを運営する REAPRA 投資先。供給（宿）と需要（旅行者）の両面を地道に育てるマーケットプレイス事業です。",
-    responsibilities: [
-      "掲載候補となる宿・ヴィラのリサーチとリスト化",
-      "オーナーへの初回コンタクト・掲載交渉のサポート",
-      "掲載ページ（写真・文言）の改善提案",
-      "問い合わせ〜予約までのファネルの定量分析",
-    ],
-    requirements: [
-      "人に会い、現場（宿）に足を運ぶことを厭わないこと",
-      "数字でものごとを捉えようとする姿勢",
-      "曖昧な状況でもまず動いてみられること",
-    ],
-    welcome: [
-      "旅行・ホスピタリティ・地域活性への関心",
-      "法人開拓・インサイドセールスの経験",
-      "スプレッドシートでの分析経験",
-    ],
-    tags: ["事業開発", "マーケットプレイス", "旅行", "営業"],
-    applyUrl: "#",
-    applyLabel: "応募する",
-    featured: true,
-    postedAt: "2026-06-16",
-  },
-  {
-    slug: "coten-history-research",
-    company: "COTEN",
-    companyTag: "世界史データベース",
-    title: "歴史データベース・リサーチインターン",
-    category: "research",
-    location: "福岡 / リモート",
+    location: "フルリモート（福岡拠点）",
     workStyle: "remote",
-    commitment: "週2日〜",
-    duration: "6か月〜",
-    compensation: "時給1,300円〜（応相談）",
+    commitment: "応相談",
+    duration: "応相談",
+    compensation: "応相談",
     summary:
-      "人物・出来事を構造化し、世界史を横断検索できるデータベースを育てる。一次情報にあたり、仮説を立て、検証する知的探究を実践する。",
+      "海運業界をITで変える成長スタートアップで、PDCAを回して「正解を探し当てる力」を磨く学生セールスインターン。代表（元・総合商社）のメンタリングを受けながら実践する。",
     about:
-      "COTEN（コテン）は、世界中の歴史をメタデータ化し、時代や地域を越えて人物・事象を比較できるデータベースの構築に挑む REAPRA 投資先。「歴史を学問の世界から解放する」ことを目指しています。",
+      "ITecMarin株式会社は「海運 × IT」で、船員採用支援・ノウハウのデジタル化・労働環境の改善に取り組む REAPRA 関連のスタートアップ。4年連続で前年比200%以上の成長を続け、フルリモートで事業を運営しています。",
     responsibilities: [
-      "歴史上の人物・出来事に関する文献リサーチ",
-      "情報の構造化・データベースへの入力と検証",
-      "出典の確認とファクトチェック",
-      "編集方針のドキュメント化",
+      "海運採用ソリューションの問い合わせ対応・新規開拓",
+      "SNS運用でチャンネルを1万人から10万人へ拡大",
+      "海事教育コンテンツの動画制作",
+      "データ分析とキャンペーン戦略の立案",
+      "船員・海事関係者とのコミュニケーション",
     ],
     requirements: [
-      "歴史・人文知への強い関心",
-      "一次情報を地道に集め、構造化できること",
-      "正確さと根気を要する作業を楽しめること",
+      "成長意欲が高く、自ら動けること",
+      "試行錯誤（PDCA）を楽しめること",
+      "誠実さと素直さ",
     ],
     welcome: [
-      "歴史学・社会科学の専攻またはそれに準ずる関心",
-      "英語など多言語での文献読解",
-      "Notion / スプレッドシートでの情報整理経験",
+      "代表（元・三井物産／7年）のメンタリングを受けられます",
+      "週次フィードバックとフルリモートのサポート体制",
     ],
-    tags: ["リサーチ", "歴史", "データベース", "リモート"],
-    applyUrl: "#",
+    tags: ["フルリモート", "営業", "PDCA", "海運", "スタートアップ"],
+    applyUrl: "https://www.wantedly.com/projects/2098771",
     applyLabel: "応募する",
-    postedAt: "2026-06-14",
-  },
-  {
-    slug: "agrimedia-field-marketing",
-    company: "AGRIMEDIA",
-    companyTag: "都市型体験農園「シェア畑」",
-    title: "体験農園コミュニティ・マーケティングインターン",
-    category: "marketing",
-    location: "首都圏 / 現地 + リモート",
-    workStyle: "hybrid",
-    commitment: "週2〜3日",
-    duration: "3か月〜",
-    compensation: "時給1,250円〜 + 交通費",
-    summary:
-      "手ぶらで通える貸し農園の集客と、利用者コミュニティづくり。届けたい相手（誰に）と価値（何を）を磨きながら、現場で伝わる施策を試す。",
-    about:
-      "AGRIMEDIA（アグリメディア）は、サポート付き貸し農園「シェア畑」などを運営し、都市の遊休農地と「土に触れたい人」をつなぐ REAPRA 投資先。農と都市生活の距離を縮める事業です。",
-    responsibilities: [
-      "農園見学会・体験イベントの企画と現地運営",
-      "SNS・チラシ・Web での集客コンテンツ制作",
-      "申込〜入会までの導線の改善提案",
-      "利用者へのヒアリングと声の整理",
-    ],
-    requirements: [
-      "現場に出向くフットワークの軽さ",
-      "読み手・参加者の立場で考えられること",
-      "食・農・地域・自然への関心",
-    ],
-    welcome: ["SNS運用やイベント運営の経験", "デザインツール（Canva/Figma）の経験"],
-    tags: ["マーケティング", "コミュニティ", "農業", "現場"],
-    applyUrl: "#",
-    applyLabel: "応募する",
-    postedAt: "2026-06-12",
-  },
-  {
-    slug: "foodison-ops-data",
-    company: "FOODISON",
-    companyTag: "水産流通プラットフォーム「魚ポチ」",
-    title: "水産流通オペレーション データインターン",
-    category: "data",
-    location: "東京 / ハイブリッド",
-    workStyle: "hybrid",
-    commitment: "週2日〜",
-    duration: "3か月〜",
-    compensation: "時給1,400円〜",
-    summary:
-      "飲食店向け鮮魚EC「魚ポチ」の受発注データを読み解き、現場のムダを見つけて改善提案へ。地に足のついたデータ活用を実践する。",
-    about:
-      "FOODISON（フーディソン）は、飲食店向けの生鮮品EC「魚ポチ」などを通じて、旧来アナログだった水産物流通のIT化に取り組む REAPRA 投資先。鮮度と需給という難しい変数に向き合う事業です。",
-    responsibilities: [
-      "受発注・在庫データの集計と可視化",
-      "需給のボトルネック分析と改善提案",
-      "物流・仕入れ現場担当者との連携",
-      "分析結果のレポーティング",
-    ],
-    requirements: [
-      "数字を扱うことに抵抗がないこと",
-      "現場目線で考えられること",
-      "失敗を恐れず試行錯誤できること",
-    ],
-    welcome: ["SQL / スプレッドシートでの分析経験", "Python の基礎", "飲食・食領域への関心"],
-    tags: ["データ", "オペレーション", "水産", "EC"],
-    applyUrl: "#",
-    applyLabel: "応募する",
-    postedAt: "2026-06-10",
-  },
-  {
-    slug: "medup-healthcare-business",
-    company: "メダップ",
-    companyTag: "医療機関向け経営支援SaaS",
-    title: "医療DX 事業開発インターン",
-    category: "business",
-    location: "東京 / リモート",
-    workStyle: "remote",
-    commitment: "週3日〜",
-    duration: "6か月〜",
-    compensation: "時給1,400円〜",
-    summary:
-      "病院の地域連携・経営課題に向き合うSaaSの導入支援とカスタマーサクセス。顧客の現場に入り込み、課題をプロダクトへ接続する。",
-    about:
-      "メダップは、病院の地域医療連携や経営を支える SaaS を提供する REAPRA 投資先。医療という社会インフラの、見えづらいが本質的な課題に取り組んでいます。",
-    responsibilities: [
-      "導入病院へのオンボーディング支援のサポート",
-      "利用状況データの分析と活用提案",
-      "顧客インタビューと課題の構造化",
-      "プロダクトフィードバックの集約",
-    ],
-    requirements: [
-      "人と話し、相手の課題を丁寧に聞けること",
-      "数字でものごとを捉えようとする姿勢",
-      "医療・社会インフラへの関心",
-    ],
-    welcome: [
-      "法人向けカスタマーサクセス/営業の経験",
-      "BIツール・スプレッドシートでの分析経験",
-    ],
-    tags: ["事業開発", "医療", "SaaS", "リモート"],
-    applyUrl: "#",
-    applyLabel: "応募する",
-    postedAt: "2026-06-07",
-  },
-  {
-    slug: "rechroma-climate-research",
-    company: "リクロマ",
-    companyTag: "気候変動・カーボン市場",
-    title: "気候テック フィールドリサーチ・インターン",
-    category: "research",
-    location: "東京 / リモート + 現地",
-    workStyle: "hybrid",
-    commitment: "週2〜3日",
-    duration: "6か月〜",
-    compensation: "時給1,300円〜 + 交通費",
-    summary:
-      "企業のGHG（温室効果ガス）算定・脱炭素の社会実装に向けて、制度や現場の一次情報を集める。机上では見えない情報を、足で集める。",
-    about:
-      "リクロマは、企業の温室効果ガス算定支援やカーボンクレジットなど、気候変動対策の市場づくりに取り組む REAPRA 投資先。ルールが定まりきらない領域で、長い時間軸の社会課題に挑みます。",
-    responsibilities: [
-      "脱炭素・カーボン市場に関するデスクリサーチ",
-      "企業・有識者へのヒアリング設計と同席",
-      "制度・規制動向の整理とレポート作成",
-      "調査結果の構造化とドキュメント化",
-    ],
-    requirements: [
-      "気候・エネルギー・社会課題への関心",
-      "一次情報を地道に集め、構造化できること",
-      "曖昧で正解のない問いに向き合えること",
-    ],
-    welcome: ["英語でのリサーチ経験", "環境・サステナビリティ領域の学習経験"],
-    tags: ["リサーチ", "気候テック", "脱炭素", "制度"],
-    applyUrl: "#",
-    applyLabel: "応募する",
-    postedAt: "2026-06-05",
+    postedAt: "2026-06-24",
   },
 ];
 
@@ -427,15 +470,16 @@ const HEADER_POOL = [
 export const DEFAULT_HEADER_IMAGES = HEADER_POOL;
 
 const HEADER_BY_SLUG: Record<string, string> = {
-  "jicou-ai-business": "/media/image/internship/1.jpg",
-  "trypl-community-growth": "/media/image/internship/2.jpg",
-  "reapra-industry-research": "/media/image/internship/3.jpg",
-  "yolot-business-dev": "/media/image/internship/4.jpg",
-  "coten-history-research": "/media/image/internship/5.jpg",
-  "agrimedia-field-marketing": "/media/image/internship/6.jpg",
-  "foodison-ops-data": "/media/image/internship/7.jpg",
-  "medup-healthcare-business": "/media/image/internship/8.jpg",
-  "rechroma-climate-research": "/media/image/internship/9.jpg",
+  "jicou-ai-marketing": "/media/image/internship/1.jpg",
+  "jicou-ai-bizdev": "/media/image/internship/2.jpg",
+  "jicou-ai-sales": "/media/image/internship/3.jpg",
+  "jicou-ai-strategy": "/media/image/internship/4.jpg",
+  "jicou-open-position": "/media/image/internship/5.jpg",
+  "jicou-career-supporter": "/media/image/internship/6.jpg",
+  "jicou-casual-meeting": "/media/image/internship/7.jpg",
+  "jicou-career-meeting": "/media/image/internship/8.jpg",
+  "itecmarin-sales-intern-intro": "/media/image/internship/9.jpg",
+  "itecmarin-sales-intern-growth": "/media/image/internship/2.jpg",
 };
 
 /** スラッグから安定的にヘッダー画像を決める（未登録は文字列ハッシュでプールから）。 */

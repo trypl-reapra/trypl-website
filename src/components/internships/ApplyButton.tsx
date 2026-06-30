@@ -19,22 +19,50 @@ function Arrow() {
   );
 }
 
+/** 外部の応募ページ（Wantedly / HERP 等）か判定。"#" や空は社内応募。 */
+function isExternalApply(url: string): boolean {
+  const u = (url || "").trim();
+  return u !== "" && u !== "#" && /^(https?:|mailto:)/i.test(u);
+}
+
 /**
- * 募集ページは誰でも閲覧できるが、応募は会員限定。
- * - ログイン済み（会員） → そのまま応募リンク
- * - 未ログイン           → 会員登録（/members）へ誘導
+ * 募集ページの応募ボタン。
+ * - applyUrl が外部URL（Wantedly / HERP 等）→ そのページへ直接遷移（誰でも可）
+ * - applyUrl が空 / "#" → 会員限定の社内応募フロー
+ *     ・ログイン済み（会員） → そのまま応募リンク
+ *     ・未ログイン           → 会員登録（/members）へ誘導
  */
 export default function ApplyButton({
   slug,
   applyLabel,
+  applyUrl = "",
 }: {
   slug: string;
   applyLabel: string;
+  applyUrl?: string;
 }) {
   const { status } = useSession();
   const t = usePages().apply;
   const authed = status === "authenticated";
 
+  // 外部の応募ページが設定されていれば、そこへ直接遷移する。
+  if (isExternalApply(applyUrl)) {
+    return (
+      <>
+        <div className="mt-7">
+          <Magnetic className="w-full">
+            <Button href={applyUrl} size="lg" className="w-full">
+              {applyLabel}
+              <Arrow />
+            </Button>
+          </Magnetic>
+        </div>
+        <p className="mt-4 text-center text-xs text-mute">{t.externalNote}</p>
+      </>
+    );
+  }
+
+  // 社内応募フロー（応募はダッシュボードで管理）。
   return (
     <>
       <div className="mt-7">

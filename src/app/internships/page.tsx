@@ -40,8 +40,9 @@ export default async function InternshipsPage() {
     requirements: [],
     welcome: [],
     tags: [],
-    applyUrl: a.applyUrl || "#",
+    applyUrl: a.applyUrl || "",
     applyLabel: "応募する",
+    companyUrl: a.companyUrl,
     headerImage: a.headerImage,
     postedAt: a.createdAt.slice(0, 10),
     featured: false,
@@ -61,6 +62,7 @@ export default async function InternshipsPage() {
             compensation: ov.compensation ?? i.compensation,
             summary: ov.summary ?? i.summary,
             applyUrl: ov.applyUrl ?? i.applyUrl,
+            companyUrl: ov.companyUrl ?? i.companyUrl,
           }
         : i;
     });

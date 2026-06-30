@@ -10,11 +10,68 @@ import {
   WORK_STYLE_LABEL,
   getAllInternships,
   getInternship,
-  internships,
+  type Internship,
 } from "@/data/internships";
+import {
+  getOverrides,
+  listPublicAdminInternships,
+  type AdminInternship,
+} from "@/lib/store";
 
-export function generateStaticParams() {
-  return internships.map((i) => ({ slug: i.slug }));
+// 管理画面の上書き（応募URL・会社HP・非表示など）を反映するため都度描画。
+export const dynamic = "force-dynamic";
+
+/** 管理画面で追加した募集を募集詳細の形に変換。 */
+function mapAdmin(a: AdminInternship): Internship {
+  return {
+    slug: `admin-${a.id}`,
+    company: a.company,
+    companyTag: "インターン募集",
+    title: a.title,
+    category: "business",
+    location: a.location || "—",
+    workStyle: "remote",
+    commitment: "—",
+    duration: "—",
+    compensation: a.compensation || "応相談",
+    summary: a.summary || "",
+    about: a.summary || "",
+    responsibilities: [],
+    requirements: [],
+    welcome: [],
+    tags: [],
+    applyUrl: a.applyUrl || "",
+    applyLabel: "応募する",
+    companyUrl: a.companyUrl,
+    headerImage: a.headerImage,
+    postedAt: a.createdAt.slice(0, 10),
+    featured: false,
+  };
+}
+
+/** slug から募集を解決（コード募集は上書き適用、admin- は管理画面の追加分）。 */
+async function resolveInternship(slug: string): Promise<Internship | null> {
+  if (slug.startsWith("admin-")) {
+    const id = slug.slice("admin-".length);
+    const a = (await listPublicAdminInternships()).find((x) => x.id === id);
+    return a ? mapAdmin(a) : null;
+  }
+  const base = getInternship(slug);
+  if (!base) return null;
+  const ov = (await getOverrides())[slug];
+  if (ov?.hidden) return null;
+  return ov
+    ? {
+        ...base,
+        company: ov.company ?? base.company,
+        title: ov.title ?? base.title,
+        location: ov.location ?? base.location,
+        compensation: ov.compensation ?? base.compensation,
+        summary: ov.summary ?? base.summary,
+        applyUrl: ov.applyUrl ?? base.applyUrl,
+        companyUrl: ov.companyUrl ?? base.companyUrl,
+      }
+    : base;
 }
 
 export async function generateMetadata({
@@ -23,7 +80,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const i = getInternship(slug);
+  const i = await resolveInternship(slug);
   if (!i) return { title: "募集が見つかりません" };
   return {
     title: `${i.title}｜${i.company}`,
@@ -55,7 +112,7 @@ export default async function InternshipDetail({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const i = getInternship(slug);
+  const i = await resolveInternship(slug);
   if (!i) notFound();
 
   const others = getAllInternships()
@@ -129,6 +186,17 @@ export default async function InternshipDetail({
                 この企業・チームについて
               </h2>
               <p className="mt-5 leading-relaxed">{i.about}</p>
+              {i.companyUrl && (
+                <a
+                  href={i.companyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-ink link-underline"
+                >
+                  会社ホームページを見る
+                  <span aria-hidden>↗</span>
+                </a>
+              )}
             </div>
             <DetailList title="主な業務" items={i.responsibilities} />
             <DetailList title="求める人物像" items={i.requirements} />
@@ -160,7 +228,22 @@ export default async function InternshipDetail({
                     </div>
                   ))}
                 </dl>
-                <ApplyButton slug={i.slug} applyLabel={i.applyLabel} />
+                {i.companyUrl && (
+                  <a
+                    href={i.companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-5 flex items-center justify-between gap-2 rounded-xl border border-line px-4 py-3 text-sm font-medium transition-colors hover:border-ink"
+                  >
+                    <span>会社ホームページ</span>
+                    <span aria-hidden>↗</span>
+                  </a>
+                )}
+                <ApplyButton
+                  slug={i.slug}
+                  applyLabel={i.applyLabel}
+                  applyUrl={i.applyUrl}
+                />
               </div>
             </div>
           </aside>

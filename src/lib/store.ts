@@ -28,7 +28,10 @@ export type AdminInternship = {
   location: string;
   compensation: string;
   summary: string;
+  /** 応募URL。空なら社内（ダッシュボード内）応募フローを使う。 */
   applyUrl: string;
+  /** 会社ホームページ（募集ページに表示）。 */
+  companyUrl?: string;
   /** ヘッダー画像（デフォルト画像のパス or 任意URL）。 */
   headerImage?: string;
   hidden: boolean;
@@ -136,6 +139,7 @@ export type Override = Partial<{
   compensation: string;
   summary: string;
   applyUrl: string;
+  companyUrl: string;
 }>;
 
 // Vercel Marketplace の Redis 連携（Upstash 等）で注入される環境変数。

@@ -24,6 +24,7 @@ type Row = {
   compensation: string;
   summary: string;
   applyUrl: string;
+  companyUrl: string;
   hidden: boolean;
 };
 
@@ -47,6 +48,7 @@ export async function GET() {
       compensation: ov.compensation ?? i.compensation,
       summary: ov.summary ?? i.summary,
       applyUrl: ov.applyUrl ?? i.applyUrl,
+      companyUrl: ov.companyUrl ?? i.companyUrl ?? "",
       hidden: !!ov.hidden,
     };
   });
@@ -59,6 +61,7 @@ export async function GET() {
     compensation: a.compensation,
     summary: a.summary,
     applyUrl: a.applyUrl,
+    companyUrl: a.companyUrl ?? "",
     headerImage: a.headerImage,
     hidden: a.hidden,
   }));
@@ -81,7 +84,8 @@ export async function POST(req: Request) {
       location: String(b.location ?? "").trim().slice(0, 120),
       compensation: String(b.compensation ?? "").trim().slice(0, 120),
       summary: String(b.summary ?? "").trim().slice(0, 1000),
-      applyUrl: String(b.applyUrl ?? "").trim().slice(0, 500) || "#",
+      applyUrl: String(b.applyUrl ?? "").trim().slice(0, 500),
+      companyUrl: String(b.companyUrl ?? "").trim().slice(0, 500) || undefined,
       headerImage: String(b.headerImage ?? "").trim().slice(0, 500) || undefined,
     },
     new Date().toISOString(),
@@ -99,6 +103,7 @@ function cleanPatch(b: Record<string, unknown>): Override {
     "compensation",
     "summary",
     "applyUrl",
+    "companyUrl",
   ] as const) {
     if (typeof b[f] === "string") p[f] = (b[f] as string).slice(0, 1000);
   }
