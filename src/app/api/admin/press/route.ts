@@ -33,8 +33,6 @@ export async function POST(req: Request) {
   const p = await addPress(
     {
       title,
-      outlet: s(b.outlet, 120),
-      url: s(b.url, 500),
       date,
       summary: s(b.summary, 800),
       body: s(b.body, 6000) || undefined,
@@ -57,8 +55,6 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "title and date required" }, { status: 422 });
   await updatePress(id, {
     title,
-    outlet: s(b.outlet, 120),
-    url: s(b.url, 500),
     date,
     summary: s(b.summary, 800),
     body: s(b.body, 6000) || undefined,

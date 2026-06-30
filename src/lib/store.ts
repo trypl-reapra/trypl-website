@@ -91,13 +91,14 @@ export type EventRegistration = {
   walkIn?: boolean;
 };
 
-/** ニュース / プレス掲載（管理画面から登録）。 */
+/** ニュース / お知らせ（管理画面から登録。サイト内で完結）。 */
 export type PressItem = {
   id: string;
   title: string;
-  outlet: string;
-  /** 外部記事のURL（媒体掲載など）。内部のお知らせは空でよい。 */
-  url: string;
+  /** （廃止）旧・媒体名。後方互換のため任意で残置。 */
+  outlet?: string;
+  /** （廃止）旧・外部記事URL。後方互換のため任意で残置。 */
+  url?: string;
   /** YYYY-MM-DD */
   date: string;
   summary: string;

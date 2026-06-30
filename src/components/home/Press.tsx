@@ -10,8 +10,6 @@ import { useT } from "@/i18n/LocaleProvider";
 type PressItem = {
   id: string;
   title: string;
-  outlet: string;
-  url: string;
   date: string;
   summary: string;
   image?: string;
@@ -72,11 +70,6 @@ export default function Press() {
                 <div className="flex flex-1 flex-col p-5">
                   <div className="flex items-center gap-3 text-xs text-mute">
                     <span className="font-display tabular-nums">{fmt(p.date)}</span>
-                    {p.outlet && (
-                      <span className="rounded-full border border-line px-2 py-0.5">
-                        {p.outlet}
-                      </span>
-                    )}
                   </div>
                   <h3 className="mt-2 font-jp font-bold leading-snug">{p.title}</h3>
                   {p.summary && (

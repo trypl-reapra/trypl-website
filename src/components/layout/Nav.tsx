@@ -45,7 +45,12 @@ export default function Nav() {
     const targets = Array.from(
       document.querySelectorAll<HTMLElement>("[data-nav-theme]"),
     );
-    if (!targets.length) return;
+    // テーマ指定のないページ（管理画面など）は明色（濃い文字）を既定にする。
+    // 指定がないと前ページの dark が残り、白いヘッダーが見えなくなるため。
+    if (!targets.length) {
+      setTheme("light");
+      return;
+    }
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {

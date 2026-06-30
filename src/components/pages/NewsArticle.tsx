@@ -2,23 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Container, Section, Button, Eyebrow } from "@/components/ui";
+import { Container, Section, Eyebrow } from "@/components/ui";
 import { Reveal } from "@/components/motion";
 import { useT, useLocale } from "@/i18n/LocaleProvider";
 import { fmtDateLocale } from "@/lib/fmtDate";
 
 export default function NewsArticle({
   title,
-  outlet,
-  url,
   date,
   summary,
   body,
   image,
 }: {
   title: string;
-  outlet: string;
-  url: string;
   date: string;
   summary: string;
   body: string;
@@ -27,7 +23,6 @@ export default function NewsArticle({
   const t = useT();
   const { locale } = useLocale();
   const n = t.news;
-  const external = /^https?:\/\//.test(url);
 
   return (
     <Section tone="light" topPad={false} className="pt-28 sm:pt-32">
@@ -36,11 +31,6 @@ export default function NewsArticle({
           <Eyebrow>{n.eyebrow}</Eyebrow>
           <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-mute">
             <span className="font-display tabular-nums">{fmtDateLocale(date, locale)}</span>
-            {outlet && (
-              <span className="rounded-full border border-line px-2.5 py-0.5 text-xs">
-                {outlet}
-              </span>
-            )}
           </div>
           <h1 className="mt-4 font-jp text-[clamp(1.7rem,4.5vw,2.6rem)] font-bold leading-[1.3] tracking-[-0.02em]">
             {title}
@@ -78,14 +68,6 @@ export default function NewsArticle({
           </div>
 
           <div className="mt-10 flex flex-wrap items-center gap-4 border-t border-line pt-8">
-            {external && (
-              <Button href={url} size="md">
-                {n.readOriginal}
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-4 w-4">
-                  <path d="M7 17L17 7M7 7h10v10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </Button>
-            )}
             <Link href="/" className="text-sm text-mute link-underline">
               ← {n.back}
             </Link>

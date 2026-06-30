@@ -31,8 +31,6 @@ export default async function NewsDetailPage({
   return (
     <NewsArticle
       title={item.title}
-      outlet={item.outlet}
-      url={item.url}
       date={item.date}
       summary={item.summary}
       body={item.body ?? ""}

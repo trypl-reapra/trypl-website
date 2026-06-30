@@ -104,8 +104,6 @@ type EventItem = {
 type PressItem = {
   id: string;
   title: string;
-  outlet: string;
-  url: string;
   date: string;
   summary: string;
   body?: string;
@@ -1628,7 +1626,7 @@ function PressTab({
   );
 }
 
-const EMPTY_PRESS = { title: "", outlet: "", url: "", date: "", summary: "", body: "", image: "" };
+const EMPTY_PRESS = { title: "", date: "", summary: "", body: "", image: "" };
 
 function PressForm({
   reload,
@@ -1644,8 +1642,6 @@ function PressForm({
     initial
       ? {
           title: initial.title,
-          outlet: initial.outlet,
-          url: initial.url,
           date: initial.date,
           summary: initial.summary,
           body: initial.body ?? "",
@@ -1697,22 +1693,10 @@ function PressForm({
           onChange={(e) => set("title", e.target.value)}
         />
         <input
-          className={inputCls}
-          placeholder="媒体名（例：日本経済新聞）"
-          value={f.outlet}
-          onChange={(e) => set("outlet", e.target.value)}
-        />
-        <input
           type="date"
-          className={inputCls}
+          className={inputCls + " sm:col-span-2"}
           value={f.date}
           onChange={(e) => set("date", e.target.value)}
-        />
-        <input
-          className={inputCls + " sm:col-span-2"}
-          placeholder="記事URL"
-          value={f.url}
-          onChange={(e) => set("url", e.target.value)}
         />
         <textarea
           className={inputCls + " sm:col-span-2"}
@@ -1723,13 +1707,13 @@ function PressForm({
         />
         <textarea
           className={inputCls + " sm:col-span-2"}
-          rows={5}
-          placeholder="本文（記事詳細ページに表示・任意）"
+          rows={6}
+          placeholder="本文（記事詳細ページに表示）"
           value={f.body}
           onChange={(e) => set("body", e.target.value)}
         />
         <p className="text-xs text-mute sm:col-span-2">
-          ※ 外部記事のURLを入れると「元記事を読む」リンクが付きます。本文を入れると詳細ページが充実します。
+          ※ サイト内で完結するお知らせです。本文を入れると詳細ページが表示されます。
         </p>
         <div className="sm:col-span-2">
           <ImagePicker value={f.image} onChange={(v) => set("image", v)} />
@@ -1791,19 +1775,8 @@ function PressRow({ p, reload }: { p: PressItem; reload: () => void }) {
       <div className="min-w-0">
         <span className="text-sm tabular-nums text-mute">{p.date}</span>
         <span className="ml-3 font-medium">{p.title}</span>
-        <span className="ml-2 text-xs text-mute">{p.outlet}</span>
       </div>
       <div className="flex items-center gap-2 text-xs">
-        {p.url && (
-          <a
-            href={p.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="link-underline text-ink"
-          >
-            記事
-          </a>
-        )}
         <button
           type="button"
           onClick={() => setEditing(true)}

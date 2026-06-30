@@ -12,8 +12,6 @@ import { fmtDateLocale } from "@/lib/fmtDate";
 type PressItem = {
   id: string;
   title: string;
-  outlet: string;
-  url: string;
   date: string;
   summary: string;
   image?: string;
@@ -59,11 +57,6 @@ export default function NewsListContent({ items }: { items: PressItem[] }) {
                         <span className="font-display tabular-nums">
                           {fmtDateLocale(p.date, locale)}
                         </span>
-                        {p.outlet && (
-                          <span className="rounded-full border border-line px-2 py-0.5">
-                            {p.outlet}
-                          </span>
-                        )}
                       </div>
                       <h3 className="mt-2 font-jp font-bold leading-snug">{p.title}</h3>
                       {p.summary && (
