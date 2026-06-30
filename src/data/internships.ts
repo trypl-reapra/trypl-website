@@ -163,8 +163,8 @@ export const internships: Internship[] = [
   },
   {
     slug: "nihei-recruiting-inside-sales",
-    company: "仁平",
-    companyTag: "人材紹介",
+    company: "スローガン株式会社",
+    companyTag: "新産業 × 人的資本投資（採用支援・人材紹介）",
     title: "人材紹介インターン（面談呼び込み・架電）",
     category: "business",
     location: "応相談（オンライン可）",
@@ -175,7 +175,7 @@ export const internships: Internship[] = [
     summary:
       "人材紹介の面談呼び込み・架電を担うインターン（3名募集）。営業の最初の接点づくりを実践します。",
     about:
-      "TrypL 経由で募集している、人材紹介事業のインターンです。3名募集。候補者との最初の接点をつくり、面談・紹介につなげる営業の実践を学べます。",
+      "スローガン株式会社は、人の可能性を引き出し才能を最適に配置することで新産業を創出し続けることを目指す、採用支援・人材紹介の企業（REAPRA 投資先）です。3名募集。候補者との最初の接点をつくり、面談・紹介につなげる営業の実践を学べます。",
     responsibilities: [
       "候補者への架電・面談の呼び込み",
       "面談日程の調整",
@@ -193,8 +193,8 @@ export const internships: Internship[] = [
   },
   {
     slug: "wellflags-sales",
-    company: "WellFlags",
-    companyTag: "スタートアップ",
+    company: "株式会社WellFlags",
+    companyTag: "ヘルスケア事業者向け Webマーケ・開業支援",
     title: "営業インターン",
     category: "business",
     location: "応相談",
@@ -203,18 +203,19 @@ export const internships: Internship[] = [
     duration: "応相談",
     compensation: "応相談",
     summary:
-      "WellFlags での営業インターン（2名募集）。詳細は Wantedly の募集ページをご覧ください。",
+      "株式会社WellFlags での営業インターン（2名募集）。詳細は Wantedly の募集ページをご覧ください。",
     about:
-      "TrypL 経由で募集している、WellFlags の営業インターンです。2名募集。詳しい仕事内容・条件は、応募先（Wantedly）の募集ページをご確認ください。",
+      "株式会社WellFlags は、ヘルスケア事業者向けの Webマーケティング・開業支援などを手がける企業（REAPRA 投資先）です。2名募集。詳しい仕事内容・条件は、応募先（Wantedly）の募集ページをご確認ください。",
     responsibilities: ["新規顧客開拓・商談", "営業プロセスの改善"],
     requirements: [
       "学生のうちに実践で成長したい意欲があること",
       "自分から学び、動けること",
     ],
     welcome: [],
-    tags: ["営業", "スタートアップ"],
+    tags: ["営業", "医療・ヘルスケア", "マーケティング"],
     applyUrl: "https://www.wantedly.com/projects/2463995",
     applyLabel: "応募する",
+    companyUrl: "https://wellflags.com/",
     postedAt: "2026-06-30",
   },
   {
@@ -279,8 +280,8 @@ export const internships: Internship[] = [
   },
   {
     slug: "mikami-strategy-malaysia",
-    company: "三上高博",
-    companyTag: "経営企画（マレーシア / オンライン可）",
+    company: "SAMURAI Internet",
+    companyTag: "マレーシア発・新築不動産プラットフォーム",
     title: "経営企画インターン（オンライン可）",
     category: "business",
     location: "マレーシア / オンライン可",
@@ -290,7 +291,7 @@ export const internships: Internship[] = [
     compensation: "応相談",
     summary: "経営企画のインターン（1名募集）。日本からオンラインでの参加が可能です。",
     about:
-      "TrypL 経由で募集している、経営企画のインターンです。1名募集。日本からオンラインでの参加が可能です。マレーシア現地に来てもらう場合は観光ビザでの入国となり、ビザの手配はできない点にご留意ください。",
+      "SAMURAI Internet は、マレーシアで新築不動産のプラットフォーム事業を手がける REAPRA 投資先です。1名募集。日本からオンラインでの参加が可能です。マレーシア現地に来てもらう場合は観光ビザでの入国となり、ビザの手配はできない点にご留意ください。",
     responsibilities: [
       "経営課題の整理と打ち手の検討",
       "データ収集・分析",
@@ -301,7 +302,7 @@ export const internships: Internship[] = [
       "オンラインでも主体的に動けること",
     ],
     welcome: [],
-    tags: ["経営企画・経営戦略", "リモート可"],
+    tags: ["経営企画・経営戦略", "不動産・建設", "リモート可"],
     applyUrl: "",
     applyLabel: "応募する",
     postedAt: "2026-06-30",
@@ -338,7 +339,7 @@ export const internships: Internship[] = [
   },
   {
     slug: "yolot-business",
-    company: "YOLOT",
+    company: "株式会社YOLOT",
     companyTag: "事業づくり（職種は相談）",
     title: "営業・経営企画・マーケティング インターン（職種は相談）",
     category: "business",
@@ -368,8 +369,8 @@ export const internships: Internship[] = [
   },
   {
     slug: "nishikawa-sales-marketing",
-    company: "西川ジョニー雄介",
-    companyTag: "営業・マーケティング",
+    company: "スローガン株式会社",
+    companyTag: "新産業 × 人的資本投資（FastGrow / 採用支援）",
     title: "セールス・マーケティングインターン（IS / FS・ユーザー獲得）",
     category: "business",
     location: "応相談（オンライン可）",
@@ -380,7 +381,7 @@ export const internships: Internship[] = [
     summary:
       "インサイドセールス／フィールドセールスとユーザー獲得マーケティングのインターン（3名募集）。",
     about:
-      "TrypL 経由で募集している、セールス・マーケティングの実践型インターンです。3名募集。インサイドセールスからフィールドセールス、ユーザー獲得マーケティングまでの一連を実践できます。",
+      "スローガン株式会社は、新産業領域 × 人的資本投資で採用支援やメディア（FastGrow）を手がける企業（REAPRA 投資先）です。3名募集。インサイドセールスからフィールドセールス、ユーザー獲得マーケティングまでの一連を実践できます。",
     responsibilities: [
       "インサイドセールス（架電・メール）",
       "フィールドセールス（商談）",
@@ -391,7 +392,7 @@ export const internships: Internship[] = [
       "数字を追って改善できること",
     ],
     welcome: [],
-    tags: ["営業", "マーケティング"],
+    tags: ["営業", "マーケティング", "Web・メディア"],
     applyUrl: "",
     applyLabel: "応募する",
     postedAt: "2026-06-30",
