@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import InternshipCard from "./InternshipCard";
 import InternshipModal from "./InternshipModal";
 import { cn } from "@/lib/cn";
+import { usePages } from "@/i18n/pages";
 import {
   WORK_STYLE_LABEL,
   type CategoryKey,
@@ -66,6 +67,7 @@ export default function InternshipsBrowser({
   const [ws, setWs] = useState<WsFilter>("all");
   const [company, setCompany] = useState<string>("all");
   const [selected, setSelected] = useState<Internship | null>(null);
+  const f = usePages().internshipsFilter;
 
   // 企業の選択肢（重複排除・五十音/英字順）。
   const companies = useMemo(
@@ -125,15 +127,15 @@ export default function InternshipsBrowser({
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="キーワードで検索（職種・企業・タグなど）"
+          placeholder={f.searchPlaceholder}
           className="h-12 w-full rounded-full border border-line bg-paper pl-12 pr-11 text-sm outline-none transition-colors focus:border-ink"
-          aria-label="募集をキーワードで検索"
+          aria-label={f.searchAria}
         />
         {q && (
           <button
             type="button"
             onClick={() => setQ("")}
-            aria-label="検索をクリア"
+            aria-label={f.clearSearch}
             className="absolute right-3 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-full text-mute transition-colors hover:bg-ink/[0.06] hover:text-ink"
           >
             <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
@@ -151,7 +153,7 @@ export default function InternshipsBrowser({
       {/* カテゴリ */}
       <div className="mt-5 flex flex-wrap items-center gap-2">
         <Chip active={cat === "all"} onClick={() => setCat("all")}>
-          すべて
+          {f.all}
         </Chip>
         {categories.map((c) => (
           <Chip
@@ -163,15 +165,15 @@ export default function InternshipsBrowser({
           </Chip>
         ))}
         <span className="ml-auto self-center text-sm tabular-nums text-mute">
-          {filtered.length} 件
+          {filtered.length} {f.unit}
         </span>
       </div>
 
       {/* 勤務形態・企業・クリア */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <span className="mr-1 text-xs font-medium text-mute">勤務形態</span>
+        <span className="mr-1 text-xs font-medium text-mute">{f.workStyle}</span>
         <Chip active={ws === "all"} onClick={() => setWs("all")}>
-          すべて
+          {f.all}
         </Chip>
         {wsUsed.map((w) => (
           <Chip key={w} active={ws === w} onClick={() => setWs(w)}>
@@ -181,10 +183,10 @@ export default function InternshipsBrowser({
         <select
           value={company}
           onChange={(e) => setCompany(e.target.value)}
-          aria-label="企業で絞り込む"
+          aria-label={f.companyAria}
           className="ml-1 h-10 max-w-[220px] rounded-full border border-line bg-paper px-4 text-sm text-mute outline-none transition-colors hover:border-ink focus:border-ink"
         >
-          <option value="all">すべての企業</option>
+          <option value="all">{f.allCompanies}</option>
           {companies.map((c) => (
             <option key={c} value={c}>
               {c}
@@ -197,7 +199,7 @@ export default function InternshipsBrowser({
             onClick={clearAll}
             className="text-sm text-mute link-underline"
           >
-            条件をクリア
+            {f.clear}
           </button>
         )}
       </div>
@@ -205,9 +207,7 @@ export default function InternshipsBrowser({
       {/* 一覧 */}
       {filtered.length === 0 ? (
         <p className="mt-12 rounded-2xl border border-line bg-paper px-6 py-14 text-center text-sm text-mute">
-          条件に合う募集が見つかりませんでした。
-          <br />
-          キーワードや絞り込みを変えてお試しください。
+          {f.empty}
         </p>
       ) : (
         <motion.div

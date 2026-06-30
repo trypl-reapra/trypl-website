@@ -42,27 +42,63 @@ export function internshipBodyHtml(i: Legacyish & { body?: string }): string {
   return i.body && i.body.trim() ? i.body : legacyBodyHtml(i);
 }
 
+/** 募集本文で許可するタグ（これ以外は中身だけ残して除去）。 */
+const ALLOWED_TAGS = new Set([
+  "a", "b", "strong", "em", "i", "u", "s", "p", "br",
+  "h1", "h2", "h3", "h4", "ul", "ol", "li", "hr", "blockquote", "span", "div",
+]);
+
+/** URL の数値実体参照をデコードしてスキームを判定するためのヘルパ。 */
+function decodeEntities(s: string): string {
+  return s
+    .replace(/&#x([0-9a-f]+);?/gi, (_, h) => {
+      try { return String.fromCodePoint(parseInt(h, 16)); } catch { return ""; }
+    })
+    .replace(/&#(\d+);?/g, (_, d) => {
+      try { return String.fromCodePoint(parseInt(d, 10)); } catch { return ""; }
+    })
+    .replace(/\s+/g, "");
+}
+
+/** href/src は http(s)/mailto/相対(/,#) のみ許可。それ以外（javascript: data: 等）は # に。 */
+function safeUrl(url: string): string {
+  const decoded = decodeEntities(url).toLowerCase();
+  return /^(https?:|mailto:|\/|#|\.)/.test(decoded) ? url : "#";
+}
+
+/** 外部リンク href の安全化（会社HP等、管理者入力URLの描画用）。空はそのまま空。 */
+export function safeHref(url: string | undefined | null): string {
+  if (!url) return "";
+  return safeUrl(String(url));
+}
+
 /**
- * 管理者が入力したHTMLの最小サニタイズ。
- * script/style/iframe 等のブロック、on* ハンドラ、javascript: を除去。
+ * 管理者が入力したHTMLのサニタイズ（許可リスト方式）。
+ * - 危険なブロック要素（script/style/svg 等）を除去
+ * - on* ハンドラ・style 属性を除去
+ * - href/src のスキームを許可リスト化（javascript:/data: 等を無効化、実体参照も考慮）
+ * - 許可タグ以外は中身だけ残して除去
+ * ※ body は管理者のみ編集可能だが、公開ページに描画されるため多層で防御する。
+ *   さらなる堅牢化が必要なら DOMPurify 等の導入を推奨。
  */
 export function sanitizeBodyHtml(html: string): string {
   if (!html) return "";
   let s = html;
-  s = s.replace(
-    /<(script|style|iframe|object|embed|link|meta|form|input|button)[\s\S]*?<\/\1>/gi,
-    "",
+  // HTMLコメント（条件付きコメント含む）を除去
+  s = s.replace(/<!--[\s\S]*?-->/g, "");
+  // 危険なブロック要素（開閉ペア＋単独タグ）
+  const DANGER = "script|style|iframe|object|embed|link|meta|form|input|button|svg|math|template|noscript";
+  s = s.replace(new RegExp(`<(${DANGER})[\\s\\S]*?<\\/\\1>`, "gi"), "");
+  s = s.replace(new RegExp(`<\\/?(${DANGER})[^>]*>`, "gi"), "");
+  // on* イベントハンドラ・style 属性を除去
+  s = s.replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "");
+  s = s.replace(/\sstyle\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "");
+  // href/src のスキーム検証
+  s = s.replace(/\s(href|src)\s*=\s*"([^"]*)"/gi, (_m, a, v) => ` ${a}="${safeUrl(v)}"`);
+  s = s.replace(/\s(href|src)\s*=\s*'([^']*)'/gi, (_m, a, v) => ` ${a}='${safeUrl(v)}'`);
+  // 許可タグ以外は除去（中身テキストは保持）
+  s = s.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>/gi, (m, tag) =>
+    ALLOWED_TAGS.has(String(tag).toLowerCase()) ? m : "",
   );
-  s = s.replace(
-    /<(script|style|iframe|object|embed|link|meta|form|input|button)[^>]*>/gi,
-    "",
-  );
-  // イベントハンドラ属性を除去
-  s = s.replace(/\son\w+\s*=\s*"[^"]*"/gi, "");
-  s = s.replace(/\son\w+\s*=\s*'[^']*'/gi, "");
-  s = s.replace(/\son\w+\s*=\s*[^\s>]+/gi, "");
-  // javascript: スキームを無効化
-  s = s.replace(/(href|src)\s*=\s*"javascript:[^"]*"/gi, '$1="#"');
-  s = s.replace(/(href|src)\s*=\s*'javascript:[^']*'/gi, "$1='#'");
   return s;
 }

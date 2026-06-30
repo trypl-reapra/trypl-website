@@ -19,7 +19,7 @@ import {
   listPublicAdminInternships,
   type AdminInternship,
 } from "@/lib/store";
-import { internshipBodyHtml, sanitizeBodyHtml } from "@/lib/internshipBody";
+import { internshipBodyHtml, sanitizeBodyHtml, safeHref } from "@/lib/internshipBody";
 
 // 管理画面の上書き（応募URL・会社HP・非表示など）を反映するため都度描画。
 export const dynamic = "force-dynamic";
@@ -186,7 +186,7 @@ export default async function InternshipDetail({
             />
             {i.companyUrl && (
               <a
-                href={i.companyUrl}
+                href={safeHref(i.companyUrl)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-sm font-medium text-ink link-underline"
@@ -224,7 +224,7 @@ export default async function InternshipDetail({
                 </dl>
                 {i.companyUrl && (
                   <a
-                    href={i.companyUrl}
+                    href={safeHref(i.companyUrl)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-5 flex items-center justify-between gap-2 rounded-xl border border-line px-4 py-3 text-sm font-medium transition-colors hover:border-ink"

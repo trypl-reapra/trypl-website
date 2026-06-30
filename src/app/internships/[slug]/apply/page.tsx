@@ -30,6 +30,9 @@ export default async function ApplyPage({
     ? (await listMembers()).find((m) => m.email === email)
     : null;
 
+  // 凍結中のアカウントは応募フローに進めない（メンバーページへ戻す）。
+  if (me?.frozen) redirect("/members");
+
   // 登録情報が未入力なら、まず登録画面へ。
   if (!me?.profile || !profileComplete(me.profile))
     redirect(`/members?next=${encodeURIComponent(`/internships/${slug}/apply`)}`);

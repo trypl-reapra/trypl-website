@@ -10,7 +10,7 @@ import {
   headerImageFor,
   type Internship,
 } from "@/data/internships";
-import { internshipBodyHtml, sanitizeBodyHtml } from "@/lib/internshipBody";
+import { internshipBodyHtml, sanitizeBodyHtml, safeHref } from "@/lib/internshipBody";
 import { useT } from "@/i18n/LocaleProvider";
 
 export default function InternshipDetailPanel({
@@ -123,7 +123,7 @@ export default function InternshipDetailPanel({
               </dl>
               {i.companyUrl && (
                 <a
-                  href={i.companyUrl}
+                  href={safeHref(i.companyUrl)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-5 flex items-center justify-between gap-2 rounded-xl border border-line px-4 py-3 text-sm font-medium transition-colors hover:border-ink"

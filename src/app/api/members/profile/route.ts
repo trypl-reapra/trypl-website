@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { setMemberProfile } from "@/lib/store";
+import { isMemberFrozen, setMemberProfile } from "@/lib/store";
 import {
   profileComplete,
   STATUS_KEYS,
@@ -21,6 +21,9 @@ export async function POST(req: Request) {
   const email = session?.user?.email;
   if (!email)
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  // 凍結中のアカウントは更新不可（既存セッションでも拒否）。
+  if (await isMemberFrozen(email))
+    return NextResponse.json({ error: "frozen" }, { status: 403 });
 
   const b = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const rawStatus = clean(b.status, 20);

@@ -1,17 +1,23 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { registerForEvent, unregisterForEvent, listEvents } from "@/lib/store";
+import {
+  isMemberFrozen,
+  registerForEvent,
+  unregisterForEvent,
+  listEvents,
+} from "@/lib/store";
 import { memberCode } from "@/lib/member";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/** ログイン中の一般会員を返す（管理者・未ログインは null）。 */
+/** ログイン中の一般会員を返す（管理者・未ログイン・凍結は null）。 */
 async function memberFromSession() {
   const s = await auth();
   const email = s?.user?.email;
   if (!email) return null;
   if ((s.user as { role?: string }).role === "admin") return null;
+  if (await isMemberFrozen(email)) return null; // 凍結中は申込・取消不可
   return { email, name: s.user?.name ?? "" };
 }
 

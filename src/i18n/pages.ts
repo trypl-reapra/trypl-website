@@ -370,6 +370,19 @@ const ja = {
       "REAPRA 投資先をはじめ、内発的動機を大切にする学生と出会いたい企業の方は、お気軽にご連絡ください。",
     companiesCta: "掲載について問い合わせる",
   },
+  internshipsFilter: {
+    searchPlaceholder: "キーワードで検索（職種・企業・タグなど）",
+    searchAria: "募集をキーワードで検索",
+    clearSearch: "検索をクリア",
+    all: "すべて",
+    workStyle: "勤務形態",
+    allCompanies: "すべての企業",
+    companyAria: "企業で絞り込む",
+    clear: "条件をクリア",
+    unit: "件",
+    empty:
+      "条件に合う募集が見つかりませんでした。キーワードや絞り込みを変えてお試しください。",
+  },
   apply: {
     cta: "会員登録して応募",
     note: "応募には無料の会員登録が必要です。",
@@ -769,6 +782,19 @@ const en: Pages = {
       "If you’re a company — a REAPRA portfolio company or otherwise — hoping to meet students who value intrinsic motivation, reach out anytime.",
     companiesCta: "Ask about listing",
   },
+  internshipsFilter: {
+    searchPlaceholder: "Search by keyword (role, company, tag…)",
+    searchAria: "Search internships by keyword",
+    clearSearch: "Clear search",
+    all: "All",
+    workStyle: "Work style",
+    allCompanies: "All companies",
+    companyAria: "Filter by company",
+    clear: "Clear filters",
+    unit: "results",
+    empty:
+      "No internships match your filters. Try a different keyword or filter.",
+  },
   apply: {
     cta: "Sign up to apply",
     note: "Applying requires a free member account.",
@@ -1165,6 +1191,18 @@ const ko: Pages = {
     companiesBody:
       "REAPRA 투자처를 비롯해, 내발적 동기를 중시하는 학생과 만나고 싶은 기업이라면 편하게 연락 주세요.",
     companiesCta: "게재 문의하기",
+  },
+  internshipsFilter: {
+    searchPlaceholder: "키워드로 검색 (직무·기업·태그 등)",
+    searchAria: "키워드로 모집 검색",
+    clearSearch: "검색 지우기",
+    all: "전체",
+    workStyle: "근무 형태",
+    allCompanies: "모든 기업",
+    companyAria: "기업으로 필터",
+    clear: "필터 초기화",
+    unit: "건",
+    empty: "조건에 맞는 모집이 없습니다. 키워드나 필터를 변경해 보세요.",
   },
   apply: {
     cta: "회원가입 후 지원",

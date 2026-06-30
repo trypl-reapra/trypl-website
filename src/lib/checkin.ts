@@ -9,7 +9,15 @@ import crypto from "node:crypto";
  * ・QR にはこのトークンだけを載せる＝メールアドレスは露出しない
  * ・メールから一意に定まる安定値なので、保存不要で都度再計算して照合できる
  */
-const SECRET = process.env.AUTH_SECRET || "trypl-dev-secret-do-not-use";
+// 本番では AUTH_SECRET 必須（未設定なら既知の弱い鍵でトークンを偽造され得るため
+// フォールバックを使わない）。開発時のみ仮の鍵を許可。
+const SECRET =
+  process.env.AUTH_SECRET ||
+  (process.env.NODE_ENV === "production"
+    ? (() => {
+        throw new Error("AUTH_SECRET is required in production for check-in tokens");
+      })()
+    : "trypl-dev-secret-do-not-use");
 
 /** QR 文字列の接頭辞（他社QRの誤読を弾く識別子）。 */
 export const QR_PREFIX = "TRYPL1:";

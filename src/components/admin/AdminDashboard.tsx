@@ -148,7 +148,10 @@ async function adminDelete(url: string, body: unknown) {
 /* ----------------------------------------------------------- CSV 出力 */
 function toCsv(rows: (string | number | null | undefined)[][]): string {
   const esc = (v: string | number | null | undefined) => {
-    const s = v == null ? "" : String(v);
+    let s = v == null ? "" : String(v);
+    // 数式インジェクション対策：先頭が = + - @ TAB CR の場合は ' を前置して
+    // Excel/Sheets で数式として実行されないように無害化（会員入力・問い合わせ由来の値を含むため必須）。
+    if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
     return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
   return rows.map((r) => r.map(esc).join(",")).join("\r\n");
@@ -416,6 +419,15 @@ export default function AdminDashboard({ storeMode }: { storeMode: string }) {
             <LogoutButton />
           </div>
         </div>
+
+        {storeMode !== "kv" && (
+          <div className="mt-6 rounded-2xl border border-red-300 bg-red-50 px-5 py-4 text-sm leading-relaxed text-red-800">
+            <strong className="font-semibold">
+              ⚠️ データが永続化されていません（メモリ保存）。
+            </strong>{" "}
+            本番では KV（Upstash）の環境変数を設定してください。未設定のままだと、会員登録・応募・イベント申込などの情報がサーバー再起動やインスタンスごとに失われ、一貫しません。
+          </div>
+        )}
 
         <div className="mt-8 flex flex-wrap items-center gap-1 rounded-2xl border border-line bg-paper p-1">
           {([
