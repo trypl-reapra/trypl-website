@@ -8,6 +8,7 @@ import ApplyButton from "@/components/internships/ApplyButton";
 import {
   CATEGORIES,
   WORK_STYLE_LABEL,
+  asCategoryKey,
   getAllInternships,
   getInternship,
   type Internship,
@@ -28,7 +29,7 @@ function mapAdmin(a: AdminInternship): Internship {
     company: a.company,
     companyTag: "インターン募集",
     title: a.title,
-    category: "business",
+    category: asCategoryKey(a.category),
     location: a.location || "—",
     workStyle: "remote",
     commitment: "—",
@@ -70,6 +71,7 @@ async function resolveInternship(slug: string): Promise<Internship | null> {
         summary: ov.summary ?? base.summary,
         applyUrl: ov.applyUrl ?? base.applyUrl,
         companyUrl: ov.companyUrl ?? base.companyUrl,
+        category: ov.category ? asCategoryKey(ov.category) : base.category,
       }
     : base;
 }

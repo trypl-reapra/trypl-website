@@ -10,10 +10,12 @@ import {
   updateInternship,
   type Override,
 } from "@/lib/store";
-import { getAllInternships } from "@/data/internships";
+import { asCategoryKey, getAllInternships } from "@/data/internships";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+const asCategory = (v: unknown): string => asCategoryKey(String(v ?? "").trim());
 
 type Row = {
   source: "code" | "admin";
@@ -25,6 +27,7 @@ type Row = {
   summary: string;
   applyUrl: string;
   companyUrl: string;
+  category: string;
   hidden: boolean;
 };
 
@@ -49,6 +52,7 @@ export async function GET() {
       summary: ov.summary ?? i.summary,
       applyUrl: ov.applyUrl ?? i.applyUrl,
       companyUrl: ov.companyUrl ?? i.companyUrl ?? "",
+      category: ov.category ?? i.category,
       hidden: !!ov.hidden,
     };
   });
@@ -62,6 +66,7 @@ export async function GET() {
     summary: a.summary,
     applyUrl: a.applyUrl,
     companyUrl: a.companyUrl ?? "",
+    category: asCategory(a.category),
     headerImage: a.headerImage,
     hidden: a.hidden,
   }));
@@ -84,6 +89,7 @@ export async function POST(req: Request) {
       location: String(b.location ?? "").trim().slice(0, 120),
       compensation: String(b.compensation ?? "").trim().slice(0, 120),
       summary: String(b.summary ?? "").trim().slice(0, 1000),
+      category: asCategory(b.category),
       applyUrl: String(b.applyUrl ?? "").trim().slice(0, 500),
       companyUrl: String(b.companyUrl ?? "").trim().slice(0, 500) || undefined,
       headerImage: String(b.headerImage ?? "").trim().slice(0, 500) || undefined,
@@ -107,6 +113,7 @@ function cleanPatch(b: Record<string, unknown>): Override {
   ] as const) {
     if (typeof b[f] === "string") p[f] = (b[f] as string).slice(0, 1000);
   }
+  if (typeof b.category === "string") p.category = asCategory(b.category);
   return p;
 }
 

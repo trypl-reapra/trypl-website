@@ -6,7 +6,9 @@ import { motion } from "framer-motion";
 import LogoutButton from "./LogoutButton";
 import EventReception from "./EventReception";
 import { cn } from "@/lib/cn";
-import { DEFAULT_HEADER_IMAGES } from "@/data/internships";
+import { CATEGORIES, DEFAULT_HEADER_IMAGES } from "@/data/internships";
+
+const CATEGORY_OPTIONS = Object.entries(CATEGORIES) as [string, string][];
 import { profileComplete } from "@/lib/profile";
 
 type Contact = {
@@ -27,6 +29,7 @@ type Row = {
   summary: string;
   applyUrl: string;
   companyUrl: string;
+  category: string;
   hidden: boolean;
 };
 type Profile = {
@@ -912,6 +915,7 @@ function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
       location: fd.get("location"),
       compensation: fd.get("compensation"),
       summary: fd.get("summary"),
+      category: fd.get("category"),
       applyUrl: fd.get("applyUrl"),
       companyUrl: fd.get("companyUrl"),
     });
@@ -941,7 +945,16 @@ function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
             <input name="location" defaultValue={row.location} placeholder="勤務地" className={inputCls} />
           </div>
           <input name="title" defaultValue={row.title} placeholder="タイトル" className={inputCls} />
-          <input name="compensation" defaultValue={row.compensation} placeholder="報酬" className={inputCls} />
+          <div className="grid grid-cols-2 gap-3">
+            <input name="compensation" defaultValue={row.compensation} placeholder="報酬" className={inputCls} />
+            <select name="category" defaultValue={row.category || "business"} className={inputCls}>
+              {CATEGORY_OPTIONS.map(([key, label]) => (
+                <option key={key} value={key}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
           <textarea name="summary" defaultValue={row.summary} rows={3} placeholder="概要" className={inputCls + " resize-y"} />
           <input name="applyUrl" defaultValue={row.applyUrl} placeholder="応募URL（空欄なら社内応募。Wantedly等のURLで外部遷移）" className={inputCls} />
           <input name="companyUrl" defaultValue={row.companyUrl} placeholder="会社HPのURL（任意）" className={inputCls} />
@@ -971,6 +984,10 @@ function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
             <p className="mt-3 line-clamp-2 text-sm text-mute">{row.summary}</p>
           )}
           <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-mute">
+            <span className="rounded-full border border-line px-2 py-0.5">
+              {CATEGORIES[row.category as keyof typeof CATEGORIES] ??
+                "ビジネス開発"}
+            </span>
             {row.location && <span>{row.location}</span>}
             {row.compensation && <span>{row.compensation}</span>}
             <span>
@@ -1011,6 +1028,9 @@ function InternshipsTab({
   const [err, setErr] = useState("");
   const [headerImage, setHeaderImage] = useState("");
 
+  // 「管理画面追加」と「既存」を区別せず、公開中の募集として1つにまとめる。
+  const all = [...admin, ...code];
+
   async function add(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
@@ -1025,6 +1045,7 @@ function InternshipsTab({
         location: fd.get("location"),
         compensation: fd.get("compensation"),
         summary: fd.get("summary"),
+        category: fd.get("category"),
         applyUrl: fd.get("applyUrl"),
         companyUrl: fd.get("companyUrl"),
         headerImage,
@@ -1054,6 +1075,16 @@ function InternshipsTab({
             <input name="location" placeholder="勤務地" className={inputCls} />
             <input name="compensation" placeholder="報酬" className={inputCls} />
           </div>
+          <label className="block text-xs font-medium text-mute">
+            カテゴリ
+            <select name="category" defaultValue="business" className={inputCls + " mt-1"}>
+              {CATEGORY_OPTIONS.map(([key, label]) => (
+                <option key={key} value={key}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </label>
           <textarea name="summary" rows={3} placeholder="概要" className={inputCls + " resize-y"} />
           <input name="applyUrl" placeholder="応募URL（空欄なら社内応募。Wantedly等で外部遷移）" className={inputCls} />
           <input name="companyUrl" placeholder="会社HPのURL（任意）" className={inputCls} />
@@ -1066,36 +1097,21 @@ function InternshipsTab({
         </button>
       </form>
 
-      <div className="space-y-8">
-        <div>
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="text-sm font-semibold text-mute">
-              管理画面で追加した募集（{admin.length}）
-            </h3>
-          </div>
-          {admin.length ? (
-            <div className="mt-4 space-y-3">
-              {admin.map((r) => (
-                <InternshipRow key={r.key} row={r} reload={reload} />
-              ))}
-            </div>
-          ) : (
-            <p className="mt-4 rounded-2xl border border-line bg-paper p-6 text-sm text-mute">
-              まだありません。左のフォームから追加できます。
-            </p>
-          )}
-        </div>
-
-        <div>
-          <h3 className="text-sm font-semibold text-mute">
-            既存の募集（{code.length}）
-          </h3>
+      <div>
+        <h3 className="text-sm font-semibold text-mute">
+          公開中の募集（{all.length}）
+        </h3>
+        {all.length ? (
           <div className="mt-4 space-y-3">
-            {code.map((r) => (
-              <InternshipRow key={r.key} row={r} reload={reload} />
+            {all.map((r) => (
+              <InternshipRow key={`${r.source}-${r.key}`} row={r} reload={reload} />
             ))}
           </div>
-        </div>
+        ) : (
+          <p className="mt-4 rounded-2xl border border-line bg-paper p-6 text-sm text-mute">
+            まだありません。左のフォームから追加できます。
+          </p>
+        )}
       </div>
     </div>
   );

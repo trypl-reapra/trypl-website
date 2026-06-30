@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import InternshipsView from "@/components/internships/InternshipsView";
 import {
+  asCategoryKey,
   getAllInternships,
   getUsedCategories,
   type Internship,
@@ -28,7 +29,7 @@ export default async function InternshipsPage() {
     company: a.company,
     companyTag: "インターン募集",
     title: a.title,
-    category: "business",
+    category: asCategoryKey(a.category),
     location: a.location || "—",
     workStyle: "remote",
     commitment: "—",
@@ -63,6 +64,7 @@ export default async function InternshipsPage() {
             summary: ov.summary ?? i.summary,
             applyUrl: ov.applyUrl ?? i.applyUrl,
             companyUrl: ov.companyUrl ?? i.companyUrl,
+            category: ov.category ? asCategoryKey(ov.category) : i.category,
           }
         : i;
     });

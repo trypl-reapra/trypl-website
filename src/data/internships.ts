@@ -326,7 +326,7 @@ export const internships: Internship[] = [
     welcome: [],
     tags: ["カジュアル面談", "オンライン", "福岡"],
     applyUrl: "https://herp.careers/careers/companies/jicou/jobs/9s-fsYidoKd3",
-    applyLabel: "カジュアル面談を申し込む",
+    applyLabel: "応募する",
     postedAt: "2026-06-26",
   },
   {
@@ -355,7 +355,7 @@ export const internships: Internship[] = [
     welcome: [],
     tags: ["キャリア面談", "オンライン", "福岡"],
     applyUrl: "https://herp.careers/careers/companies/jicou/jobs/nuke5aaJu4XS",
-    applyLabel: "キャリア面談を申し込む",
+    applyLabel: "応募する",
     postedAt: "2026-06-26",
   },
 
@@ -438,6 +438,13 @@ export function getAllInternships(): Internship[] {
 
 export function getInternship(slug: string): Internship | undefined {
   return internships.find((i) => i.slug === slug);
+}
+
+/** 文字列を有効な CategoryKey に正規化（不正なら business）。 */
+export function asCategoryKey(v: string | undefined | null): CategoryKey {
+  return v && Object.prototype.hasOwnProperty.call(CATEGORIES, v)
+    ? (v as CategoryKey)
+    : "business";
 }
 
 export function getFeatured(): Internship[] {
