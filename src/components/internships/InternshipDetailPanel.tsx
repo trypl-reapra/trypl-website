@@ -10,24 +10,8 @@ import {
   headerImageFor,
   type Internship,
 } from "@/data/internships";
+import { internshipBodyHtml, sanitizeBodyHtml } from "@/lib/internshipBody";
 import { useT } from "@/i18n/LocaleProvider";
-
-function DetailList({ title, items }: { title: string; items: string[] }) {
-  if (!items.length) return null;
-  return (
-    <div className="border-t border-line pt-7">
-      <h3 className="text-sm font-semibold tracking-wide text-mute">{title}</h3>
-      <ul className="mt-4 space-y-3">
-        {items.map((t, idx) => (
-          <li key={idx} className="flex gap-3 leading-relaxed">
-            <span className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
-            <span>{t}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
 
 export default function InternshipDetailPanel({
   internship: i,
@@ -106,16 +90,13 @@ export default function InternshipDetailPanel({
         </p>
 
         <div className="mt-9 grid gap-10 lg:grid-cols-[1.6fr_1fr] lg:gap-14">
-          <div className="space-y-9">
-            <div>
-              <h3 className="text-sm font-semibold tracking-wide text-mute">
-                この企業・チームについて
-              </h3>
-              <p className="mt-4 leading-relaxed">{i.about}</p>
-            </div>
-            <DetailList title="主な業務" items={i.responsibilities} />
-            <DetailList title="求める人物像" items={i.requirements} />
-            <DetailList title="歓迎する経験・スキル" items={i.welcome} />
+          <div className="space-y-7">
+            <div
+              className="max-w-none leading-relaxed [&_a]:underline [&_h2]:mb-2 [&_h2]:mt-7 [&_h2]:text-lg [&_h2]:font-bold [&_h3]:mb-1.5 [&_h3]:mt-5 [&_h3]:text-base [&_h3]:font-semibold [&_hr]:my-6 [&_hr]:border-line [&_li]:leading-relaxed [&_p]:my-3 [&_strong]:font-semibold [&_ul]:my-3 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5 [&>:first-child]:mt-0"
+              dangerouslySetInnerHTML={{
+                __html: sanitizeBodyHtml(internshipBodyHtml(i)),
+              }}
+            />
             {i.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 border-t border-line pt-7">
                 {i.tags.map((t) => (

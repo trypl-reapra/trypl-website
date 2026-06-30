@@ -19,6 +19,7 @@ import {
   listPublicAdminInternships,
   type AdminInternship,
 } from "@/lib/store";
+import { internshipBodyHtml, sanitizeBodyHtml } from "@/lib/internshipBody";
 
 // 管理画面の上書き（応募URL・会社HP・非表示など）を反映するため都度描画。
 export const dynamic = "force-dynamic";
@@ -102,23 +103,6 @@ export async function generateMetadata({
   };
 }
 
-function DetailList({ title, items }: { title: string; items: string[] }) {
-  if (!items.length) return null;
-  return (
-    <div className="border-t border-line pt-8">
-      <h2 className="text-sm font-semibold tracking-wide text-mute">{title}</h2>
-      <ul className="mt-5 space-y-3">
-        {items.map((t, idx) => (
-          <li key={idx} className="flex gap-3 leading-relaxed">
-            <span className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
-            <span>{t}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 export default async function InternshipDetail({
   params,
 }: {
@@ -193,27 +177,24 @@ export default async function InternshipDetail({
       {/* body */}
       <Container className="pb-24 sm:pb-32">
         <div className="grid gap-12 lg:grid-cols-[1.7fr_1fr] lg:gap-16">
-          <div className="space-y-10">
-            <div>
-              <h2 className="text-sm font-semibold tracking-wide text-mute">
-                この企業・チームについて
-              </h2>
-              <p className="mt-5 leading-relaxed">{i.about}</p>
-              {i.companyUrl && (
-                <a
-                  href={i.companyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-ink link-underline"
-                >
-                  会社ホームページを見る
-                  <span aria-hidden>↗</span>
-                </a>
-              )}
-            </div>
-            <DetailList title="主な業務" items={i.responsibilities} />
-            <DetailList title="求める人物像" items={i.requirements} />
-            <DetailList title="歓迎する経験・スキル" items={i.welcome} />
+          <div className="space-y-8">
+            <div
+              className="max-w-none leading-relaxed [&_a]:underline [&_h2]:mb-3 [&_h2]:mt-10 [&_h2]:text-xl [&_h2]:font-bold [&_h3]:mb-2 [&_h3]:mt-6 [&_h3]:text-lg [&_h3]:font-semibold [&_hr]:my-8 [&_hr]:border-line [&_li]:leading-relaxed [&_p]:my-4 [&_strong]:font-semibold [&_ul]:my-4 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5 [&>:first-child]:mt-0"
+              dangerouslySetInnerHTML={{
+                __html: sanitizeBodyHtml(internshipBodyHtml(i)),
+              }}
+            />
+            {i.companyUrl && (
+              <a
+                href={i.companyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-ink link-underline"
+              >
+                会社ホームページを見る
+                <span aria-hidden>↗</span>
+              </a>
+            )}
 
             {i.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 border-t border-line pt-8">

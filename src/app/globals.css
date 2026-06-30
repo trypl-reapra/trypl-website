@@ -148,6 +148,13 @@ html.lenis body {
   text-transform: uppercase;
 }
 
+/* リッチエディタの空状態プレースホルダ（管理画面）。 */
+.rich-editor:empty:before {
+  content: attr(data-placeholder);
+  color: var(--color-mute);
+  pointer-events: none;
+}
+
 .font-feature-tnum {
   font-variant-numeric: tabular-nums;
 }

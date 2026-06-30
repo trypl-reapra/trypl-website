@@ -5,6 +5,8 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import LogoutButton from "./LogoutButton";
 import EventReception from "./EventReception";
+import RichEditor from "./RichEditor";
+import TagPicker from "./TagPicker";
 import { cn } from "@/lib/cn";
 import {
   CATEGORIES,
@@ -14,15 +16,6 @@ import {
 
 const CATEGORY_OPTIONS = Object.entries(CATEGORIES) as [string, string][];
 const WORK_STYLE_OPTIONS = Object.entries(WORK_STYLE_LABEL) as [string, string][];
-
-/** 配列 → 改行テキスト（textarea 初期値用）。 */
-const linesToText = (a?: string[]): string => (a ?? []).join("\n");
-/** 改行テキスト → 配列（1行1項目、空行除去）。 */
-const textToLines = (v: FormDataEntryValue | null): string[] =>
-  String(v ?? "")
-    .split("\n")
-    .map((s) => s.trim())
-    .filter(Boolean);
 import { profileComplete } from "@/lib/profile";
 
 type Contact = {
@@ -50,6 +43,7 @@ type Row = {
   requirements: string[];
   welcome: string[];
   tags: string[];
+  body: string;
   applyUrl: string;
   companyUrl: string;
   category: string;
@@ -917,6 +911,8 @@ function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
   const [editing, setEditing] = useState(false);
   const [busy, setBusy] = useState(false);
   const [headerImage, setHeaderImage] = useState(row.headerImage || "");
+  const [body, setBody] = useState(row.body || "");
+  const [tags, setTags] = useState<string[]>(row.tags || []);
 
   async function toggle() {
     setBusy(true);
@@ -945,11 +941,8 @@ function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
       compensation: fd.get("compensation"),
       category: fd.get("category"),
       summary: fd.get("summary"),
-      about: fd.get("about"),
-      responsibilities: textToLines(fd.get("responsibilities")),
-      requirements: textToLines(fd.get("requirements")),
-      welcome: textToLines(fd.get("welcome")),
-      tags: textToLines(fd.get("tags")),
+      body,
+      tags,
       applyUrl: fd.get("applyUrl"),
       companyUrl: fd.get("companyUrl"),
       headerImage,
@@ -1005,26 +998,12 @@ function InternshipRow({ row, reload }: { row: Row; reload: () => void }) {
             </select>
           </div>
           <textarea name="summary" defaultValue={row.summary} rows={2} placeholder="概要（カード・OG用の短い要約）" className={inputCls + " resize-y"} />
-          <label className="block text-xs font-medium text-mute">
-            この企業・チームについて
-            <textarea name="about" defaultValue={row.about} rows={4} className={inputCls + " mt-1 resize-y"} />
-          </label>
-          <label className="block text-xs font-medium text-mute">
-            主な業務（1行に1項目）
-            <textarea name="responsibilities" defaultValue={linesToText(row.responsibilities)} rows={4} className={inputCls + " mt-1 resize-y"} />
-          </label>
-          <label className="block text-xs font-medium text-mute">
-            求める人物像（1行に1項目）
-            <textarea name="requirements" defaultValue={linesToText(row.requirements)} rows={4} className={inputCls + " mt-1 resize-y"} />
-          </label>
-          <label className="block text-xs font-medium text-mute">
-            歓迎する経験・スキル（1行に1項目）
-            <textarea name="welcome" defaultValue={linesToText(row.welcome)} rows={3} className={inputCls + " mt-1 resize-y"} />
-          </label>
-          <label className="block text-xs font-medium text-mute">
-            タグ（1行に1項目）
-            <textarea name="tags" defaultValue={linesToText(row.tags)} rows={2} className={inputCls + " mt-1 resize-y"} />
-          </label>
+          <div className="text-xs font-medium text-mute">
+            募集本文（見出し・太字・区切り線などを設定できます）
+          </div>
+          <RichEditor value={body} onChange={setBody} />
+          <div className="text-xs font-medium text-mute">タグ（業種から選択）</div>
+          <TagPicker value={tags} onChange={setTags} />
           <input name="applyUrl" defaultValue={row.applyUrl} placeholder="応募URL（空欄なら社内応募。Wantedly等のURLで外部遷移）" className={inputCls} />
           <input name="companyUrl" defaultValue={row.companyUrl} placeholder="会社HPのURL（任意）" className={inputCls} />
           <div className="text-xs font-medium text-mute">画像</div>
@@ -1098,6 +1077,8 @@ function InternshipsTab({
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const [headerImage, setHeaderImage] = useState("");
+  const [body, setBody] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
 
   // 「管理画面追加」と「既存」を区別せず、公開中の募集として1つにまとめる。
   const all = [...admin, ...code];
@@ -1121,11 +1102,8 @@ function InternshipsTab({
         compensation: fd.get("compensation"),
         category: fd.get("category"),
         summary: fd.get("summary"),
-        about: fd.get("about"),
-        responsibilities: textToLines(fd.get("responsibilities")),
-        requirements: textToLines(fd.get("requirements")),
-        welcome: textToLines(fd.get("welcome")),
-        tags: textToLines(fd.get("tags")),
+        body,
+        tags,
         applyUrl: fd.get("applyUrl"),
         companyUrl: fd.get("companyUrl"),
         headerImage,
@@ -1138,6 +1116,8 @@ function InternshipsTab({
     }
     (e.target as HTMLFormElement).reset();
     setHeaderImage("");
+    setBody("");
+    setTags([]);
     reload();
   }
 
@@ -1179,26 +1159,12 @@ function InternshipsTab({
             </select>
           </div>
           <textarea name="summary" rows={2} placeholder="概要（カード・OG用の短い要約）" className={inputCls + " resize-y"} />
-          <label className="block text-xs font-medium text-mute">
-            この企業・チームについて
-            <textarea name="about" rows={4} className={inputCls + " mt-1 resize-y"} />
-          </label>
-          <label className="block text-xs font-medium text-mute">
-            主な業務（1行に1項目）
-            <textarea name="responsibilities" rows={4} className={inputCls + " mt-1 resize-y"} />
-          </label>
-          <label className="block text-xs font-medium text-mute">
-            求める人物像（1行に1項目）
-            <textarea name="requirements" rows={4} className={inputCls + " mt-1 resize-y"} />
-          </label>
-          <label className="block text-xs font-medium text-mute">
-            歓迎する経験・スキル（1行に1項目）
-            <textarea name="welcome" rows={3} className={inputCls + " mt-1 resize-y"} />
-          </label>
-          <label className="block text-xs font-medium text-mute">
-            タグ（1行に1項目）
-            <textarea name="tags" rows={2} className={inputCls + " mt-1 resize-y"} />
-          </label>
+          <div className="text-xs font-medium text-mute">
+            募集本文（見出し・太字・区切り線などを設定できます）
+          </div>
+          <RichEditor value={body} onChange={setBody} />
+          <div className="text-xs font-medium text-mute">タグ（業種から選択）</div>
+          <TagPicker value={tags} onChange={setTags} />
           <input name="applyUrl" placeholder="応募URL（空欄なら社内応募。Wantedly等で外部遷移）" className={inputCls} />
           <input name="companyUrl" placeholder="会社HPのURL（任意）" className={inputCls} />
           <div className="text-xs font-medium text-mute">画像</div>

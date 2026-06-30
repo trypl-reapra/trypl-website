@@ -35,6 +35,43 @@ export const CATEGORIES: Record<CategoryKey, string> = {
   engineering: "エンジニアリング",
 };
 
+/**
+ * タグの選択肢（業種ベースのおおまかな分類を網羅）。
+ * 管理画面ではこの中からボタンで選択する。
+ */
+export const INDUSTRY_TAGS: string[] = [
+  "IT・ソフトウェア",
+  "AI・データ",
+  "Web・メディア",
+  "ゲーム・エンタメ",
+  "マーケティング",
+  "広告・PR",
+  "営業",
+  "事業開発",
+  "経営企画・経営戦略",
+  "コンサルティング",
+  "金融・フィンテック",
+  "不動産・建設",
+  "医療・ヘルスケア",
+  "教育・EdTech",
+  "人材・HR",
+  "製造・ものづくり",
+  "物流・運輸",
+  "海運・モビリティ",
+  "小売・EC",
+  "食・農業",
+  "旅行・観光",
+  "ファッション・美容",
+  "環境・エネルギー",
+  "公共・ソーシャル",
+  "スポーツ",
+  "デザイン・クリエイティブ",
+  "エンジニアリング",
+  "リサーチ・研究",
+  "スタートアップ",
+  "リモート可",
+];
+
 export type WorkStyle = "remote" | "hybrid" | "onsite";
 
 export const WORK_STYLE_LABEL: Record<WorkStyle, string> = {
@@ -65,6 +102,11 @@ export type Internship = {
   requirements: string[];
   welcome: string[];
   tags: string[];
+  /**
+   * 募集本文（リッチHTML）。設定されていればこれを表示し、未設定なら
+   * about / responsibilities / requirements / welcome から本文を自動生成する。
+   */
+  body?: string;
   /** 応募URL。外部募集ページ（HERP / Wantedly 等）なら直接遷移。空なら社内応募フロー。 */
   applyUrl: string;
   applyLabel: string;

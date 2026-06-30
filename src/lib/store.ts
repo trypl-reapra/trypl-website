@@ -46,6 +46,8 @@ export type AdminInternship = {
   welcome?: string[];
   /** タグ */
   tags?: string[];
+  /** 募集本文（リッチHTML）。設定時はこちらを優先表示。 */
+  body?: string;
   /** カテゴリ（CATEGORIES のキー。未設定なら business 扱い）。 */
   category?: string;
   /** 応募URL。空なら社内（ダッシュボード内）応募フローを使う。 */
@@ -167,6 +169,7 @@ export type Override = Partial<{
   requirements: string[];
   welcome: string[];
   tags: string[];
+  body: string;
   applyUrl: string;
   companyUrl: string;
   category: string;

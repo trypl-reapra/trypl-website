@@ -11,6 +11,7 @@ import {
   type Override,
 } from "@/lib/store";
 import { asCategoryKey, getAllInternships } from "@/data/internships";
+import { legacyBodyHtml, sanitizeBodyHtml } from "@/lib/internshipBody";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -48,6 +49,7 @@ type Row = {
   requirements: string[];
   welcome: string[];
   tags: string[];
+  body: string;
   applyUrl: string;
   companyUrl: string;
   category: string;
@@ -83,6 +85,8 @@ export async function GET() {
       requirements: ov.requirements ?? i.requirements,
       welcome: ov.welcome ?? i.welcome,
       tags: ov.tags ?? i.tags,
+      // 編集用に本文を流し込む（override が無ければ旧フィールドから生成）。
+      body: ov.body ?? (i.body || legacyBodyHtml(i)),
       applyUrl: ov.applyUrl ?? i.applyUrl,
       companyUrl: ov.companyUrl ?? i.companyUrl ?? "",
       category: ov.category ?? i.category,
@@ -107,6 +111,7 @@ export async function GET() {
     requirements: a.requirements ?? [],
     welcome: a.welcome ?? [],
     tags: a.tags ?? [],
+    body: a.body ?? "",
     applyUrl: a.applyUrl,
     companyUrl: a.companyUrl ?? "",
     category: asCategory(a.category),
@@ -141,6 +146,7 @@ export async function POST(req: Request) {
       requirements: list(b.requirements),
       welcome: list(b.welcome),
       tags: list(b.tags),
+      body: sanitizeBodyHtml(str(b.body, 20000)) || undefined,
       category: asCategory(b.category),
       applyUrl: str(b.applyUrl, 500),
       companyUrl: str(b.companyUrl, 500) || undefined,
@@ -172,6 +178,8 @@ function cleanPatch(b: Record<string, unknown>): Override {
   }
   if (typeof b.category === "string") p.category = asCategory(b.category);
   if (typeof b.workStyle === "string") p.workStyle = asWorkStyle(b.workStyle);
+  if (typeof b.body === "string")
+    p.body = sanitizeBodyHtml(b.body.slice(0, 20000));
   for (const f of ["responsibilities", "requirements", "welcome", "tags"] as const) {
     if (Array.isArray(b[f])) p[f] = list(b[f]);
   }
