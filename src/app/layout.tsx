@@ -34,7 +34,7 @@ const zenKaku = Zen_Kaku_Gothic_New({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "TrypL（トリプル）— 社会とつながり、やりながら学ぶ。",
+    default: "TrypL（トリプル）— 自分らしさで、社会とつながる。",
     template: "%s — TrypL",
   },
   description: site.description,
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ja_JP",
     siteName: site.name,
-    title: "TrypL（トリプル）— 社会とつながり、やりながら学ぶ。",
+    title: "TrypL（トリプル）— 自分らしさで、社会とつながる。",
     description: site.description,
   },
   twitter: {

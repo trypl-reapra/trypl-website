@@ -80,9 +80,9 @@ export const dict: Record<Locale, Dict> = {
     scroll: "Scroll",
     hero: {
       eyebrow: "REAPRA発・実践型コミュニティ。",
-      title: ["社会とつながり、", "やりながら学ぶ。"],
+      title: ["自分らしさで、", "社会とつながる。"],
       lead1:
-        "「何者かになりたい」と願う。未知の世界に足を踏み入れる。社会の肌触りを感じながら、仲間と共に問い続ける。",
+        "未知の世界に足を踏み入れる。社会の肌触りを感じながら、仲間と共に実践し続ける。",
       lead2:
         "TrypL（トリプル）は、学生の「やりたい」を「実践」に変え、社会と接続するためのコミュニティです。私たちは、一人ひとりの内発的な動機を大切にしながら、共に未来を切り拓く場を提供します。",
       seeInternships: "募集を見る",
@@ -91,7 +91,7 @@ export const dict: Record<Locale, Dict> = {
     statement: {
       eyebrow: "What we do",
       title: ["社会と学生の距離を縮め", "実践的な学びを最大化する。"],
-      body: "TrypLは、REAPRAの投資先企業群と連携し、単なるスキル習得に留まらない、社会のリアルな課題に向き合う機会を提供します。社会に価値を生み出すためには、まず動いてみること。私たちは「案ずるより産むが易し」を合言葉に、学生が社会のプレイヤーとして成長するためのコミュニティを構築しています。",
+      body: "TrypLは、REAPRAの投資先企業群と連携し、単なるスキル習得に留まらない、社会のリアルな課題と実践に向き合う機会を提供します。社会に価値を生み出すためには、まず動いてみること。私たちは、学生が社会の主体的な実践者として成長するためのコミュニティを構築しています。",
       pillars: [
         {
           label: "社会との接点",
@@ -99,11 +99,11 @@ export const dict: Record<Locale, Dict> = {
         },
         {
           label: "実践からの学び",
-          body: "やりながら学び、感じたことを言葉にして蓄積する。「自分は何者か」を実践の中で探っていく。",
+          body: "実践を通じて学び、感じたことを言葉にして蓄積する。「じぶんらしさ（唯一無二の内発的な動機）」を実践の中で探っていく。",
         },
         {
           label: "長期の時間軸",
-          body: "就活や報酬のためではなく、1年後・5年後・10年後を見据えて社会と向き合い続ける。",
+          body: "就活やガクチカ、金銭的な報酬のためではなく、1年後・5年後・10年後を見据えて社会と向き合い続ける。",
         },
       ],
       brandWords: [
@@ -131,7 +131,7 @@ export const dict: Record<Locale, Dict> = {
         "まず、動いてみたい人。",
         "就活のためじゃなく、",
         "自分の動機から始めたい人。",
-        "学んだことを、言葉にできる人。",
+        "社会に人に触れる実践を通じて、あらゆることを学習機会に変えようとする人。",
       ],
       lead: "入口は、広く。最初から完璧である必要はありません。曖昧な状況でも一歩を踏み出し、活動を通じて自分の志向と適性を見つけていく——そんな姿勢を、私たちは大切にします。",
     },
@@ -176,9 +176,9 @@ export const dict: Record<Locale, Dict> = {
     scroll: "Scroll",
     hero: {
       eyebrow: "A practice-first community, born from REAPRA",
-      title: ["Connect with society,", "learn by doing."],
+      title: ["Connect with society,", "as who you are."],
       lead1:
-        "Wishing to “become someone.” Stepping into the unknown. Feeling the texture of the real world, and keep questioning together with peers.",
+        "Stepping into the unknown. Feeling the texture of the real world, and continuing to practice together with peers.",
       lead2:
         "TrypL turns a student’s “I want to try” into real practice and connects it to society. We honor each person’s intrinsic motivation and create a place to carve out the future, together.",
       seeInternships: "See internships",
@@ -187,19 +187,19 @@ export const dict: Record<Locale, Dict> = {
     statement: {
       eyebrow: "What we do",
       title: ["Close the gap between", "students and society."],
-      body: "Working with REAPRA’s portfolio companies, TrypL offers chances to face the real problems of society — far beyond simply acquiring skills. To create value, you first have to move. Under the motto “doing is easier than worrying,” we build a community where students grow into players in the real world.",
+      body: "Working with REAPRA’s portfolio companies, TrypL offers chances to face the real problems and practices of society — far beyond simply acquiring skills. To create value, you first have to move. We build a community where students grow into proactive practitioners in society.",
       pillars: [
         {
           label: "A door to society",
           body: "Real internships at REAPRA and its portfolio companies. It starts from the actual field, not the textbook.",
         },
         {
-          label: "Learning by doing",
-          body: "Learn as you go, and put what you feel into words. Explore “who am I” through practice.",
+          label: "Learning through practice",
+          body: "Learn through practice, and put what you feel into words. Explore your own uniqueness — your one-of-a-kind intrinsic motivation — through practice.",
         },
         {
           label: "A long time horizon",
-          body: "Not for job hunting or pay, but facing society with a view to one, five, ten years ahead.",
+          body: "Not for job hunting, résumé lines, or financial reward, but facing society with a view to one, five, ten years ahead.",
         },
       ],
       brandWords: [
@@ -227,7 +227,7 @@ export const dict: Record<Locale, Dict> = {
         "People who want to move first.",
         "Not for job hunting,",
         "but starting from their own motivation.",
-        "People who can put what they learn into words.",
+        "People who turn everything into a chance to learn, through hands-on encounters with society and its people.",
       ],
       lead: "The door is wide open. You don’t need to be perfect from the start. Take a step even amid uncertainty, and discover your direction and strengths through the work — that’s the attitude we value.",
     },
@@ -272,9 +272,9 @@ export const dict: Record<Locale, Dict> = {
     scroll: "Scroll",
     hero: {
       eyebrow: "REAPRA에서 시작된 실천형 커뮤니티",
-      title: ["사회와 연결되고,", "하면서 배운다."],
+      title: ["나다움으로,", "사회와 연결된다."],
       lead1:
-        "“무언가가 되고 싶다”고 바란다. 미지의 세계에 발을 들인다. 사회의 질감을 느끼며, 동료와 함께 계속 질문한다.",
+        "미지의 세계에 발을 들인다. 사회의 질감을 느끼며, 동료와 함께 계속 실천한다.",
       lead2:
         "TrypL(트리플)은 학생의 “해보고 싶다”를 “실천”으로 바꿔 사회와 잇는 커뮤니티입니다. 우리는 한 사람 한 사람의 내발적 동기를 소중히 하며, 함께 미래를 열어가는 장을 제공합니다.",
       seeInternships: "모집 보기",
@@ -283,7 +283,7 @@ export const dict: Record<Locale, Dict> = {
     statement: {
       eyebrow: "What we do",
       title: ["사회와 학생의 거리를 좁히고", "실천적 배움을 극대화한다."],
-      body: "TrypL은 REAPRA의 투자처 기업들과 협력하여, 단순한 스킬 습득에 그치지 않고 사회의 실제 과제와 마주하는 기회를 제공합니다. 가치를 만들려면 먼저 움직여야 합니다. ‘걱정보다 실행이 쉽다’를 모토로, 학생이 사회의 플레이어로 성장하는 커뮤니티를 만들어 갑니다.",
+      body: "TrypL은 REAPRA의 투자처 기업들과 협력하여, 단순한 스킬 습득에 그치지 않고 사회의 실제 과제와 실천에 마주하는 기회를 제공합니다. 가치를 만들려면 먼저 움직여야 합니다. 우리는 학생이 사회의 주체적인 실천자로 성장하는 커뮤니티를 만들어 갑니다.",
       pillars: [
         {
           label: "사회와의 접점",
@@ -291,11 +291,11 @@ export const dict: Record<Locale, Dict> = {
         },
         {
           label: "실천을 통한 배움",
-          body: "하면서 배우고, 느낀 것을 언어로 쌓아갑니다. ‘나는 누구인가’를 실천 속에서 탐구합니다.",
+          body: "실천을 통해 배우고, 느낀 것을 언어로 쌓아갑니다. ‘나다움(유일무이한 내발적 동기)’을 실천 속에서 탐구합니다.",
         },
         {
           label: "긴 시간 축",
-          body: "취업이나 보수가 아니라, 1년·5년·10년 뒤를 바라보며 사회와 계속 마주합니다.",
+          body: "취업 스펙이나 금전적 보수를 위해서가 아니라, 1년·5년·10년 뒤를 바라보며 사회와 계속 마주합니다.",
         },
       ],
       brandWords: [
@@ -323,7 +323,7 @@ export const dict: Record<Locale, Dict> = {
         "우선 움직여 보고 싶은 사람.",
         "취업을 위해서가 아니라,",
         "자신의 동기에서 시작하고 싶은 사람.",
-        "배운 것을 말로 표현할 수 있는 사람.",
+        "사회와 사람에 닿는 실천을 통해, 모든 것을 배움의 기회로 바꾸려는 사람.",
       ],
       lead: "입구는 넓게. 처음부터 완벽할 필요는 없습니다. 불확실한 상황에서도 한 걸음 내딛고, 활동을 통해 자신의 지향과 적성을 찾아가는—그런 자세를 우리는 소중히 여깁니다.",
     },

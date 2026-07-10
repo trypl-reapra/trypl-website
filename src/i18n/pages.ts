@@ -33,15 +33,15 @@ const ja = {
         key: "LifeMission",
         jp: "ライフミッション",
         line: "内発的動機から、人生の使命へ。",
-        body: "「どう社会と関わりたいか」という内側から湧き出る動機を起点に、自分なりの貢献のかたちを深めていく。",
+        body: "「どう生きたいか」という内側から湧き出る動機を起点に、自分なりの貢献のかたちを深めていく。",
       },
     ],
   },
   headers: {
     about: {
       eyebrow: "About · TrypLとは",
-      title: ["社会と共創する、", "その予備軍を。"],
-      lead: "内発的動機を起点に、学生が社会と共創しながら学び、挑戦し、熟達していく。TrypLは、その実践機会を提供するコミュニティです。",
+      title: ["社会と共に", "探究し続ける。"],
+      lead: "内発的動機を起点に、社会と共創しながら学び、挑戦し、熟達していく。",
     },
     internships: {
       eyebrow: "Internships · 募集一覧",
@@ -77,11 +77,11 @@ const ja = {
   about: {
     whatEyebrow: "What",
     whatLede:
-      "TrypL は、REAPRA 発の「若年層向けインターンシップコミュニティ」です。",
+      "TrypL は、じぶんらしさ（内発的動機）を知り、社会の中で実践する探究の循環を生み出すコミュニティです。",
     whatP1:
-      "不透明度が増す社会において、若年層が長い時間軸をかけて「株式会社にまつわる仕事＝社会との繋がり」を通じて社会と共創し、熟達でイキイキ生きる（ウェルビーイング）きっかけを掴む——その場と機会を共創するプロジェクトです。",
+      "不確実性が増す社会において、若年層が長い時間軸をかけて「社会との繋がり」を通じて、イキイキ生きる（ウェルビーイング）きっかけを掴む——その場と機会を共創するプロジェクトです。",
     whatP2:
-      "就活や報酬・お金ドリブンではなく、「自分は何者か」「どう社会に関わりたいか」という内発的な動機を持つ学生が、実際の企業活動を通じて「社会と共創する熟達」の一歩を踏み出していきます。",
+      "就活やガクチカ、金銭的な報酬ドリブンではなく、「自分は何者か」「どう社会に関わりたいか」という内発的な動機を持つ学生が、実際の企業活動を通じて「社会と共創する熟達」の一歩を踏み出していきます。",
     nameEyebrow: "The name",
     nameHeading: "名前に込めた、3つのL。",
     triple: [
@@ -98,7 +98,7 @@ const ja = {
       {
         key: "LifeMission",
         jp: "ライフミッション",
-        body: "「どう社会と関わりたいか」という内側から湧き出る動機を起点に、自分なりの貢献のかたちを深めていく。",
+        body: "「どう生きたいか」という内側から湧き出る動機を起点に、自分なりの貢献のかたちを深めていく。",
       },
     ],
     words: [
@@ -115,15 +115,15 @@ const ja = {
     reapraP2:
       "TrypL を通じて内発的動機と向き合った学生たちが、5年後・10年後に自分のキャリアや届けたい社会を持って、再び REAPRA のエコシステムに接続してくれる。それも、TrypL が持つ長期的な意義です。",
     visionEyebrow: "Vision · 2035",
-    visionHeading: ["「大学生になったら、", "とりあえず TrypL。」"],
+    visionHeading: ["「大学生にとって", "欠かすことのできないインフラに」"],
     visionP:
-      "大学の生活協同組合のように、当たり前にそこにある存在へ。2035年までに、既存の有力学生団体を超える規模と質を持つ、日本で最も強い学生実践コミュニティを目指します。学生が自分のペースで「やりたいこと」や「社会への貢献のかたち」を探し、深められる場を提供し続けます。",
+      "大学の生協のように、当たり前にそこにある存在へ。2035年までに、既存の有力学生団体を超える規模と質を持つ、日本で圧倒的な学生実践コミュニティを目指します。学生が自分のペースで「やりたいこと」や「社会への貢献のかたち」を探し、深められる場を提供し続けます。",
     msgEyebrow: "Message · 代表メッセージ",
     msgTitle: "「やりたい」という衝動を、社会の現場で形にする。",
     msgBody: [
       "TrypLが目指すのは、単なる学生団体やインターン紹介所ではありません。それは、どんな人とも安心感を持って本音を出し合い、共に人生という冒険を楽しみ、互いに応援し支え合える「家族」のような愛情に満ちたコミュニティです。",
-      "今の社会では、多くの学生が「将来のために実績を作らなければならない」という強迫観念に囚われています。しかし、本当に大切なのは、履歴書を飾ることではなく、あなた自身の内側にある純粋な動機に従って、社会の複雑さに直接触れてみることです。",
-      "自分の弱さや「わがまま」さえも分かち合いながら、仲間と共に未踏の現場へ踏み出す。その試行錯誤のプロセスこそが、あなたを本当の意味での「熟達」へと導きます。私たちは、この挑戦を楽しみ、共に成長していける「越境者」たちを待っています。",
+      "今の社会では、多くの学生が「将来のためにスキルや実績を作らなければならない」という強迫観念に囚われています。しかし、本当に大切なのは、履歴書を飾ることではなく、あなた自身の内側にある純粋な動機（あなたらしさ）に従って、社会の複雑さに直接触れてみることです。",
+      "自分の弱さもさらけ出し合いながら、仲間と共に未踏の現場へ踏み出す。その試行錯誤のプロセスこそが、あなたを本当の意味での「熟達」へと導きます。私たちは、この挑戦を楽しみ、共に成長していける「越境者」たちを待っています。",
     ],
     repName: "山田 晃義",
     repRole: "TrypL 代表",
@@ -456,15 +456,15 @@ const en: Pages = {
         key: "LifeMission",
         jp: "Life Mission",
         line: "From intrinsic motivation to a life’s mission.",
-        body: "Starting from the motivation welling up inside — “how do I want to relate to society” — and deepening your own form of contribution.",
+        body: "Starting from the motivation welling up inside — “how do I want to live” — and deepening your own form of contribution.",
       },
     ],
   },
   headers: {
     about: {
       eyebrow: "About · What is TrypL",
-      title: ["The next generation", "of co-creators with society."],
-      lead: "Starting from intrinsic motivation, students co-create with society — learning, challenging, and growing into mastery. TrypL is the community that provides those real opportunities.",
+      title: ["Keep exploring,", "together with society."],
+      lead: "Starting from intrinsic motivation — learning, challenging, and growing into mastery while co-creating with society.",
     },
     internships: {
       eyebrow: "Internships",
@@ -500,11 +500,11 @@ const en: Pages = {
   about: {
     whatEyebrow: "What",
     whatLede:
-      "TrypL is a “youth-focused internship community,” born from REAPRA.",
+      "TrypL is a community that creates a cycle of inquiry — knowing your own uniqueness (intrinsic motivation) and putting it into practice in society.",
     whatP1:
-      "In an increasingly uncertain society, TrypL is a project that co-creates the place and the chances for young people to connect with society over a long time horizon — through real work and companies — and to find well-being through mastery.",
+      "In an increasingly uncertain society, TrypL is a project that co-creates the place and the chances for young people to find, over a long time horizon and through their connection with society, a spark for living vividly (well-being).",
     whatP2:
-      "Not driven by job hunting or money, but starting from intrinsic motivation — “who am I,” “how do I want to relate to society” — students take a first step toward mastery co-created with society through real company work.",
+      "Not driven by job hunting, résumé lines, or financial reward, but starting from intrinsic motivation — “who am I,” “how do I want to relate to society” — students take a first step toward mastery co-created with society through real company work.",
     nameEyebrow: "The name",
     nameHeading: "Three L’s, woven into the name.",
     triple: [
@@ -521,7 +521,7 @@ const en: Pages = {
       {
         key: "LifeMission",
         jp: "Life Mission",
-        body: "Starting from the motivation welling up inside — “how do I want to relate to society” — and deepening your own form of contribution.",
+        body: "Starting from the motivation welling up inside — “how do I want to live” — and deepening your own form of contribution.",
       },
     ],
     words: [
@@ -538,15 +538,15 @@ const en: Pages = {
     reapraP2:
       "Students who have faced their intrinsic motivation through TrypL come back, five or ten years later, with their own careers and the society they want to create, and reconnect to REAPRA’s ecosystem. That, too, is TrypL’s long-term significance.",
     visionEyebrow: "Vision · 2035",
-    visionHeading: ["“Once you become a college student,", "just start with TrypL.”"],
+    visionHeading: ["“Indispensable infrastructure", "for every college student.”"],
     visionP:
-      "Like a campus co-op, something that is simply there as a given. By 2035, we aim to be Japan’s strongest student community of practice — surpassing today’s leading student organizations in scale and quality — and to keep offering a place where students explore and deepen “what they want to do” and “their form of contribution” at their own pace.",
+      "Like a campus co-op, something that is simply there as a given. By 2035, we aim to be Japan’s preeminent student community of practice — surpassing today’s leading student organizations in scale and quality — and to keep offering a place where students explore and deepen “what they want to do” and “their form of contribution” at their own pace.",
     msgEyebrow: "Message",
     msgTitle: "Giving the urge to “try” a real shape, in the field of society.",
     msgBody: [
       "What TrypL aims for is not a mere student group or internship agency. It is a community full of family-like affection — where anyone can share their true feelings in safety, enjoy the adventure of life together, and cheer each other on.",
-      "In today’s society, many students are gripped by the obsession that they “must build achievements for the future.” But what truly matters is not decorating a résumé — it is following the pure motivation inside you and touching the complexity of society directly.",
-      "Sharing even your weaknesses and “selfishness,” you step into uncharted fields with your peers. That very process of trial and error leads you to true mastery. We’re waiting for “boundary-crossers” who can enjoy this challenge and grow together.",
+      "In today’s society, many students are gripped by the obsession that they “must build skills and achievements for the future.” But what truly matters is not decorating a résumé — it is following the pure motivation inside you, who you really are, and touching the complexity of society directly.",
+      "Laying bare even your weaknesses to one another, you step into uncharted fields with your peers. That very process of trial and error leads you to true mastery. We’re waiting for “boundary-crossers” who can enjoy this challenge and grow together.",
     ],
     repName: "Akiyoshi Yamada",
     repRole: "TrypL Representative",
@@ -877,15 +877,15 @@ const ko: Pages = {
         key: "LifeMission",
         jp: "라이프 미션",
         line: "내발적 동기에서, 인생의 사명으로.",
-        body: "‘어떻게 사회와 관계 맺고 싶은가’라는 내면에서 솟는 동기를 기점으로, 자신만의 기여의 형태를 깊이 다져 갑니다.",
+        body: "‘어떻게 살고 싶은가’라는 내면에서 솟는 동기를 기점으로, 자신만의 기여의 형태를 깊이 다져 갑니다.",
       },
     ],
   },
   headers: {
     about: {
       eyebrow: "About · TrypL이란",
-      title: ["사회와 공동 창조하는,", "그 예비군을."],
-      lead: "내발적 동기를 기점으로, 학생이 사회와 공동 창조하며 배우고 도전하고 숙달해 갑니다. TrypL은 그 실천의 기회를 제공하는 커뮤니티입니다.",
+      title: ["사회와 함께", "계속 탐구한다."],
+      lead: "내발적 동기를 기점으로, 사회와 공동 창조하며 배우고 도전하고 숙달해 갑니다.",
     },
     internships: {
       eyebrow: "Internships · 모집 공고",
@@ -921,11 +921,11 @@ const ko: Pages = {
   about: {
     whatEyebrow: "What",
     whatLede:
-      "TrypL은 REAPRA에서 시작된 ‘청년 대상 인턴십 커뮤니티’입니다.",
+      "TrypL은 나다움(내발적 동기)을 알고, 사회 속에서 실천하는 탐구의 순환을 만들어 내는 커뮤니티입니다.",
     whatP1:
-      "불확실성이 커지는 사회에서, 청년이 긴 시간 축에 걸쳐 ‘회사와 관련된 일=사회와의 연결’을 통해 사회와 공동 창조하고, 숙달로 생기 있게 사는(웰빙) 계기를 잡는—그 장과 기회를 함께 만드는 프로젝트입니다.",
+      "불확실성이 커지는 사회에서, 청년이 긴 시간 축에 걸쳐 ‘사회와의 연결’을 통해 생기 있게 사는(웰빙) 계기를 잡는—그 장과 기회를 함께 만드는 프로젝트입니다.",
     whatP2:
-      "취업이나 보수·돈 중심이 아니라, ‘나는 누구인가’ ‘어떻게 사회와 관계 맺고 싶은가’라는 내발적 동기를 가진 학생이, 실제 기업 활동을 통해 ‘사회와 공동 창조하는 숙달’의 첫걸음을 내딛습니다.",
+      "취업이나 스펙, 금전적 보수 중심이 아니라, ‘나는 누구인가’ ‘어떻게 사회와 관계 맺고 싶은가’라는 내발적 동기를 가진 학생이, 실제 기업 활동을 통해 ‘사회와 공동 창조하는 숙달’의 첫걸음을 내딛습니다.",
     nameEyebrow: "The name",
     nameHeading: "이름에 담은 세 개의 L.",
     triple: [
@@ -942,7 +942,7 @@ const ko: Pages = {
       {
         key: "LifeMission",
         jp: "라이프 미션",
-        body: "‘어떻게 사회와 관계 맺고 싶은가’라는 내면에서 솟는 동기를 기점으로, 자신만의 기여의 형태를 깊이 다져 갑니다.",
+        body: "‘어떻게 살고 싶은가’라는 내면에서 솟는 동기를 기점으로, 자신만의 기여의 형태를 깊이 다져 갑니다.",
       },
     ],
     words: [
@@ -959,15 +959,15 @@ const ko: Pages = {
     reapraP2:
       "TrypL을 통해 내발적 동기와 마주한 학생들이 5년·10년 뒤 자신의 커리어와 만들고 싶은 사회를 안고 다시 REAPRA의 생태계로 이어집니다. 그것 또한 TrypL이 지닌 장기적 의의입니다.",
     visionEyebrow: "Vision · 2035",
-    visionHeading: ["“대학생이 되면,", "일단 TrypL.”"],
+    visionHeading: ["“대학생에게 없어서는 안 될", "인프라로.”"],
     visionP:
-      "대학의 생활협동조합처럼, 당연히 거기에 있는 존재로. 2035년까지 기존의 유력 학생 단체를 뛰어넘는 규모와 질을 갖춘, 일본에서 가장 강한 학생 실천 커뮤니티를 목표로 합니다. 학생이 자신의 페이스로 ‘하고 싶은 일’이나 ‘사회 기여의 형태’를 찾고 깊이 다져 갈 수 있는 장을 계속 제공합니다.",
+      "대학의 생협처럼, 당연히 거기에 있는 존재로. 2035년까지 기존의 유력 학생 단체를 뛰어넘는 규모와 질을 갖춘, 일본에서 압도적인 학생 실천 커뮤니티를 목표로 합니다. 학생이 자신의 페이스로 ‘하고 싶은 일’이나 ‘사회 기여의 형태’를 찾고 깊이 다져 갈 수 있는 장을 계속 제공합니다.",
     msgEyebrow: "Message · 대표 메시지",
     msgTitle: "‘하고 싶다’는 충동을, 사회의 현장에서 형태로.",
     msgBody: [
       "TrypL이 지향하는 것은 단순한 학생 단체나 인턴 소개소가 아닙니다. 누구와도 안심하고 본심을 나누고, 인생이라는 모험을 함께 즐기며, 서로 응원하고 지지하는 ‘가족’ 같은 애정으로 가득한 커뮤니티입니다.",
-      "지금 사회에서는 많은 학생이 ‘미래를 위해 실적을 쌓아야 한다’는 강박에 사로잡혀 있습니다. 하지만 정말 중요한 것은 이력서를 꾸미는 것이 아니라, 당신 내면의 순수한 동기를 따라 사회의 복잡함에 직접 닿아 보는 것입니다.",
-      "자신의 약함이나 ‘제멋대로’조차 나누면서, 동료와 함께 미답의 현장으로 나아갑니다. 그 시행착오의 과정이야말로 당신을 진정한 의미의 ‘숙달’로 이끕니다. 우리는 이 도전을 즐기며 함께 성장할 ‘경계를 넘는 사람들’을 기다립니다.",
+      "지금 사회에서는 많은 학생이 ‘미래를 위해 스킬과 실적을 쌓아야 한다’는 강박에 사로잡혀 있습니다. 하지만 정말 중요한 것은 이력서를 꾸미는 것이 아니라, 당신 내면의 순수한 동기(나다움)를 따라 사회의 복잡함에 직접 닿아 보는 것입니다.",
+      "자신의 약함도 드러내 나누면서, 동료와 함께 미답의 현장으로 나아갑니다. 그 시행착오의 과정이야말로 당신을 진정한 의미의 ‘숙달’로 이끕니다. 우리는 이 도전을 즐기며 함께 성장할 ‘경계를 넘는 사람들’을 기다립니다.",
     ],
     repName: "야마다 아키요시",
     repRole: "TrypL 대표",
