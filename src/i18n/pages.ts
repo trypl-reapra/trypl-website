@@ -82,6 +82,7 @@ const ja = {
       "不確実性が増す社会において、若年層が長い時間軸をかけて「社会との繋がり」を通じて、イキイキ生きる（ウェルビーイング）きっかけを掴む——その場と機会を共創するプロジェクトです。",
     whatP2:
       "就活やガクチカ、金銭的な報酬ドリブンではなく、「自分は何者か」「どう社会に関わりたいか」という内発的な動機を持つ学生が、実際の企業活動を通じて「社会と共創する熟達」の一歩を踏み出していきます。",
+    whatP2LinkText: "「社会と共創する熟達」",
     nameEyebrow: "The name",
     nameHeading: "名前に込めた、3つのL。",
     triple: [
@@ -505,6 +506,7 @@ const en: Pages = {
       "In an increasingly uncertain society, TrypL is a project that co-creates the place and the chances for young people to find, over a long time horizon and through their connection with society, a spark for living vividly (well-being).",
     whatP2:
       "Not driven by job hunting, résumé lines, or financial reward, but starting from intrinsic motivation — “who am I,” “how do I want to relate to society” — students take a first step toward mastery co-created with society through real company work.",
+    whatP2LinkText: "mastery co-created with society",
     nameEyebrow: "The name",
     nameHeading: "Three L’s, woven into the name.",
     triple: [
@@ -926,6 +928,7 @@ const ko: Pages = {
       "불확실성이 커지는 사회에서, 청년이 긴 시간 축에 걸쳐 ‘사회와의 연결’을 통해 생기 있게 사는(웰빙) 계기를 잡는—그 장과 기회를 함께 만드는 프로젝트입니다.",
     whatP2:
       "취업이나 스펙, 금전적 보수 중심이 아니라, ‘나는 누구인가’ ‘어떻게 사회와 관계 맺고 싶은가’라는 내발적 동기를 가진 학생이, 실제 기업 활동을 통해 ‘사회와 공동 창조하는 숙달’의 첫걸음을 내딛습니다.",
+    whatP2LinkText: "‘사회와 공동 창조하는 숙달’",
     nameEyebrow: "The name",
     nameHeading: "이름에 담은 세 개의 L.",
     triple: [

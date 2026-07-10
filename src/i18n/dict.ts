@@ -49,7 +49,23 @@ type Dict = {
     shifts: { from: string; to: string }[];
   };
   who: { eyebrow: string; titleLines: string[]; lead: string };
-  preview: { eyebrow: string; title: string; lead: string; all: string };
+  preview: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    all: string;
+    model: {
+      heading: string;
+      deepLabel: string;
+      deepDesc: string;
+      deepBar: string;
+      crossLabel: string;
+      crossDesc: string;
+      crossBars: string[];
+      months: string[];
+      caption: string;
+    };
+  };
   join: { eyebrow: string; title: string; body: string; primary: string; secondary: string };
   footer: {
     desc: string;
@@ -140,6 +156,18 @@ export const dict: Record<Locale, Dict> = {
       title: "実践の機会。",
       lead: "REAPRA およびREAPRA投資先企業での、選び抜かれたインターン。複数のインターンを横断する経験設計も可能です。",
       all: "すべての募集を見る",
+      model: {
+        heading: "経験設計のモデル",
+        deepLabel: "深める",
+        deepDesc: "一つの現場に、深く入り込む",
+        deepBar: "現場A（12ヶ月〜）",
+        crossLabel: "横断する",
+        crossDesc: "半年単位で、複数の現場を渡り歩く",
+        crossBars: ["現場A", "現場B", "現場C"],
+        months: ["0", "6ヶ月", "12ヶ月", "18ヶ月"],
+        caption:
+          "どちらの道でも、内発的動機を確かめながら「社会と共創する熟達」へ。組み合わせや途中での切り替えも自由です。",
+      },
     },
     join: {
       eyebrow: "Join our community",
@@ -236,6 +264,18 @@ export const dict: Record<Locale, Dict> = {
       title: "Opportunities for practice.",
       lead: "Curated internships at REAPRA and its portfolio companies. You can even design an experience that spans several internships.",
       all: "See all internships",
+      model: {
+        heading: "How an experience can be designed",
+        deepLabel: "Go deep",
+        deepDesc: "Dive deep into a single field",
+        deepBar: "Field A (12+ months)",
+        crossLabel: "Cross over",
+        crossDesc: "Move across fields in half-year units",
+        crossBars: ["Field A", "Field B", "Field C"],
+        months: ["0", "6 mo", "12 mo", "18 mo"],
+        caption:
+          "Either path leads toward mastery co-created with society, while testing your intrinsic motivation. Combining or switching along the way is up to you.",
+      },
     },
     join: {
       eyebrow: "Join our community",
@@ -332,6 +372,18 @@ export const dict: Record<Locale, Dict> = {
       title: "실천의 기회.",
       lead: "REAPRA와 REAPRA 투자처 기업에서 엄선한 인턴십. 여러 인턴십을 넘나드는 경험 설계도 가능합니다.",
       all: "모든 모집 보기",
+      model: {
+        heading: "경험 설계 모델",
+        deepLabel: "깊이 파기",
+        deepDesc: "한 현장에 깊이 들어간다",
+        deepBar: "현장 A (12개월~)",
+        crossLabel: "넘나들기",
+        crossDesc: "반년 단위로 여러 현장을 오간다",
+        crossBars: ["현장 A", "현장 B", "현장 C"],
+        months: ["0", "6개월", "12개월", "18개월"],
+        caption:
+          "어느 길이든 내발적 동기를 확인하며 ‘사회와 공동 창조하는 숙달’로 향합니다. 조합하거나 도중에 바꾸는 것도 자유입니다.",
+      },
     },
     join: {
       eyebrow: "Join our community",

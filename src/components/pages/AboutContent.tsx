@@ -10,6 +10,29 @@ import { representative } from "@/data/team";
 import { site } from "@/data/site";
 import { usePages } from "@/i18n/pages";
 
+/** 「社会と共創する熟達」の解説記事（代表・山田さんの note）。 */
+const MASTERY_NOTE_URL = "https://note.com/akn5451/n/n542db42955f8";
+
+/** 本文中の特定フレーズだけを外部リンクにして描画する。 */
+function linkifyPhrase(text: string, phrase: string, href: string) {
+  const at = text.indexOf(phrase);
+  if (at === -1) return text;
+  return (
+    <>
+      {text.slice(0, at)}
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-medium text-ink underline decoration-line underline-offset-4 transition-colors hover:decoration-ink"
+      >
+        {phrase}
+      </a>
+      {text.slice(at + phrase.length)}
+    </>
+  );
+}
+
 export default function AboutContent() {
   const t = usePages();
   const a = t.about;
@@ -37,7 +60,9 @@ export default function AboutContent() {
                 <p className="mt-8 leading-relaxed text-mute">{a.whatP1}</p>
               </Reveal>
               <Reveal delay={0.15}>
-                <p className="mt-6 leading-relaxed text-mute">{a.whatP2}</p>
+                <p className="mt-6 leading-relaxed text-mute">
+                  {linkifyPhrase(a.whatP2, a.whatP2LinkText, MASTERY_NOTE_URL)}
+                </p>
               </Reveal>
             </div>
           </div>
