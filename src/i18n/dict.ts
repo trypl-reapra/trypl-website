@@ -63,6 +63,8 @@ type Dict = {
       crossDesc: string;
       crossBars: string[];
       months: string[];
+      goal: string;
+      you: string;
       caption: string;
     };
   };
@@ -165,6 +167,8 @@ export const dict: Record<Locale, Dict> = {
         crossDesc: "半年単位で、複数の現場を渡り歩く",
         crossBars: ["現場A", "現場B", "現場C"],
         months: ["0", "6ヶ月", "12ヶ月", "18ヶ月"],
+        goal: "「社会と共創する熟達」へ",
+        you: "あなたの歩み",
         caption:
           "どちらの道でも、内発的動機を確かめながら「社会と共創する熟達」へ。組み合わせや途中での切り替えも自由です。",
       },
@@ -273,6 +277,8 @@ export const dict: Record<Locale, Dict> = {
         crossDesc: "Move across fields in half-year units",
         crossBars: ["Field A", "Field B", "Field C"],
         months: ["0", "6 mo", "12 mo", "18 mo"],
+        goal: "Toward mastery co-created with society",
+        you: "Your journey",
         caption:
           "Either path leads toward mastery co-created with society, while testing your intrinsic motivation. Combining or switching along the way is up to you.",
       },
@@ -381,6 +387,8 @@ export const dict: Record<Locale, Dict> = {
         crossDesc: "반년 단위로 여러 현장을 오간다",
         crossBars: ["현장 A", "현장 B", "현장 C"],
         months: ["0", "6개월", "12개월", "18개월"],
+        goal: "‘사회와 공동 창조하는 숙달’로",
+        you: "나의 여정",
         caption:
           "어느 길이든 내발적 동기를 확인하며 ‘사회와 공동 창조하는 숙달’로 향합니다. 조합하거나 도중에 바꾸는 것도 자유입니다.",
       },
