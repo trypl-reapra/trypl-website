@@ -6,9 +6,11 @@ import { Container, Section } from "@/components/ui";
 import MemberLogout from "@/components/members/MemberLogout";
 import MembershipCard from "@/components/members/MembershipCard";
 import MemberProfileForm from "@/components/members/MemberProfileForm";
+import MasteryPanel from "@/components/members/MasteryPanel";
 import DeleteAccountButton from "@/components/members/DeleteAccountButton";
 import { usePages } from "@/i18n/pages";
 import type { MemberProfile } from "@/lib/profile";
+import type { MasteryRecord } from "@/lib/mastery";
 
 export default function MembersContent({
   name,
@@ -19,6 +21,7 @@ export default function MembersContent({
   founder,
   profile,
   qrSvg,
+  mastery,
 }: {
   name: string | null;
   email: string | null;
@@ -28,6 +31,7 @@ export default function MembersContent({
   founder: boolean;
   profile: MemberProfile | null;
   qrSvg?: string;
+  mastery?: MasteryRecord;
 }) {
   const t = usePages();
   const m = t.members;
@@ -65,6 +69,11 @@ export default function MembersContent({
               profile={profile}
               defaultName={name ?? ""}
             />
+          </div>
+
+          {/* 熟達タイプ診断の結果（診断サイトから記録したもの） */}
+          <div className="mb-10">
+            <MasteryPanel mastery={mastery} />
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2">

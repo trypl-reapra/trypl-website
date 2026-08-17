@@ -17,6 +17,7 @@ import {
 const CATEGORY_OPTIONS = Object.entries(CATEGORIES) as [string, string][];
 const WORK_STYLE_OPTIONS = Object.entries(WORK_STYLE_LABEL) as [string, string][];
 import { profileComplete } from "@/lib/profile";
+import { MASTERY_TYPES, type MasteryRecord } from "@/lib/mastery";
 
 type Contact = {
   id: string;
@@ -79,6 +80,8 @@ type Member = {
   founder?: boolean;
   frozen?: boolean;
   profile?: Profile;
+  /** 熟達タイプ診断の結果（本人が /members/mastery から記録） */
+  mastery?: MasteryRecord;
 };
 type Withdrawal = {
   id: string;
@@ -208,9 +211,13 @@ function membersCsv(members: Member[]): string {
     "創設メンバー",
     "凍結",
     "プロバイダ",
+    "熟達タイプ",
+    "タイプコード",
+    "診断モード",
   ];
   const rows = members.map((m) => {
     const p = m.profile;
+    const mt = m.mastery;
     return [
       fmt(m.createdAt),
       p?.fullName ?? "",
@@ -227,6 +234,9 @@ function membersCsv(members: Member[]): string {
       m.founder ? "○" : "",
       m.frozen ? "○" : "",
       m.provider ?? "",
+      mt ? MASTERY_TYPES[mt.code]?.name ?? "" : "",
+      mt?.code ?? "",
+      mt ? (mt.mode === "quick" ? "クイック" : "精密") : "",
     ];
   });
   return toCsv([header, ...rows]);
@@ -814,6 +824,14 @@ function MemberRow({ mb, reload }: { mb: Member; reload: () => void }) {
           {mb.frozen && (
             <span className="ml-2 rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-700">
               凍結中
+            </span>
+          )}
+          {mb.mastery && (
+            <span
+              className="ml-2 rounded-full border border-line px-2 py-0.5 text-[11px] font-semibold text-mute"
+              title={`熟達タイプ ${mb.mastery.code}（${mb.mastery.mode === "quick" ? "クイック" : "精密"}）`}
+            >
+              {MASTERY_TYPES[mb.mastery.code]?.name ?? mb.mastery.code}
             </span>
           )}
           <span className="ml-3 text-sm text-mute">{mb.email}</span>

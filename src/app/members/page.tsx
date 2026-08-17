@@ -95,6 +95,7 @@ export default async function MembersPage({
       founder={!!me?.founder}
       profile={profile}
       qrSvg={qrSvg}
+      mastery={me?.mastery}
     />
   );
 }

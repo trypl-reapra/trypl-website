@@ -48,7 +48,14 @@ type Dict = {
     lead: string;
     shifts: { from: string; to: string }[];
   };
-  who: { eyebrow: string; titleLines: string[]; lead: string };
+  who: {
+    eyebrow: string;
+    titleLines: string[];
+    lead: string;
+    /** 熟達タイプ診断（別サイト）への導線 */
+    masteryLead: string;
+    masteryCta: string;
+  };
   preview: {
     eyebrow: string;
     title: string;
@@ -152,6 +159,9 @@ export const dict: Record<Locale, Dict> = {
         "社会に人に触れる実践を通じて、あらゆることを学習機会に変えようとする人。",
       ],
       lead: "入口は、広く。最初から完璧である必要はありません。曖昧な状況でも一歩を踏み出し、活動を通じて自分の志向と適性を見つけていく——そんな姿勢を、私たちは大切にします。",
+      masteryLead:
+        "自分の挑戦の癖を、先に知っておく。REAPRAの学習理論からつくった16タイプの診断です（無料・約4分）。結果は会員ページに記録できます。",
+      masteryCta: "熟達タイプ診断を受ける",
     },
     preview: {
       eyebrow: "Internships",
@@ -262,6 +272,9 @@ export const dict: Record<Locale, Dict> = {
         "People who turn everything into a chance to learn, through hands-on encounters with society and its people.",
       ],
       lead: "The door is wide open. You don’t need to be perfect from the start. Take a step even amid uncertainty, and discover your direction and strengths through the work — that’s the attitude we value.",
+      masteryLead:
+        "Get to know your own habits of challenge first. A 16-type assessment built from REAPRA's learning theory (free, ~4 min). You can save the result to your member page.",
+      masteryCta: "Take the Mastery Type assessment",
     },
     preview: {
       eyebrow: "Internships",
@@ -372,6 +385,9 @@ export const dict: Record<Locale, Dict> = {
         "사회와 사람에 닿는 실천을 통해, 모든 것을 배움의 기회로 바꾸려는 사람.",
       ],
       lead: "입구는 넓게. 처음부터 완벽할 필요는 없습니다. 불확실한 상황에서도 한 걸음 내딛고, 활동을 통해 자신의 지향과 적성을 찾아가는—그런 자세를 우리는 소중히 여깁니다.",
+      masteryLead:
+        "자신의 도전 습관을 먼저 알아두기. REAPRA의 학습 이론으로 만든 16유형 진단입니다(무료·약 4분). 결과는 회원 페이지에 기록할 수 있습니다.",
+      masteryCta: "숙달 유형 진단 받기",
     },
     preview: {
       eyebrow: "Internships",

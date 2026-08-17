@@ -6,6 +6,7 @@ import { Reveal } from "@/components/motion";
 import { cn } from "@/lib/cn";
 import { site } from "@/data/site";
 import { socials } from "@/data/socials";
+import { MASTERY_SITE } from "@/lib/mastery";
 import { usePages } from "@/i18n/pages";
 
 function ArrowUpRight() {
@@ -106,6 +107,14 @@ export default function LinksContent() {
             <LinkRow label={t.primary[0].label} sub={t.primary[0].sub} href="/internships" available prep={t.prep} />
             <LinkRow label={t.primary[1].label} sub={t.primary[1].sub} href="/events" available prep={t.prep} />
             <LinkRow label={t.primary[2].label} sub={t.primary[2].sub} href="/about" available prep={t.prep} />
+            {/* 熟達タイプ診断（別サイト）。結果は会員ページに記録できる */}
+            <LinkRow
+              label={t.masteryLabel}
+              sub={t.masteryDesc}
+              href={MASTERY_SITE}
+              available
+              prep={t.prep}
+            />
           </div>
         </Reveal>
 

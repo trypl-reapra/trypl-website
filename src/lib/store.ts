@@ -10,6 +10,7 @@
 
 import "server-only";
 import type { MemberProfile } from "@/lib/profile";
+import type { MasteryRecord } from "@/lib/mastery";
 import { defaultPress, defaultEvents } from "@/data/site";
 
 export type Contact = {
@@ -126,6 +127,8 @@ export type Member = {
   frozen?: boolean;
   /** 応募用プロフィール（一度入力すると次回以降は自動入力される）。 */
   profile?: MemberProfile;
+  /** 熟達タイプ診断の結果（本人が /members/mastery から記録）。 */
+  mastery?: MasteryRecord;
 };
 
 /** 退会したメンバーの記録（退会者リスト）。 */
@@ -420,6 +423,22 @@ export async function setMemberProfile(
   const items = (await listMembers()).map((m) =>
     m.email === email ? { ...m, profile } : m,
   );
+  await saveAllMembers(items);
+}
+
+/** 熟達タイプ診断の結果を保存（本人が診断サイトから記録）。null で削除。 */
+export async function setMemberMastery(
+  email: string,
+  mastery: MasteryRecord | null,
+): Promise<void> {
+  const items = (await listMembers()).map((m) => {
+    if (m.email !== email) return m;
+    if (!mastery) {
+      const { mastery: _drop, ...rest } = m;
+      return rest;
+    }
+    return { ...m, mastery };
+  });
   await saveAllMembers(items);
 }
 
