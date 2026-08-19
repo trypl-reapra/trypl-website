@@ -77,6 +77,39 @@ npm start        # 本番サーバー
 
 ---
 
+## 熟達タイプ診断との連携
+
+REAPRA式の学習スタイル診断（別リポジトリ `~/mastery-type` → https://mastery-type.vercel.app ）の結果を、
+会員が自分の会員ページに記録できます。**診断 → 会員登録** の導線になっています。
+
+```
+診断サイトの結果画面「会員ページに記録する」
+  → /members/mastery?r=<ペイロード>
+     ├ 未ログイン → Google ログイン（＝会員登録）→ 同じURLへ戻る
+     └ ログイン済 → 「記録する」→ POST /api/members/mastery → Member.mastery に保存
+  → /members の「熟達タイプ」パネルに表示（管理画面の一覧・CSVにも出る）
+```
+
+| 場所 | 役割 |
+|---|---|
+| `src/lib/mastery.ts` | ペイロードの検証・16タイプ表・軸ラベル。**診断側 `data.js` の写しなので、向こうを変えたらここも合わせる** |
+| `src/app/members/mastery/page.tsx` | 受け口（未ログイン／ログイン済／不正リンクの3状態） |
+| `src/app/api/members/mastery/route.ts` | 記録（POST）・削除（DELETE） |
+| `src/components/members/MasteryPanel.tsx` | 会員ページでの表示 |
+| `scripts/verify-mastery-contract.mjs` | 両リポジトリを突き合わせる契約テスト |
+
+保存するのはタイプコード・4軸の%・センサー値・モード・記録日時だけで、**個々の設問への回答は受け取りません**
+（プライバシーポリシー第3条(5)・第4条(5)・第10条に明記済み）。本人が会員ページからいつでも削除できます。
+
+```bash
+node scripts/verify-mastery-contract.mjs            # ~/mastery-type を見にいく
+node scripts/verify-mastery-contract.mjs /path/to/mastery-type
+```
+
+タイプ名やペイロード形式を変えたときは、**必ずこれを走らせてから**両方をデプロイすること。
+
+---
+
 ## 🚀 公開前のチェックリスト
 
 1. **募集要項・SNS リンク・連絡先** を実データに差し替える（`src/data/`）。
