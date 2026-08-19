@@ -123,6 +123,7 @@ node scripts/verify-mastery-contract.mjs /path/to/mastery-type
 
 ## デプロイ（Vercel）
 
+本番は **https://trypl.vercel.app**（`trypl-reapra` のVercelアカウント）。
 `main` ブランチへ push すると Vercel が自動でビルド・デプロイします。
 
 ```bash
@@ -131,7 +132,10 @@ git commit -m "update content"
 git push
 ```
 
-手動デプロイ：`vercel --prod`
+> ⚠ **`vercel --prod` による手動デプロイは使わないこと。**
+> このリポジトリの `.vercel/project.json` は、いまは存在しない別アカウントの
+> プロジェクトを指したまま残っており、手動デプロイは通らない。
+> 本番は上記のGitHub連携だけで運用する。
 
 ---
 
