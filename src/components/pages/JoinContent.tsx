@@ -5,7 +5,6 @@ import PageHeader from "@/components/PageHeader";
 import { Container, Section, Button, Eyebrow } from "@/components/ui";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { site } from "@/data/site";
-import { socials } from "@/data/socials";
 import { usePages } from "@/i18n/pages";
 import { useT } from "@/i18n/LocaleProvider";
 
@@ -13,7 +12,6 @@ export default function JoinContent() {
   const t = usePages();
   const tt = useT();
   const j = t.join;
-  const line = socials.find((s) => s.key === "line");
   const { status } = useSession();
   const authed = status === "authenticated";
 
@@ -79,21 +77,6 @@ export default function JoinContent() {
             </div>
 
             <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2 text-sm text-mute-dark">
-              <span>
-                {j.lineLabel}
-                {line?.available ? (
-                  <a
-                    href={line.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="link-underline text-paper-dim"
-                  >
-                    {j.lineAction}
-                  </a>
-                ) : (
-                  <span className="text-paper-dim/50">{j.prep}</span>
-                )}
-              </span>
               <span>
                 {j.contactLabel}
                 <a

@@ -208,7 +208,7 @@ const ja = {
       },
       {
         title: "つながる",
-        body: "LINE 公式やコミュニティで、同世代の仲間や運営とつながる。",
+        body: "コミュニティで、同世代の仲間や運営とつながる。",
       },
       {
         title: "応募・実践する",
@@ -218,12 +218,10 @@ const ja = {
     getStartedEyebrow: "Get started",
     getStartedHeading: "いますぐ、はじめる。",
     getStartedBody:
-      "まずはこのサイトで会員登録（無料・30秒）。その後 LINE で最新情報を受け取り、気になる募集に応募できます。",
+      "まずはこのサイトで会員登録（無料・30秒）。会員になると最新情報を受け取り、気になる募集に応募できます。",
     entryReady: "参加フォームへ",
     entryPrep: "参加フォーム（準備中）",
     seeInternships: "募集を見る",
-    lineLabel: "LINE：",
-    lineAction: "友だち追加",
     slackLabel: "Slack：",
     slackAction: "参加する",
     contactLabel: "お問い合わせ：",
@@ -392,7 +390,6 @@ const ja = {
     privacy: "続行することで、TrypL の運営方針とプライバシーの取り扱いに同意したものとみなされます。",
     prepTitle: "会員登録は近日公開",
     prepDesc: "現在、会員登録機能を準備中です。公開までは下記からお気軽にご連絡ください。",
-    prepLine: "公式アカウントを友だち追加",
     adminLink: "運営の方はこちら",
   },
   internshipsCta: {
@@ -668,7 +665,7 @@ const en: Pages = {
       },
       {
         title: "Connect",
-        body: "Connect with peers and the team via LINE Official and the community.",
+        body: "Connect with peers and the team through the community.",
       },
       {
         title: "Apply & practice",
@@ -678,12 +675,10 @@ const en: Pages = {
     getStartedEyebrow: "Get started",
     getStartedHeading: "Start, right now.",
     getStartedBody:
-      "First, sign up on this site (free, ~30s). Then get updates on LINE and apply to internships that interest you.",
+      "First, sign up on this site (free, ~30s). As a member, you’ll get the latest updates and can apply to internships that interest you.",
     entryReady: "Go to the form",
     entryPrep: "Form (coming soon)",
     seeInternships: "See internships",
-    lineLabel: "LINE: ",
-    lineAction: "Add as friend",
     slackLabel: "Slack: ",
     slackAction: "Join",
     contactLabel: "Contact: ",
@@ -850,7 +845,6 @@ const en: Pages = {
     privacy: "By continuing, you agree to TrypL's operating policy and the handling of your data.",
     prepTitle: "Sign-up coming soon",
     prepDesc: "Member sign-up is being prepared. Until it launches, feel free to reach us below.",
-    prepLine: " Official — add as a friend",
     adminLink: "Operators, log in here",
   },
   internshipsCta: {
@@ -1124,7 +1118,7 @@ const ko: Pages = {
       },
       {
         title: "연결되기",
-        body: "LINE 공식과 커뮤니티에서 또래 동료·운영진과 이어집니다.",
+        body: "커뮤니티에서 또래 동료·운영진과 이어집니다.",
       },
       {
         title: "지원·실천하기",
@@ -1134,12 +1128,10 @@ const ko: Pages = {
     getStartedEyebrow: "Get started",
     getStartedHeading: "지금 바로 시작.",
     getStartedBody:
-      "먼저 이 사이트에서 회원 가입(무료·30초). 이후 LINE으로 소식을 받고, 관심 있는 모집에 지원할 수 있습니다.",
+      "먼저 이 사이트에서 회원 가입(무료·30초). 회원이 되면 소식을 받고, 관심 있는 모집에 지원할 수 있습니다.",
     entryReady: "참가 폼으로",
     entryPrep: "참가 폼(준비 중)",
     seeInternships: "모집 보기",
-    lineLabel: "LINE: ",
-    lineAction: "친구 추가",
     slackLabel: "Slack: ",
     slackAction: "참여하기",
     contactLabel: "문의: ",
@@ -1306,7 +1298,6 @@ const ko: Pages = {
     privacy: "계속하면 TrypL의 운영 방침과 개인정보 처리에 동의하는 것으로 간주됩니다.",
     prepTitle: "회원 가입은 곧 공개됩니다",
     prepDesc: "현재 회원 가입 기능을 준비 중입니다. 공개 전까지는 아래로 편하게 연락 주세요.",
-    prepLine: " 공식 계정 친구 추가",
     adminLink: "운영자는 여기로",
   },
   internshipsCta: {

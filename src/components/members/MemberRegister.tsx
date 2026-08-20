@@ -4,7 +4,6 @@ import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
 import { LogoMark } from "@/components/logo";
 import { site } from "@/data/site";
-import { socials } from "@/data/socials";
 import { usePages } from "@/i18n/pages";
 
 type Providers = { google: boolean; apple: boolean; any: boolean };
@@ -30,7 +29,6 @@ function AppleIcon() {
 
 export default function MemberRegister({ providers }: { providers: Providers }) {
   const t = usePages().memberAuth;
-  const line = socials.find((s) => s.key === "line");
 
   // クリック時に ?next= を読む（応募ページ等から来たらログイン後そこへ戻す。内部パスのみ許可）。
   function start(provider: "google" | "apple") {
@@ -94,16 +92,6 @@ export default function MemberRegister({ providers }: { providers: Providers }) 
             <h2 className="font-jp text-base font-bold">{t.prepTitle}</h2>
             <p className="mt-3 text-sm leading-relaxed text-mute">{t.prepDesc}</p>
             <div className="mt-5 flex flex-col gap-2 text-sm">
-              {line?.available && (
-                <a
-                  href={line.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="link-underline"
-                >
-                  LINE{t.prepLine}
-                </a>
-              )}
               <a href={`mailto:${site.email}`} className="link-underline">
                 {site.email}
               </a>

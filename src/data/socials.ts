@@ -12,7 +12,6 @@ export type SocialKey =
   | "threads"
   | "youtube"
   | "note"
-  | "line"
   | "slack";
 
 export type Social = {
@@ -81,14 +80,6 @@ export const socials: Social[] = [
     href: "#",
     available: false,
     role: "発信",
-  },
-  {
-    key: "line",
-    label: "LINE公式",
-    handle: "友だち追加",
-    href: "https://lin.ee/8mMyO9Qc",
-    available: true,
-    role: "接点管理",
   },
   {
     key: "slack",
