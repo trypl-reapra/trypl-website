@@ -43,6 +43,11 @@ const ja = {
       title: ["社会と共に", "探究し続ける。"],
       lead: "内発的動機を起点に、社会と共創しながら学び、挑戦し、熟達していく。",
     },
+    products: {
+      eyebrow: "Products · TrypLでできること",
+      title: ["知る、試す、", "つながる。"],
+      lead: "自分の癖を知ることから、実践の現場に立つところまで。TrypLが用意している4つの入口です。",
+    },
     internships: {
       eyebrow: "Internships · 募集一覧",
       title: ["実践の、機会を。"],
@@ -275,6 +280,79 @@ const ja = {
     note: "メンバー用パスワードは運営からお知らせします。運営者は管理者アカウントでログインすると管理画面に進みます。",
     errorDefault: "ログインに失敗しました",
   },
+
+  /* プロダクト紹介ページ（/products）。TrypLが提供している入口を1枚にまとめる */
+  productsPage: {
+    intro:
+      "TrypLは、REAPRA発の実践型インターンコミュニティです。「いきなり応募」ではなく、自分を知るところから現場に立つまでを、段階を追って用意しています。",
+    items: [
+      {
+        num: "01",
+        badge: "無料・約4分から",
+        name: "熟達タイプ診断",
+        tagline: "あなたの人生の\"癖\"を知る。",
+        body:
+          "REAPRAが積み重ねてきた「社会と共創する熟達」の学習理論から、あなたの挑み方・決め方・学び方・時間軸を4つの軸で読み解きます。16タイプのどれかに当てはめて終わりではなく、結果には次の7日間の小さな実験が添えられます。",
+        points: [
+          "24問・約4分のクイック版と、60問の精密版",
+          "しっくりこなければ、結果をその場で切り替えられる",
+          "診断結果は会員ページに記録できる",
+        ],
+        cta: "診断を受ける",
+        external: true,
+      },
+      {
+        num: "02",
+        badge: "無料・30秒",
+        name: "会員コミュニティ",
+        tagline: "一度登録すれば、次からすぐ動ける。",
+        body:
+          "Googleアカウントで登録すると会員証が発行されます。応募のたびに情報を入力し直す必要がなくなり、イベントの受付もQRで完了します。熟達タイプを記録しておけば、測り直したときの変化も残せます。",
+        points: [
+          "会員証に熟達タイプが載る",
+          "応募情報は一度入力すれば次回から自動入力",
+          "イベント受付用のQRコード",
+        ],
+        cta: "会員登録する",
+        external: false,
+      },
+      {
+        num: "03",
+        badge: "随時更新",
+        name: "インターンシップ",
+        tagline: "実践の現場に、立つ。",
+        body:
+          "REAPRAおよび投資先企業での実践機会を掲載しています。ひとつの現場を深く掘るのも、半年単位で複数の現場を渡るのも選べます。完璧である必要はありません。曖昧なままでも一歩を踏み出せる場を用意しています。",
+        points: [
+          "業種・勤務形態・コミット量から選べる",
+          "会員登録済みならフォーム入力なしで応募",
+          "選考の連絡もサイト内で完結",
+        ],
+        cta: "募集を見る",
+        external: false,
+      },
+      {
+        num: "04",
+        badge: "オンライン／対面",
+        name: "イベント",
+        tagline: "まず、社会と出会ってみる。",
+        body:
+          "説明会・座談会・ワークショップを開催しています。いきなり応募するのはハードルが高いという人に、まず社会と出会う機会として使ってもらえたらと思っています。",
+        points: [
+          "オンライン開催もあり、地方からでも参加できる",
+          "会員はQRで受付が完了する",
+          "開催予定はイベントページで随時更新",
+        ],
+        cta: "予定を見る",
+        external: false,
+      },
+    ],
+    flowTitle: "どこから始めても構いません。",
+    flowLead:
+      "順番はありません。診断から入って自分を知ってから応募してもいいですし、気になる募集を先に見てからでも構いません。",
+    ctaTitle: "まずは、4分から。",
+    ctaLead: "自分の癖を知るところから始めるなら、診断がいちばん軽い入口です。",
+  },
   members: {
     welcome: "ようこそ、",
     welcomeSuffix: " さん。TrypL のメンバーエリアです。",
@@ -499,6 +577,11 @@ const en: Pages = {
       eyebrow: "About · What is TrypL",
       title: ["Keep exploring,", "together with society."],
       lead: "Starting from intrinsic motivation — learning, challenging, and growing into mastery while co-creating with society.",
+    },
+    products: {
+      eyebrow: "Products · What TrypL offers",
+      title: ["Know yourself,", "then step out."],
+      lead: "From knowing your own habits to standing in a real workplace. Four ways in.",
     },
     internships: {
       eyebrow: "Internships",
@@ -732,6 +815,78 @@ const en: Pages = {
     note: "The member password is shared by the team. Admins log in with an admin account to reach the dashboard.",
     errorDefault: "Login failed",
   },
+
+  productsPage: {
+    intro:
+      "TrypL is a hands-on internship community born from REAPRA. Instead of jumping straight to applications, we've laid out a path from knowing yourself to standing in a real workplace.",
+    items: [
+      {
+        num: "01",
+        badge: "Free · from ~4 min",
+        name: "Mastery Type",
+        tagline: "Know the habits of your life.",
+        body:
+          "Built on REAPRA's learning theory of co-creative mastery, it reads how you take on challenges, how you decide, how you learn, and your time horizon across four axes. Rather than pinning you to a label, the result comes with a small seven-day experiment.",
+        points: [
+          "A 24-question quick version and a 60-question full version",
+          "If it doesn't fit, you can switch the result on the spot",
+          "Save your type to your member page",
+        ],
+        cta: "Take the assessment",
+        external: true,
+      },
+      {
+        num: "02",
+        badge: "Free · 30 seconds",
+        name: "Membership",
+        tagline: "Register once, move fast after.",
+        body:
+          "Sign in with Google and you get a membership card. You won't re-enter your details for every application, and event check-in is a QR scan. Save your mastery type and you can see how it shifts when you retake it.",
+        points: [
+          "Your mastery type appears on your card",
+          "Application details autofill after the first time",
+          "QR code for event check-in",
+        ],
+        cta: "Become a member",
+        external: false,
+      },
+      {
+        num: "03",
+        badge: "Updated regularly",
+        name: "Internships",
+        tagline: "Stand in the real work.",
+        body:
+          "Opportunities at REAPRA and its portfolio companies. Dive deep into one field, or move across several over half-year stretches. You don't need to be perfect — this is a place to take a step even amid uncertainty.",
+        points: [
+          "Filter by field, work style, and commitment",
+          "Members apply without filling in forms again",
+          "Selection updates handled on the site",
+        ],
+        cta: "See openings",
+        external: false,
+      },
+      {
+        num: "04",
+        badge: "Online / in person",
+        name: "Events",
+        tagline: "Meet society first.",
+        body:
+          "Info sessions, dialogues, and workshops. If applying outright feels like too big a leap, these are a lighter way to encounter the world of work first.",
+        points: [
+          "Online sessions, so distance is no barrier",
+          "Members check in with a QR code",
+          "Upcoming dates posted on the events page",
+        ],
+        cta: "See what's on",
+        external: false,
+      },
+    ],
+    flowTitle: "Start anywhere.",
+    flowLead:
+      "There's no required order. Take the assessment first and apply once you know yourself, or browse the openings first — either works.",
+    ctaTitle: "Start with four minutes.",
+    ctaLead: "If you want to begin by knowing your own habits, the assessment is the lightest way in.",
+  },
   members: {
     welcome: "Welcome, ",
     welcomeSuffix: ". This is the TrypL members area.",
@@ -952,6 +1107,11 @@ const ko: Pages = {
       eyebrow: "About · TrypL이란",
       title: ["사회와 함께", "계속 탐구한다."],
       lead: "내발적 동기를 기점으로, 사회와 공동 창조하며 배우고 도전하고 숙달해 갑니다.",
+    },
+    products: {
+      eyebrow: "Products · TrypL에서 할 수 있는 것",
+      title: ["알고, 시도하고,", "이어진다."],
+      lead: "자신의 습관을 아는 것부터 실천의 현장에 서는 것까지. TrypL이 준비한 네 개의 입구입니다.",
     },
     internships: {
       eyebrow: "Internships · 모집 공고",
@@ -1184,6 +1344,78 @@ const ko: Pages = {
     sending: "확인 중…",
     note: "멤버용 비밀번호는 운영진이 안내합니다. 운영자는 관리자 계정으로 로그인하면 관리 화면으로 이동합니다.",
     errorDefault: "로그인에 실패했습니다",
+  },
+
+  productsPage: {
+    intro:
+      "TrypL은 REAPRA에서 시작된 실천형 인턴 커뮤니티입니다. 곧바로 지원하는 것이 아니라, 자신을 아는 것부터 현장에 서기까지를 단계적으로 준비해 두었습니다.",
+    items: [
+      {
+        num: "01",
+        badge: "무료 · 약 4분부터",
+        name: "숙달 유형 진단",
+        tagline: "당신 인생의 \"습관\"을 안다.",
+        body:
+          "REAPRA가 쌓아온 「사회와 공동 창조하는 숙달」의 학습 이론을 바탕으로, 당신의 도전 방식·결정 방식·배움의 방식·시간축을 네 개의 축으로 읽어냅니다. 유형에 가두는 것으로 끝나지 않고, 결과에는 다음 7일간의 작은 실험이 함께 담깁니다.",
+        points: [
+          "24문항 퀵 버전과 60문항 정밀 버전",
+          "납득되지 않으면 결과를 그 자리에서 바꿀 수 있음",
+          "진단 결과를 회원 페이지에 기록 가능",
+        ],
+        cta: "진단 받기",
+        external: true,
+      },
+      {
+        num: "02",
+        badge: "무료 · 30초",
+        name: "회원 커뮤니티",
+        tagline: "한 번 등록하면, 다음부터 바로 움직일 수 있다.",
+        body:
+          "Google 계정으로 등록하면 회원증이 발급됩니다. 지원할 때마다 정보를 다시 입력할 필요가 없고, 이벤트 접수도 QR로 끝납니다. 숙달 유형을 기록해 두면 다시 측정했을 때의 변화도 남길 수 있습니다.",
+        points: [
+          "회원증에 숙달 유형이 표시됨",
+          "지원 정보는 한 번 입력하면 다음부터 자동 입력",
+          "이벤트 접수용 QR 코드",
+        ],
+        cta: "회원 가입하기",
+        external: false,
+      },
+      {
+        num: "03",
+        badge: "수시 업데이트",
+        name: "인턴십",
+        tagline: "실천의 현장에 선다.",
+        body:
+          "REAPRA와 투자처 기업에서의 실천 기회를 게재하고 있습니다. 한 현장을 깊이 파고드는 것도, 반년 단위로 여러 현장을 넘나드는 것도 선택할 수 있습니다. 완벽할 필요는 없습니다.",
+        points: [
+          "업종·근무 형태·커밋 정도로 선택 가능",
+          "회원이라면 폼 입력 없이 지원",
+          "선고 연락도 사이트 내에서 완결",
+        ],
+        cta: "모집 보기",
+        external: false,
+      },
+      {
+        num: "04",
+        badge: "온라인 / 대면",
+        name: "이벤트",
+        tagline: "우선, 사회와 만나본다.",
+        body:
+          "설명회·좌담회·워크숍을 개최하고 있습니다. 곧바로 지원하기에는 부담스럽다는 분에게, 먼저 사회와 만나는 기회로 활용해 주셨으면 합니다.",
+        points: [
+          "온라인 개최도 있어 지방에서도 참여 가능",
+          "회원은 QR로 접수 완료",
+          "개최 예정은 이벤트 페이지에서 수시 업데이트",
+        ],
+        cta: "일정 보기",
+        external: false,
+      },
+    ],
+    flowTitle: "어디서 시작해도 괜찮습니다.",
+    flowLead:
+      "순서는 없습니다. 진단부터 시작해 자신을 알고 나서 지원해도 좋고, 관심 있는 모집을 먼저 봐도 괜찮습니다.",
+    ctaTitle: "우선, 4분부터.",
+    ctaLead: "자신의 습관을 아는 것부터 시작한다면, 진단이 가장 가벼운 입구입니다.",
   },
   members: {
     welcome: "환영합니다, ",

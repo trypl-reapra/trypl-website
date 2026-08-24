@@ -27,6 +27,7 @@ export default function Nav() {
 
   const navItems = [
     { label: t.nav.about, href: "/about" },
+    { label: t.nav.products, href: "/products" },
     { label: t.nav.internships, href: "/internships" },
     { label: t.nav.events, href: "/events" },
     { label: t.footer.contact, href: "/contact" },

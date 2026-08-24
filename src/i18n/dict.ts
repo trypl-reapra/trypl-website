@@ -21,7 +21,7 @@ export const LOCALE_HTML: Record<Locale, string> = {
 };
 
 type Dict = {
-  nav: { about: string; internships: string; events: string; links: string };
+  nav: { about: string; products: string; internships: string; events: string; links: string };
   cta: string;
   ctaMember: string;
   press: { eyebrow: string; heading: string; more: string; all: string; empty: string };
@@ -94,6 +94,7 @@ export const dict: Record<Locale, Dict> = {
   ja: {
     nav: {
       about: "TrypLとは",
+      products: "プロダクト",
       internships: "募集一覧",
       events: "イベント",
       links: "リンク",
@@ -207,6 +208,7 @@ export const dict: Record<Locale, Dict> = {
   en: {
     nav: {
       about: "About",
+      products: "Products",
       internships: "Internships",
       events: "Events",
       links: "Links",
@@ -320,6 +322,7 @@ export const dict: Record<Locale, Dict> = {
   ko: {
     nav: {
       about: "TrypL이란",
+      products: "프로덕트",
       internships: "모집 공고",
       events: "이벤트",
       links: "링크",
